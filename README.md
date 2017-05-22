@@ -173,7 +173,7 @@ This means the toolchain from your BUILD to your TARGET, even if
 BUILD and TARGET are the same.
 
 HOST_HOST_BASE is the path where your native toolchain for the TARGET
-is installed. TODO: rename this variable
+is installed.
 
 COUNTRY_CODE, LOCAL_IP and ROUTER_IP are configuration variables
 for your TARGET. COUNTRY_CODE is one of `uk`, `fr`, `rs`, `vn` or `cn`.

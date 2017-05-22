@@ -1,0 +1,92 @@
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Language" content="en" />
+    <title>lh-bootstrap - a tool to build images running s6 and s6-rc</title>
+    <meta name="Description" content="lh-bootstrap - a tool to build images running s6 and s6-rc" />
+    <meta name="Keywords" content="lh-bootstrap bootstrap VM qemu linux s6 s6-rc virtual machine disk image" />
+    <!-- <link rel="stylesheet" type="text/css" href="http://skarnet.org/default.css" /> -->
+  </head>
+<body>
+
+<p>
+<a href="http://skarnet.org/software/">Software</a><br />
+<a href="http://skarnet.org/">skarnet.org</a>
+</p>
+
+<h1> lh-bootstrap </h1>
+
+<h2> What is it&nbsp;? </h2>
+
+<p>
+ <tt>lh-bootstrap</tt> is a set of scripts that build a disk image
+for a virtual machine such as <a href="http://www.qemu.org/">QEMU</a>.
+The image uses <a href="https://kernel.org/">Linux</a>,
+<a href="http://musl-libc.org/">musl</a>,
+<a href="http://busybox.net/">BusyBox</a>, and skarnet.org tools,
+and similar small and efficient software. It provides the necessary
+minimum amount of tools to securely connect to the Internet and
+download more software while having a stable init system and service
+infrastructure.
+</p>
+
+<hr />
+
+<h2> Installation </h2>
+
+<h3> Requirements </h3>
+
+<p>
+ Read the
+<a href="https://github.com/skarnet/lh-bootstrap/blob/master/README.md">README.md</a>
+file (on GitHub, for Markdown formatting).
+</p>
+
+<h3> Licensing </h3>
+
+<p>
+ lh-bootstrap is free software. It is available under the
+<a href="https://opensource.org/licenses/GPL-2.0">GNU General Public License
+version 2</a>.
+</p>
+
+<h3> Download </h3>
+
+<p>
+<tt>lh-bootstrap</tt> does not have regular numbered releases; you should always
+pull the latest version from Git.
+</p>
+
+<ul>
+ <li> Pull from the
+<a href="http://git.skarnet.org/cgi-bin/cgit.cgi/lh-bootstrap/">main
+lh-bootstrap git repository</a>:
+<pre> git clone git://git.skarnet.org/lh-bootstrap </pre> </li>
+ <li> Pull from the
+<a href="https://github.com/skarnet/lh-bootstrap">GitHub mirror</a>. </li>
+</ul>
+
+<h3> Compilation </h3>
+
+<ul>
+ <li> Read the <a href="https://github.com/skarnet/lh-bootstrap/blob/master/README.md">README.md</a>
+file carefully </li>
+ <li> Copy <tt>lh-config.dist</tt> to <tt>lh-config</tt> and edit it to suit your needs </li>
+ <li> Run <tt>./make</tt> </li>
+</ul>
+
+<a name="related">
+<h2> Related resources </h2>
+</a>
+
+<h3> lh-bootstrap discussion </h3>
+
+<ul>
+ <li> <tt>lh-bootstrap</tt> is discussed on the
+<a href="http://skarnet.org/lists.html#skaware">skaware</a> mailing-list. </li>
+ <li> It can also be discussed on the <tt>#s6</tt> IRC channel on Freenode. </li>
+</ul>
+
+</body>
+</html>
