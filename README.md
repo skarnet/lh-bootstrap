@@ -7,7 +7,7 @@ last modified: 2017-05-22
 
 ## License
 
-`lh-boostrap` is distributed under the terms of the
+`lh-bootstrap` is distributed under the terms of the
 [GNU General Public License version 2](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html).
 
 
