@@ -1,0 +1,26 @@
+#!/command/execlineb -P
+
+# Make sure the /dev/urandom entropy pool will be set in
+# a not-too-distant future. Ideally we'd block on this,
+# but it's not critical, so we don't.
+
+background -d { s6-fillurandompool }
+
+
+# Set the system clock to something sensible,
+# to get coherent logs until the initial NTP message
+
+if { s6-clock %%BUILDTIME%% }
+
+
+# Initialize the service manager
+
+if { s6-rc-init /run/service }
+
+
+# Run the service manager.
+# Call it twice because the first time may spuriously "timeout"
+# due to the clock jumping forward.
+
+if -nt { s6-rc -t %%RCTIMEOUT%% -- change ok-all }
+s6-rc -t %%RCTIMEOUT%% -- change ok-all

@@ -1,0 +1,13 @@
+#!/command/execlineb -S0
+
+/command/multisubstitute
+{
+  import -i HOME
+  import -i LOGNAME
+}
+/command/export PATH "/command:/bin"
+/command/export USER $LOGNAME
+export SHELL /etc/execline-shell
+fdblock 0 fdblock 1 fdblock 2
+
+${HOME}/.execline-loginshell $@

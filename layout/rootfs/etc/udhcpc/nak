@@ -1,0 +1,7 @@
+#!/command/execlineb -P
+multisubstitute
+{
+  import -uD "<no server id>" serverid
+  import -uD "<no error message>" message
+}
+s6-echo "udhcpc-script: nak: server ${serverid} said: ${message}"

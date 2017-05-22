@@ -1,0 +1,10 @@
+#!/command/execlineb -P
+fdmove -c 2 1
+if
+{
+  forbacktickx -p -0 i { s6-ls -0 /run/service }
+  import -u i
+  s6-cleanfifodir /run/service/${i}/event
+}
+s6-setuidgid nobody
+s6-sleep 86400

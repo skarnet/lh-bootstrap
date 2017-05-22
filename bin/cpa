@@ -1,0 +1,17 @@
+#!/bin/sh -e
+
+test "$#" -ge 3 || { echo "cpa: fatal: too few arguments" 1>&2 ; exit 100 ; }
+
+output="$1"
+source=$($output/build-build/command/s6-linkname -f -- $2)
+dest="$3"
+
+
+srcname=$(basename "$source")
+destdir="$output"/$(dirname "$dest")
+destname=$(basename "$dest")
+
+{ cd $(dirname "$source") && tar c "$srcname" ; } | { cd "$destdir" && tar x ; }
+if test "$srcname" != "$destname" ; then
+  mv -f "$destdir/$srcname" "$destdir/$destname"
+fi

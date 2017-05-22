@@ -1,0 +1,12 @@
+#!/command/execlineb -P
+
+multisubstitute
+{
+  import -ui interface
+  import -ui ip
+  import -uD "<unknown mask>" mask
+  import -uD "<unknown DNS>" dns
+  import -ui router
+  import -ui lease
+}
+s6-echo "udhcpc-script: renew: ${ip}/${mask} on ${interface}, gateway ${router}, lease time ${lease}"

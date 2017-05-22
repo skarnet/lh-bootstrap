@@ -1,0 +1,2 @@
+if { modprobe atkbd }
+modprobe mousedev

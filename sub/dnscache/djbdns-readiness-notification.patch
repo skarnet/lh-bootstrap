@@ -1,0 +1,21 @@
+--- src.old/dnscache.c
++++ src/dnscache.c
+@@ -445,5 +445,7 @@
+     strerr_die2sys(111,FATAL,"unable to listen on TCP socket: ");
+ 
+   log_startup();
++  write(1, "\n", 1);
++  close(1);
+   doit();
+ }
+--- src.old/server.c
++++ src/server.c
+@@ -104,6 +104,8 @@
+   socket_tryreservein(udp53,65536);
+ 
+   buffer_putsflush(buffer_2,starting);
++  write(1, "\n", 1);
++  close(1);
+ 
+   for (;;) {
+     len = socket_recv4(udp53,buf,sizeof buf,ip,&port);

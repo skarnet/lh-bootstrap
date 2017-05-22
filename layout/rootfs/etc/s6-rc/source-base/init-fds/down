@@ -1,0 +1,2 @@
+foreground { s6-fdholder-delete /run/service/fdholder/s pipe:r:s6-svscan-log }
+exit 0

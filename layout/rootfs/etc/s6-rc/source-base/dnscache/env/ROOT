@@ -1,0 +1,1 @@
+/etc/dnscache/root

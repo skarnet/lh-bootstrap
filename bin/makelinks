@@ -1,0 +1,49 @@
+#!/bin/sh -e
+#
+# 
+# "makelinks base linkdir realdir" does a "relative ln", relatively to "base". "linkdir" and "realdir" are relative path to subdirectories under "base". Symlinks are created into linkdir for files in realdir. The symlinks do not contain "base".
+# 
+#
+
+test "$#" -ge 3 || { echo "makelinks: too few arguments" 1>&2 ; exit 100 ; }
+
+computerelative() {
+  source="$1"
+  target="$2"
+
+  common="$source"
+  result=""
+
+  while test "${target#$common}" = "$target" ; do
+    common="$(dirname $common)"
+    if test -z "$result" ; then
+      result=".."
+    else
+      result="../$result"
+    fi
+  done
+
+  if test "$common" = "/" ; then
+    result="$result/"
+  fi
+
+  forward="${target#$common}"
+
+  if test -n "$result" -a -n "$forward" ; then
+    result="$result$forward"
+  elif test -n "$forward" ; then
+    result="${forward:1}"
+  fi
+
+  echo "$result"
+}
+
+base=${1%%/}
+linkdir=${2%%/}
+realdir=${3%%/}
+
+targetdir=$(computerelative "$base$linkdir" "$base$realdir")
+
+for i in $(ls -1 "$base$realdir") ; do
+  ln -sf "$targetdir/$i" "$base$linkdir/$i" || true
+done

@@ -1,0 +1,17 @@
+#!/command/execlineb -S0
+
+backtick -n defaulthome
+{
+  if -nt
+  {
+    backtick -n defaultuser { id -un }
+    import -u defaultuser
+    import -D $defaultuser USER
+    redirfd -w 2 /dev/null
+    homeof ${USER}
+  }
+  s6-echo /
+}
+import -u defaulthome
+import -D $defaulthome HOME
+${HOME}/.execline-shell $@

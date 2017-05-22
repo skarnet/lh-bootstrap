@@ -1,0 +1,18 @@
+#!/bin/sh -e
+
+output="$1"
+file="$2"
+
+cp -f $output/build-host/bbsuid $output/rootfs/opt/busybox/bin/bbsuid
+s6-chmod 4755 $output/rootfs/opt/busybox/bin/bbsuid
+
+for i in $(s6-ls $output/rootfs/opt/busybox/bin | grep -xFf $file) ; do
+  rm -f $output/rootfs/opt/busybox/bin/$i
+  s6-ln -s bbsuid $output/rootfs/opt/busybox/bin/$i
+done
+
+for i in $(s6-ls $output/rootfs/opt/busybox/sbin | grep -xFf $file) ; do
+  rm -f $output/rootfs/opt/busybox/sbin/$i
+  s6-ln -s ../bin/bbsuid $output/rootfs/opt/busybox/bin/$i
+done
+

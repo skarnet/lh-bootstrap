@@ -1,0 +1,51 @@
+# Not all country codes are supported.
+# See sub/layout/configure-localoptions.
+# When in doubt, leave to uk, and adjust the timezone
+# and NTP client script later by hand.
+COUNTRY_CODE=uk
+
+# If you use DHCP, then LOCAL_IP and ROUTER_IP will be ignored.
+# LOCAL_IP=192.168.0.7
+# ROUTER_IP=192.168.0.1
+USE_DHCP=true
+
+# If you have a graphics card, set to true: the console will be on tty1.
+# Else, leave to false: you will have a serial console.
+USE_GRAPHIC=false
+
+# Set to true if you use TAP networking (you need to be root to set up
+# the bridge on the host); false if you use qemu's user networking.
+USE_TAP=false
+
+# Set to true if your virtual machine manager supports virtio disks. qemu does.
+USE_VIRTIO_DISK=false
+
+# Set to true if your virtual machine manager supports virtio networks. qemu and virtualbox do, at least.
+USE_VIRTIO_NETWORK=false
+
+# Set to the output directory.
+# By default, it's a subdirectory named "output" in lh-bootstrap's base directory.
+OUTPUT=
+
+# Set to a non-privileged user on your system.
+# Most of the build will be performed as that user.
+NORMALUSER=nobody
+
+# Kernel config. Leave commented to use the one provided with the bootstrap,
+# which is suitable for qemu.
+# KERNEL_CONFIG=
+
+# Uncomment, and define the triplet of the target system,
+# and the absolute path to the base of the toolchains.
+# TRIPLE=x86_64-linux-musl
+# CROSS_BASE=/home/ska/toolchains/cross/$TRIPLE
+# HOST_HOST_BASE=/home/ska/toolchains/native/$TRIPLE
+
+
+# Filesystems size, in megabytes.
+
+ROOTFS_SIZE=32768
+SWAP_SIZE=4096
+RWFS_SIZE=4096
+USERFS_SIZE=1024
+EXTRA_SIZE=2048

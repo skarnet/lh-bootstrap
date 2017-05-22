@@ -1,0 +1,22 @@
+--- src.old/efi/build-gnu-efi.sh
++++ src/efi/build-gnu-efi.sh
+@@ -29,7 +29,7 @@
+ 
+ (
+ 	cd ../..
+-	git submodule update --init
++	git submodule update --init || true
+ )
+ 
+ mkdir -p "$objdir/gnu-efi"
+--- src.old/efi/clean-gnu-efi.sh
++++ src/efi/clean-gnu-efi.sh
+@@ -23,7 +23,7 @@
+ 
+ (
+ 	cd ../..
+-	git submodule update --init
++	git submodule update --init || true
+ )
+ 
+ if [ -d "$objdir/gnu-efi" ];then

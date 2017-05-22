@@ -1,0 +1,66 @@
+--- options.h.old
++++ options.h
+@@ -40,7 +40,7 @@
+  *
+  * Both of these flags can be defined at once, don't compile without at least
+  * one of them. */
+-#define NON_INETD_MODE
++/* #define NON_INETD_MODE */
+ #define INETD_MODE
+ 
+ /* Setting this disables the fast exptmod bignum code. It saves ~5kB, but is
+@@ -52,10 +52,10 @@
+ several kB in binary size however will make the symmetrical ciphers and hashes
+ slower, perhaps by 50%. Recommended for small systems that aren't doing
+ much traffic. */
+-#define DROPBEAR_SMALL_CODE
++/* #define DROPBEAR_SMALL_CODE */
+ 
+ /* Enable X11 Forwarding - server only */
+-#define ENABLE_X11FWD
++/* #define ENABLE_X11FWD */
+ 
+ /* Enable TCP Fowarding */
+ /* 'Local' is "-L" style (client listening port forwarded via server)
+@@ -157,7 +157,7 @@
+    with badly seeded /dev/urandom when systems first boot.
+    This also requires a runtime flag "-R". This adds ~4kB to binary size (or hardly 
+    anything if dropbearkey is linked in a "dropbearmulti" binary) */
+-#define DROPBEAR_DELAY_HOSTKEY
++/* #define DROPBEAR_DELAY_HOSTKEY */
+ 
+ /* Enable Curve25519 for key exchange. This is another elliptic
+  * curve method with good security properties. Increases binary size
+@@ -244,7 +244,7 @@
+  * specified in the SSH_ASKPASS environment variable, and dbclient
+  * should be run with DISPLAY set and no tty. The program should
+  * return the password on standard output */
+-/*#define ENABLE_CLI_ASKPASS_HELPER*/
++#define ENABLE_CLI_ASKPASS_HELPER
+ 
+ /* Save a network roundtrip by sendng a real auth request immediately after
+  * sending a query for the available methods.  It is at the expense of < 100
+@@ -295,12 +295,12 @@
+  * OpenSSH), set the path below. If the path isn't defined, sftp will not
+  * be enabled */
+ #ifndef SFTPSERVER_PATH
+-#define SFTPSERVER_PATH "/usr/libexec/sftp-server"
++#define SFTPSERVER_PATH "/opt/dropbear/bin/sftp-server"
+ #endif
+ 
+ /* This is used by the scp binary when used as a client binary. If you're
+  * not using the Dropbear client, you'll need to change it */
+-#define DROPBEAR_PATH_SSH_PROGRAM "/usr/bin/dbclient"
++#define DROPBEAR_PATH_SSH_PROGRAM "/bin/dbclient"
+ 
+ /* Whether to log commands executed by a client. This only logs the 
+  * (single) command sent to the server, not what a user did in a 
+@@ -342,7 +342,7 @@
+ #define DEFAULT_IDLE_TIMEOUT 0
+ 
+ /* The default path. This will often get replaced by the shell */
+-#define DEFAULT_PATH "/usr/bin:/bin"
++#define DEFAULT_PATH "/command:/bin"
+ 
+ /* Some other defines (that mostly should be left alone) are defined
+  * in sysoptions.h */

@@ -1,0 +1,2 @@
+redirfd -r 0 /run/service/s6-svscan-log/fifo
+s6-fdholder-store /run/service/fdholder/s pipe:r:s6-svscan-log

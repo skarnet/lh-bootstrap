@@ -1,0 +1,71 @@
+#!/bin/sh -e
+
+# if you use QEMU user mode networking, endpoint 127.0.0.1:2222 on the host will be forwarded to port 22 in the guest
+SSH_PORTFORWARD=${SSH_PORTFORWARD:-2222}
+
+virtioblk=virtio-blk-device
+virtionet=virtio-net-device
+
+case "$QEMU_ARCH" in
+  i386)
+    qemu_sysoptions="-smp 2 -m 2G"
+    qemu_console=ttyS0
+    nic=e1000
+    diskoption="-drive file=$OUTPUT/disk-image.raw,media=disk,format=raw,if=none,id=sata0 -device ich9-ahci,id=ahci -device ide-drive,drive=sata0,bus=ahci.0" ;;
+  x86_64)
+    qemu_sysoptions="-enable-kvm -cpu host -smp 4 -m 16G"
+    qemu_console=ttyS0
+    nic=e1000
+    virtioblk=virtio-blk-pci
+    virtionet=virtio-net-pci
+    diskoption="-drive file=$OUTPUT/disk-image.raw,media=disk,format=raw,if=none,id=sata0 -device ich9-ahci,id=ahci -device ide-drive,drive=sata0,bus=ahci.0" ;;
+  arm)
+    qemu_sysoptions="-m 1G -M vexpress-a9 -cpu cortex-a9 -dtb sub/disk-image/vexpress-v2p-ca9.dtb"
+    qemu_console=ttyAMA0
+    USE_VIRTIO_NETWORK=true  # we only support virtio on armv7
+    diskoption="-sd $OUTPUT/disk-image.raw" ;;
+  aarch64)
+    qemu_sysoptions="-M virt -cpu cortex-a57 -m 2G"
+    qemu_console=ttyAMA0
+    USE_VIRTIO_NETWORK=true  # we only support virtio on armv8
+    diskoption="-device sdhci-pci -device sd-card,drive=sdcard -drive file=$OUTPUT/disk-image.raw,id=sdcard,cache=unsafe,if=none,format=raw" ;;
+esac
+
+nographic=-nographic
+
+# On graphical mode, enforce tty1 as the console
+if $USE_GRAPHIC ; then
+  qemu_console=tty1
+  nographic=
+fi
+
+# If the image has been compiled for a virtual disk (/dev/vda)
+if $USE_VIRTIO_DISK ; then
+  diskoption="-drive file=$OUTPUT/disk-image.raw,format=raw,if=none,id=disk -device $virtioblk,drive=disk"
+fi
+
+if $USE_VIRTIO_NETWORK ; then
+  nic=$virtionet
+fi
+
+qemu_guestnetoptions="-device $nic,netdev=network"
+
+# running in QEMU with TAP networking (need to be root to configure the host)
+# or running QEMU in user-mode networking (which is the default in QEMU), with redirection of port 2222 to 22
+if $USE_TAP ; then
+  qemu_hostnetoptions="-netdev tap,id=network,ifname=tap0,script=no,downscript=no"
+else
+  qemu_hostnetoptions="-netdev user,id=network,hostfwd=tcp:127.0.0.1:${SSH_PORTFORWARD}-:22"
+fi
+
+# echo qemu-system-$QEMU_ARCH $nographic $qemu_sysoptions $qemu_guestnetoptions $qemu_hostnetoptions \
+#   -append "console=$qemu_console" \
+#   -kernel "$OUTPUT/kernel" \
+#   -initrd "$OUTPUT/initramfs.img.gz" \
+#   $diskoption
+
+exec qemu-system-$QEMU_ARCH $nographic $qemu_sysoptions $qemu_guestnetoptions $qemu_hostnetoptions \
+  -append "console=$qemu_console" \
+  -kernel "$OUTPUT/kernel" \
+  -initrd "$OUTPUT/initramfs.img.gz" \
+  $diskoption

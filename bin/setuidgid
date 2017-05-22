@@ -1,0 +1,7 @@
+#!/bin/sh -e
+
+test "$#" -ge 2 || { echo "setuidgid: too few arguments" 1>&2 ; exit 100 ; }
+
+wd=$(pwd)
+
+exec su -s /bin/sh -p -c "PATH=$PATH ; export PATH ; cd $wd ; exec \"\$0\" \"\$@\"" -- "$@"

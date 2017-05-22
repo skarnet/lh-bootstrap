@@ -1,0 +1,18 @@
+#!/bin/sh -e
+
+file="$1"
+muslspecs="$2"
+realgcc="$3"
+allstatic="$4"
+
+if $allstatic ; then
+  dostatic=-static
+else
+  dostatic=
+fi
+
+cat > "$file" <<EOF
+#!/bin/sh
+exec "\${REALGCC:-$realgcc}" $dostatic -specs "$muslspecs" "\$@"
+EOF
+exec chmod 0755 "$file"

@@ -1,0 +1,4 @@
+#!/command/execlineb -S1
+ifelse { s6-test $# -ge 1 } { /etc/udhcpc/$1 }
+if { fdmove -c 1 2 s6-echo "udhcpc-script: too few arguments" }
+exit 1

@@ -1,0 +1,12 @@
+#!/bin/sh -e
+
+test "$#" -ge 4 || { echo "makenamelink: too few arguments" 1>&2 ; exit 100 ; }
+
+base=${1%%/}
+link="$2"
+real="$3"
+tmp="$4"
+
+rm -f "$tmp/$link"
+ln -s "$real" "$tmp/$link"
+mv -f "$tmp/$link" "$base"/

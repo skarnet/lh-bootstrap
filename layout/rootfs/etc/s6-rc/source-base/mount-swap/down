@@ -1,0 +1,1 @@
+s6-swapoff /dev/%%PARTITION%%3

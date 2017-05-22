@@ -1,0 +1,13 @@
+#!/command/execlineb -P
+fdmove -c 2 1
+s6-envuidgid dnscache
+s6-envdir env
+s6-softlimit -m 4000000
+pipeline -d
+{
+  redirfd -r 0 /dev/urandom
+  s6-head -c 128
+}
+unexport !
+fdmove 1 3
+dnscache

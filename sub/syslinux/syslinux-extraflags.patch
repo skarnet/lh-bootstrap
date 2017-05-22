@@ -1,0 +1,39 @@
+--- src.tmp/core/Makefile
++++ src/core/Makefile
+@@ -26,7 +26,7 @@
+ 
+ OPTFLAGS =
+ INCLUDES = -I$(SRC)/include -I$(com32)/include -I$(com32)/include/sys -I$(com32)/lib \
+-	-I$(SRC)/lwip/src/include -I$(SRC)/lwip/src/include/ipv4 -I$(SRC)/fs/pxe
++	-I$(SRC)/lwip/src/include -I$(SRC)/lwip/src/include/ipv4 -I$(SRC)/fs/pxe $(EXTRA_CFLAGS)
+ 
+ # This is very similar to cp437; technically it's for Norway and Denmark,
+ # but it's unlikely the characters that are different will be used in
+--- src.tmp/extlinux/Makefile
++++ src/extlinux/Makefile
+@@ -17,10 +17,10 @@
+ include $(MAKEDIR)/syslinux.mk
+ 
+ OPTFLAGS = -g -Os
+-INCLUDES = -I$(SRC) -I$(objdir) -I$(SRC)/../libinstaller
++INCLUDES = -I$(SRC) -I$(objdir) -I$(SRC)/../libinstaller $(EXTRA_CFLAGS)
+ CFLAGS	 = $(GCCWARN) -Wno-sign-compare -D_FILE_OFFSET_BITS=64 \
+ 	   $(OPTFLAGS) $(INCLUDES)
+-LDFLAGS	 = 
++LDFLAGS	 = $(EXTRA_LDFLAGS) 
+ 
+ SRCS     = main.c \
+ 	   mountinfo.c \
+--- src.tmp/utils/Makefile
++++ src/utils/Makefile
+@@ -17,8 +17,8 @@
+ VPATH = $(SRC)
+ include $(MAKEDIR)/syslinux.mk
+ 
+-CFLAGS   = $(GCCWARN) -Os -fomit-frame-pointer -D_FILE_OFFSET_BITS=64 -I$(SRC)
+-LDFLAGS  = -O2
++CFLAGS   = $(GCCWARN) -Os -fomit-frame-pointer -D_FILE_OFFSET_BITS=64 -I$(SRC) $(EXTRA_CFLAGS)
++LDFLAGS  = -O2 $(EXTRA_LDFLAGS)
+ 
+ C_TARGETS	 = isohybrid gethostip memdiskfind
+ SCRIPT_TARGETS	 = mkdiskimage
