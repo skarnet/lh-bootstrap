@@ -1,4 +1,4 @@
-target: x86_64-linux-musl
+target: i686-linux-musl
 clockrt: yes
 clockmon: yes
 posixspawn: yes
