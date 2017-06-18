@@ -2,8 +2,8 @@
 
 /command/multisubstitute
 {
-  import -i HOME
-  import -i LOGNAME
+  importas -i HOME HOME
+  importas -i LOGNAME LOGNAME
 }
 /command/export PATH "/command:/bin"
 /command/export USER $LOGNAME
