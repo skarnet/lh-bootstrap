@@ -67,7 +67,7 @@ $(OUTPUT)/build-host/bbsuid.c: sub/busybox/SUIDLIST sub/busybox/bbsuid-header su
 	exec setuidgid $(NORMALUSER) redirfd -w 1 $@ foreground cat sub/busybox/bbsuid-header "" foreground sed s/.*/\"\&\",/ sub/busybox/SUIDLIST "" cat sub/busybox/bbsuid-footer
 
 $(OUTPUT)/build-host/bbsuid: $(OUTPUT)/build-host/bbsuid.c $(OUTPUT)/build-host/bin/muslgcc $(OUTPUT)/build-host/.lh_skalibs_installed
-	exec setuidgid $(NORMALUSER) muslgcc -o $@ -I $(OUTPUT)/rootfs/package/prog/skalibs/include -L $(OUTPUT)/rootfs/package/prog/skalibs/library $(OUTPUT)/build-host/bbsuid.c -lskarnet
+	exec setuidgid $(NORMALUSER) muslgcc -static -o $@ -I $(OUTPUT)/rootfs/package/prog/skalibs/include -L $(OUTPUT)/rootfs/package/prog/skalibs/library $(OUTPUT)/build-host/bbsuid.c -lskarnet
 
 $(OUTPUT)/build-host/.lh_bbsuid_installed: sub/busybox/SUIDLIST $(OUTPUT)/build-host/bbsuid $(OUTPUT)/build-host/.lh_bb_installed | $(OUTPUT)/tmp/.lh_prepared $(OUTPUT)/build-build/.lh_skarnet_installed
 	exec sub/busybox/install-bbsuid $(OUTPUT) sub/busybox/SUIDLIST
