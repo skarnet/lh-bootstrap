@@ -41,10 +41,10 @@ timeout=${S6RC_TIMEOUT}
 buildtime=$(s6-clock)
 
 hostarch=$(s6-echo $TRIPLE | cut -f1 -d-)
-# sed -i -e "s/%%HOSTNAME%%/lh-$hostarch/g" $output/rootfs/etc/s6-rc/source-base/00/up $output/rootfs/etc/s6-linux-init/run-image/service/s6-linux-init-early-getty/run $output/rootfs/etc/motd $output/rootfs/etc/issue.net $output/rootfs/root/.execline-shell $output/userfs/home/guest/.execline-shell
+sed -i -e "s/%%HOSTNAME%%/lh-$hostarch/g" $output/rootfs/etc/s6-rc/source-base/00/up $output/rootfs/etc/s6-linux-init/run-image/service/s6-linux-init-early-getty/run $output/rootfs/etc/motd $output/rootfs/etc/issue.net $output/rootfs/root/.execline-shell $output/userfs/home/guest/.execline-shell
 sed -i -e "s/%%CONSOLE%%/$console/g" $output/rootfs/etc/s6-linux-init/run-image/service/s6-linux-init-early-getty/run
-# sed -i -e "s/%%NETMODULE%%/$netmodule/g" $output/rootfs/etc/s6-rc/source-base/init-eth0/up
-# sed -i -e "s/%%RCTIMEOUT%%/$timeout/g" -e "s/%%BUILDTIME%%/$buildtime/g" $output/rootfs/etc/rc.init
+sed -i -e "s/%%NETMODULE%%/$netmodule/g" $output/rootfs/etc/s6-rc/source-base/init-eth0/up
+sed -i -e "s/%%RCTIMEOUT%%/$timeout/g" -e "s/%%BUILDTIME%%/$buildtime/g" $output/rootfs/etc/rc.init
 
 
 if $USE_DHCP ; then
