@@ -1,8 +1,5 @@
-# Version from 2017-04-07
-# BUSYBOX_VERSION := 1140bf39ab113aefee8079755fac618bf6314db6
-
-# Version from 2017-05-22
-BUSYBOX_VERSION := f5470419404d643070db99d058405b714695b817
+# Version from 2017-07-17
+BUSYBOX_VERSION := b95ee96e7528554fc3ee2c48fbd59d75c59148db
 
 clean-busybox:
 	rm -f $(OUTPUT)/sources/.lh_bb_cloned

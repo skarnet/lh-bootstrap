@@ -1,7 +1,8 @@
 MUSL_BASE ?= /opt/musl-git
 
-# Version from 2017-05-22
-MUSL_VERSION := f9f686b7721e2cc35e20fa5c6df6da2dc4ac3f50
+# Version from 2017-07-17
+MUSL_VERSION := a08910fc2cc739f631b75b2d09b8d72a0d64d285
+
 
 # Build-build
 
