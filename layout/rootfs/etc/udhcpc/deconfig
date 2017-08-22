@@ -1,7 +1,7 @@
 #!/command/execlineb -P
 multisubstitute
 {
-  import -uD "<no server id>" serverid
-  import -uD "<no error message>" message
+  importas -uD "<no server id>" serverid serverid
+  importas -uD "<no error message>" message message
 }
 s6-echo "udhcpc-script: deconfig: server ${serverid} said: ${message}"

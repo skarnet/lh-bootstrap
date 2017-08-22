@@ -2,11 +2,11 @@
 
 multisubstitute
 {
-  import -ui interface
-  import -ui ip
-  import -uD "<unknown mask>" mask
-  import -uD "<unknown DNS>" dns
-  import -ui router
-  import -ui lease
+  importas -ui interface interface
+  importas -ui ip ip
+  importas -uD "<unknown mask>" mask mask
+  importas -uD "<unknown DNS>" dns dns
+  importas -ui router router
+  importas -ui lease lease
 }
 s6-echo "udhcpc-script: renew: ${ip}/${mask} on ${interface}, gateway ${router}, lease time ${lease}"

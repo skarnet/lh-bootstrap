@@ -2,14 +2,14 @@
 
 multisubstitute
 {
-  import -ui interface
-  import -ui ip
-  import -ui subnet
-  import -ui mask
-  import -ui router
-  import -ui dns
-  import -uD localdomain domain
-  import -ui lease
+  importas -ui interface interface
+  importas -ui ip ip
+  importas -ui subnet subnet
+  importas -ui mask mask
+  importas -ui router router
+  importas -ui dns dns
+  importas -uD localdomain domain domain
+  importas -ui lease lease
 }
 
 foreground

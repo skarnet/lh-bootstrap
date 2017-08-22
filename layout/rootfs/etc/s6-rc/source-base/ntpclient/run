@@ -12,9 +12,9 @@ pipeline
 {
   s6-setuidgid nobody
   s6-envdir /etc/s6-linux-init/env-stage2
-  import -u COUNTRY_CODE
+  importas -u COUNTRY_CODE COUNTRY_CODE
   forx -p I { 0 1 }
-    import -u I
+    importas -u I I
     s6-dnsip4 -t 30000 -- ${I}.${COUNTRY_CODE}.pool.ntp.org
 }
 importas -u p1 !
@@ -28,7 +28,7 @@ pipeline
 {
   s6-setuidgid ntp
   forstdin -p -d"\n" NTPSERVERIP
-    import -u NTPSERVERIP
+    importas -u NTPSERVERIP NTPSERVERIP
     s6-sntpclock -T 5000 ${NTPSERVERIP}
 }
 importas -u p2 !
