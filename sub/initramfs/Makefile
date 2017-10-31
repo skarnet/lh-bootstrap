@@ -1,8 +1,8 @@
 # The initramfs
 
-INITRAMFS_SKARNET_LIST := cd execlineb export if redirfd s6-echo s6-mount
+INITRAMFS_SKARNET_LIST := cd execlineb export if redirfd s6-echo s6-mount mdevd-coldplug mdevd
 
-$(OUTPUT)/tmp/.lh_initramfs_installed: $(OUTPUT)/tmp/.lh_layout_copied $(OUTPUT)/build-host/.lh_skarnet_installed $(OUTPUT)/build-host/.lh_mdev_installed
+$(OUTPUT)/tmp/.lh_initramfs_installed: $(OUTPUT)/tmp/.lh_layout_copied $(OUTPUT)/build-host/.lh_skarnet_installed
 	for i in $(INITRAMFS_SKARNET_LIST) ; do cp -f -L $(OUTPUT)/rootfs/command/$$i $(OUTPUT)/initramfs/command/$$i ; done
 	exec setuidgid $(NORMALUSER) touch $@
 

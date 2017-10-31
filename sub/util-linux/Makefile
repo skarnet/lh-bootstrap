@@ -6,7 +6,7 @@
 
 
 UTLX_NAME := util-linux
-UTLX_VERSION := 2.29.2
+UTLX_VERSION := 2.31
 UTLX_MAJOR := $(word 1, $(subst ., ,$(UTLX_VERSION)))
 UTLX_MINOR := $(word 2, $(subst ., ,$(UTLX_VERSION)))
 UTLX_URLDIR := https://cdn.kernel.org/pub/linux/utils/$(UTLX_NAME)/v$(UTLX_MAJOR).$(UTLX_MINOR)
