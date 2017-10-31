@@ -20,7 +20,7 @@ $(OUTPUT)/build-build$(MUSL_BASE)/.lh_copied: $(OUTPUT)/sources/.lh_musl_cloned
 	exec setuidgid $(NORMALUSER) touch $@
 
 $(OUTPUT)/build-build$(MUSL_BASE)/.lh_configured: $(OUTPUT)/build-build$(MUSL_BASE)/.lh_copied
-	cd $(OUTPUT)/build-build$(MUSL_BASE)/src && setuidgid $(NORMALUSER) ./configure --prefix=$(OUTPUT)/build-build$(MUSL_BASE) --enable-warnings --enable-gcc-wrapper CC=$(BUILD_BUILD_CC)
+	cd $(OUTPUT)/build-build$(MUSL_BASE)/src && setuidgid $(NORMALUSER) ./configure --prefix=$(OUTPUT)/build-build$(MUSL_BASE) --enable-warnings --enable-gcc-wrapper "CC=$(BUILD_BUILD_CC)"
 	exec setuidgid $(NORMALUSER) touch $@
 
 $(OUTPUT)/build-build$(MUSL_BASE)/.lh_built: $(OUTPUT)/build-build$(MUSL_BASE)/.lh_configured
