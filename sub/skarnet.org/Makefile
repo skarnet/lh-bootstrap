@@ -58,7 +58,7 @@ $(OUTPUT)/build-build/.lh_skalibs_copied: $(OUTPUT)/sources/.lh_skalibs_cloned
 	exec setuidgid $(NORMALUSER) touch $@
 
 $(OUTPUT)/build-build/.lh_skalibs_configured: $(OUTPUT)/build-build/.lh_skalibs_copied $(OUTPUT)/build-build/.lh_gcc
-	cd $(OUTPUT)/build-build/tmp/skalibs && LDFLAGS=-static setuidgid $(NORMALUSER) ./configure --enable-tai-clock --enable-force-devr --enable-slashpackage --with-default-path=/command:/bin --disable-shared
+	cd $(OUTPUT)/build-build/tmp/skalibs && setuidgid $(NORMALUSER) ./configure --enable-tai-clock --enable-force-devr --enable-slashpackage --with-default-path=/command:/bin --disable-shared
 	exec setuidgid $(NORMALUSER) touch $@
 
 $(OUTPUT)/build-build/.lh_skalibs_built: $(OUTPUT)/build-build/.lh_skalibs_configured
