@@ -90,7 +90,7 @@ $(OUTPUT)/build-build/.lh_done: $(OUTPUT)/build-build/.lh_gcc $(OUTPUT)/build-bu
 
 # The rootfs
 
-$(OUTPUT)/tmp/.lh_rootfs_installed: $(OUTPUT)/tmp/.lh_layout_installed $(OUTPUT)/build-host/.lh_skarnet_installed $(OUTPUT)/build-host/.lh_bb_installed $(OUTPUT)/build-host/.lh_bbsuid_installed $(OUTPUT)/build-host/.lh_dnscache_installed $(OUTPUT)/build-host/.lh_dropbear_installed $(OUTPUT)/tmp/.lh_initramfs_done $(OUTPUT)/build-host/kernel/.lh_installed
+$(OUTPUT)/tmp/.lh_rootfs_installed: $(OUTPUT)/tmp/.lh_layout_installed $(OUTPUT)/build-host/.lh_skarnet_installed $(OUTPUT)/build-host/.lh_socklog_installed $(OUTPUT)/build-host/.lh_bb_installed $(OUTPUT)/build-host/.lh_bbsuid_installed $(OUTPUT)/build-host/.lh_dnscache_installed $(OUTPUT)/build-host/.lh_dropbear_installed $(OUTPUT)/tmp/.lh_initramfs_done $(OUTPUT)/build-host/kernel/.lh_installed
 	exec setuidgid $(NORMALUSER) touch $@
 
 
@@ -141,6 +141,7 @@ include sub/layout/Makefile
 include sub/initramfs/Makefile
 include sub/bearssl/Makefile
 include sub/skarnet.org/Makefile
+include sub/socklog/Makefile
 include sub/busybox/Makefile
 include sub/dnscache/Makefile
 include sub/dropbear/Makefile
