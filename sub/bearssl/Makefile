@@ -1,7 +1,7 @@
 
 BEARSSL_NAME := bearssl
-# Version from 2017-10-31
-BEARSSL_VERSION := dddc412922f42f9c7dd6177133828be724f44424
+# Version from 2017-11-02
+BEARSSL_VERSION := 4cbe51b0d039c7afc477009cf7f327f8de9da487
 BEARSSL_URLDIR := https://www.bearssl.org/git
 
 $(OUTPUT)/sources/.lh_$(BEARSSL_NAME)_dled: | $(OUTPUT)/build-build/.lh_skarnet_installed

@@ -60,10 +60,6 @@ distclean:
 clean:
 	ls -1 $(OUTPUT) | grep -vF sources | while read a ; do rm -rf $(OUTPUT)/"$$a" & : ; done ; true
 	
-# same as above, minus the kernel (TODO)
-quickclean:
-	ls -1 $(OUTPUT) | grep -vF sources | while read a ; do rm -rf $(OUTPUT)/"$$a" & : ; done ; true
-	
 # other available targets to clean subsystems:
 # clean-busybox
 # clean-dropbear

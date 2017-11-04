@@ -27,7 +27,7 @@ $(OUTPUT)/build-host/.lh_zlib_installed: $(OUTPUT)/build-host/.lh_zlib_built $(O
 
 
 LIBRESSL_NAME := libressl
-LIBRESSL_VERSION := 2.5.4
+LIBRESSL_VERSION := 2.5.5
 LIBRESSL_URLDIR := https://ftp.openbsd.org/pub/OpenBSD/LibreSSL
 LIBRESSL_TAREXT := tar.gz
 LIBRESSL_TARLETTER := z
