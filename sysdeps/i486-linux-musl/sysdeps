@@ -54,3 +54,8 @@ arc4random: no
 arc4random_addrandom: no
 getrandom: yes
 itimer: yes
+dirfd: yes
+odirectory: yes
+memmem: yes
+namespaces: yes
+nsgetparent: yes
