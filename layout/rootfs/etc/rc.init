@@ -1,12 +1,5 @@
 #!/command/execlineb -P
 
-# Make sure the /dev/urandom entropy pool will be set in
-# a not-too-distant future. Ideally we'd block on this,
-# but it's not critical, so we don't.
-
-background -d { s6-fillurandompool }
-
-
 # Set the system clock to something sensible,
 # to get coherent logs until the initial NTP message
 

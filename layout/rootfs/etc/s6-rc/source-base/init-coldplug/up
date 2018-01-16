@@ -1,1 +1,1 @@
-pipeline { mdevd-coldplug } mdevd
+mdevd-coldplug

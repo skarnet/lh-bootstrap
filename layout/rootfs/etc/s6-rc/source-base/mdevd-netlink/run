@@ -1,3 +1,0 @@
-#!/command/execlineb -P
-exec -c
-mdevd-netlink -d 3
