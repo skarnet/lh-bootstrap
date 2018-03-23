@@ -19,7 +19,7 @@ $(OUTPUT)/build-host/.lh_dropbear_copied: $(OUTPUT)/build-host/.lh_dropbear_dled
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
 $(OUTPUT)/build-host/.lh_dropbear_patched: $(OUTPUT)/build-host/.lh_dropbear_copied sub/dropbear/localoptions.h
-	exec setuidgid $(NORMALUSER) cp -f sub/dropbear/localoptions.h $(OUTPUT)/build-host/dropbear-$(DROPBEAR_VERSION)/src/localoptions.h
+	exec setuidgid $(NORMALUSER) cp -f sub/dropbear/localoptions.h $(OUTPUT)/build-host/dropbear-$(DROPBEAR_VERSION)/localoptions.h
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
 $(OUTPUT)/build-host/.lh_dropbear_configured: $(OUTPUT)/build-host/.lh_dropbear_patched $(OUTPUT)/build-host/bin/muslgcc | $(OUTPUT)/build-build/.lh_skarnet_installed
