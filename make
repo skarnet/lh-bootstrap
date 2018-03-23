@@ -23,11 +23,6 @@ USE_TAP=${USE_TAP:-false}   # TODO: backend specific, move to backends
 USE_VIRTIO_NETWORK=${USE_VIRTIO_NETWORK:-false} # allow end user to choose
 USE_VIRTIO_DISK=${USE_VIRTIO_DISK:-false}
 
-# Properly build musl and friends if the default toolchain produces PIE
-if ${BUILD_BUILD_CC} -dM -E - < /dev/null | grep -qF __PIE__ ; then
-  BUILD_BUILD_CC="$BUILD_BUILD_CC -fPIC"
-fi
-
 # By default, give up if all services aren't up 30 seconds after boot.
 # This allows shutting down the machine (via s6-poweroff) even if the
 # network fails to start, for instance.
