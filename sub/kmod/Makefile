@@ -14,8 +14,8 @@ KMOD_TARLETTER := J
 # is REALLY broken.
 
 KMOD_CONFIGURE_OPTIONS := --with-gnu-ld --disable-gtk-doc-html --with-xz --disable-manpages --with-bashcompletiondir=$(OUTPUT)/build-build/opt/$(KMOD_NAME)-$(KMOD_VERSION)/bash-completions
-KMOD_CFLAGS := ""
-KMOD_CONFLDFLAGS := "-s"
+KMOD_CFLAGS := "-I $(OUTPUT)/build-build/opt/xz/include"
+KMOD_CONFLDFLAGS := "-s -L$(OUTPUT)/build-build/opt/xz/lib"
 KMOD_MAKELDFLAGS := "-s -L$(OUTPUT)/build-build/opt/xz/lib"
 
 
