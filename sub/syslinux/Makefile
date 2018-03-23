@@ -17,7 +17,7 @@ SYSLINUX_TAREXT := tar.xz
 SYSLINUX_TARLETTER := J
 
 SYSLINUX_CFLAGS := "-I $(OUTPUT)/build-build/opt/$(LIBUUID_NAME)/include"
-SYSLINUX_LDFLAGS := "-s -static -L $(OUTPUT)/build-build/opt/$(LIBUUID_NAME)/lib"
+SYSLINUX_LDFLAGS := "-s -L $(OUTPUT)/build-build/opt/$(LIBUUID_NAME)/lib"
 SYSLINUX_INSTALLROOT := $(OUTPUT)/build-build/opt/$(SYSLINUX_NAME)-$(SYSLINUX_VERSION)
 
 
@@ -70,11 +70,11 @@ $(OUTPUT)/build-build/.lh_$(NASM_NAME)_copied: $(OUTPUT)/sources/.lh_$(NASM_NAME
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
 $(OUTPUT)/build-build/.lh_$(NASM_NAME)_configured: $(OUTPUT)/build-build/.lh_$(NASM_NAME)_copied $(OUTPUT)/build-build/.lh_gcc | $(OUTPUT)/build-build/.lh_skarnet_installed
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-build/opt/$(NASM_NAME)-$(NASM_VERSION)/src export LDFLAGS -static ./configure --prefix=$(OUTPUT)/build-build/opt/$(NASM_NAME)-$(NASM_VERSION) --enable-static
+	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-build/opt/$(NASM_NAME)-$(NASM_VERSION)/src ./configure --prefix=$(OUTPUT)/build-build/opt/$(NASM_NAME)-$(NASM_VERSION)
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
 $(OUTPUT)/build-build/.lh_$(NASM_NAME)_built: $(OUTPUT)/build-build/.lh_$(NASM_NAME)_copied $(OUTPUT)/build-build/.lh_gcc | $(OUTPUT)/build-build/.lh_skarnet_installed
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-build/opt/$(NASM_NAME)-$(NASM_VERSION)/src $(MAKE) LDFLAGS=-static
+	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-build/opt/$(NASM_NAME)-$(NASM_VERSION)/src $(MAKE)
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
 $(OUTPUT)/build-build/.lh_$(NASM_NAME)_installed: $(OUTPUT)/build-build/.lh_$(NASM_NAME)_built $(OUTPUT)/build-build/.lh_gcc | $(OUTPUT)/tmp/.lh_prepared $(OUTPUT)/build-build/.lh_skarnet_installed

@@ -15,8 +15,8 @@ KMOD_TARLETTER := J
 
 KMOD_CONFIGURE_OPTIONS := --with-gnu-ld --disable-gtk-doc-html --with-xz --disable-manpages --with-bashcompletiondir=$(OUTPUT)/build-build/opt/$(KMOD_NAME)-$(KMOD_VERSION)/bash-completions
 KMOD_CFLAGS := ""
-KMOD_CONFLDFLAGS := "-s -static"
-KMOD_MAKELDFLAGS := "-s -all-static -L$(OUTPUT)/build-build/opt/xz/lib"
+KMOD_CONFLDFLAGS := "-s"
+KMOD_MAKELDFLAGS := "-s -L$(OUTPUT)/build-build/opt/xz/lib"
 
 
 $(OUTPUT)/sources/$(KMOD_NAME)-$(KMOD_VERSION).$(KMOD_TAREXT): | $(OUTPUT)/tmp/.lh_prepared $(OUTPUT)/build-build/.lh_skarnet_installed

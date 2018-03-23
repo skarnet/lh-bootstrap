@@ -1,6 +1,4 @@
 
-# copies our pre-made layout ("copylayout") in /layout to the output directory
-# add our local options to the layout ("configure-localoptions")
 $(OUTPUT)/tmp/.lh_layout_copied: $(OUTPUT)/tmp/.lh_prepared layout | $(OUTPUT)/build-build/.lh_skarnet_installed
 	exec sub/layout/copylayout $(OUTPUT)
 	exec sub/layout/configure-localoptions $(OUTPUT) $(COUNTRY_CODE) $(LOCAL_IP) $(ROUTER_IP)

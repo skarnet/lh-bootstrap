@@ -5,7 +5,7 @@
 # Each target, for instance "$(OUTPUT)/tmp/.lh_installed",
 # is a witness file, ie the file is not needed anywhere but is
 # used by make to handle dependencies. Each of these files is
-# being touch-ed at the end of each recipe to update its date,
+# being touched at the end of each recipe to update its date,
 # since make relies on dates to handle updates of targets.
 # 
 # * why these "exec" at the beginning at each line?

@@ -6,7 +6,7 @@
 
 
 UTLX_NAME := util-linux
-UTLX_VERSION := 2.31.1
+UTLX_VERSION := 2.32
 UTLX_MAJOR := $(word 1, $(subst ., ,$(UTLX_VERSION)))
 UTLX_MINOR := $(word 2, $(subst ., ,$(UTLX_VERSION)))
 UTLX_URLDIR := https://cdn.kernel.org/pub/linux/utils/$(UTLX_NAME)/v$(UTLX_MAJOR).$(UTLX_MINOR)
@@ -15,10 +15,9 @@ UTLX_TARLETTER := J
 UTLX_CONFIGURE_OPTIONS := --disable-assert --disable-nls --enable-mount --enable-losetup --disable-bash-completion --disable-pylibmount --disable-pg-bell --disable-makeinstall-chown --disable-makeinstall-setuid --disable-colors-default --with-gnu-ld --without-util --without-termcap --without-libiconv-prefix --without-udev --without-user --without-python --without-ncurses --without-tinfo
 UTLX_CFLAGS := ""
 UTLX_CONFLDFLAGS := ""
-UTLX_MAKELDFLAGS := "-s -all-static"
+UTLX_MAKELDFLAGS := "-s"
 
-# only compiling losetup, other tools are widely available and well defined. You could also add: fdisk losetup mkswap mount
-# (Laurent) No, listing all the tools we need allows us to not depend on *any*
+# Listing all the tools we need allows us to not depend on any
 # version of util-linux being installed on the machine. This is intentional:
 # if we're going to download our own util-linux anyway, we might as well
 # remove the dependency entirely.

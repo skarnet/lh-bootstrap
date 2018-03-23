@@ -1,6 +1,6 @@
 include sub/dropbear/Makefile.sftp-server
 
-DROPBEAR_VERSION ?= 2017.75
+DROPBEAR_VERSION ?= 2018.76
 
 
 clean-dropbear:

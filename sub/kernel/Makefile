@@ -3,9 +3,6 @@ KERNEL_VERSION ?= 4.14.13
 KERNEL_MAJOR := $(firstword $(subst ., ,$(KERNEL_VERSION)))
 KERNEL_ENV := DEPMOD=$(OUTPUT)/build-build/opt/kmod/bin/depmod INSTALL_MOD_PATH=$(OUTPUT)/rootfs CROSS_COMPILE=$(BUILD_HOST_PREFIX)- ARCH=$(KERNEL_GENERIC_ARCH) INSTALL_MOD_STRIP="-R .note -R .comment -R .note.GNU-stack --strip-debug"
 
-# for Stage 1 - get the kernel headers for the build-build
-# these headers are not correct but we don't care
-
 $(OUTPUT)/sources/linux-$(KERNEL_VERSION).tar.xz: | $(OUTPUT)/tmp/.lh_prepared
 	cd $(OUTPUT)/sources && setuidgid $(NORMALUSER) wget https://cdn.kernel.org/pub/linux/kernel/v$(KERNEL_MAJOR).x/linux-$(KERNEL_VERSION).tar.xz
 
@@ -22,10 +19,6 @@ $(OUTPUT)/build-build/.lh_kernel_headers_installed: $(OUTPUT)/build-build/.lh_ke
 	exec setuidgid $(NORMALUSER) touch $@
 	
 	
-	
-
-# for Stage 2 - build the kernel
-
 $(OUTPUT)/build-host/kernel/.lh_unpacked: $(OUTPUT)/sources/linux-$(KERNEL_VERSION).tar.xz | $(OUTPUT)/build-build/.lh_skarnet_installed
 	exec setuidgid $(NORMALUSER) s6-mkdir -p $(OUTPUT)/build-host/kernel
 	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-host/kernel tar Jxpvf $(OUTPUT)/sources/linux-$(KERNEL_VERSION).tar.xz
@@ -63,6 +56,3 @@ ifeq ($(KERNEL_GENERIC_ARCH),x86)
 	exec s6-ln -sf vmlinuz-$(KERNEL_VERSION) $(OUTPUT)/rootfs/boot/vmlinuz
 endif
 	exec setuidgid $(NORMALUSER) s6-touch $@
-	
-	
-# TODO: copy the config to /boot

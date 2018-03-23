@@ -6,8 +6,8 @@ XZ_TAREXT := tar.xz
 XZ_TARLETTER := J
 XZ_CONFIGURE_OPTIONS := --disable-nls --with-gnu-ld --enable-threads=posix --disable-shared --disable-scripts --disable-doc --disable-lzma-links --disable-lzmainfo --disable-lzmadec --disable-xzdec --disable-xz
 XZ_CFLAGS := ""
-XZ_CONFLDFLAGS := "-s -static"
-XZ_MAKELDFLAGS := "-s -static"
+XZ_CONFLDFLAGS := "-s"
+XZ_MAKELDFLAGS := "-s"
 
 
 $(OUTPUT)/sources/$(XZ_NAME)-$(XZ_VERSION).$(XZ_TAREXT): | $(OUTPUT)/tmp/.lh_prepared $(OUTPUT)/build-build/.lh_skarnet_installed

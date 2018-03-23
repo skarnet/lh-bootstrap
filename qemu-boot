@@ -8,24 +8,24 @@ virtionet=virtio-net-device
 
 case "$QEMU_ARCH" in
   i386)
-    qemu_sysoptions="-smp 2 -m 2G"
+    qemu_sysoptions="-smp 2 -m 500M"
     qemu_console=ttyS0
     nic=e1000
     diskoption="-drive file=$OUTPUT/disk-image.raw,media=disk,format=raw,if=none,id=sata0 -device ich9-ahci,id=ahci -device ide-drive,drive=sata0,bus=ahci.0" ;;
   x86_64)
-    qemu_sysoptions="-enable-kvm -cpu host -smp 4 -m 16G"
+    qemu_sysoptions="-enable-kvm -cpu host -smp 4 -m 500M"
     qemu_console=ttyS0
     nic=e1000
     virtioblk=virtio-blk-pci
     virtionet=virtio-net-pci
     diskoption="-drive file=$OUTPUT/disk-image.raw,media=disk,format=raw,if=none,id=sata0 -device ich9-ahci,id=ahci -device ide-drive,drive=sata0,bus=ahci.0" ;;
   arm)
-    qemu_sysoptions="-m 1G -M vexpress-a9 -cpu cortex-a9 -dtb sub/disk-image/vexpress-v2p-ca9.dtb"
+    qemu_sysoptions="-m 500M -M vexpress-a9 -cpu cortex-a9 -dtb sub/disk-image/vexpress-v2p-ca9.dtb"
     qemu_console=ttyAMA0
     USE_VIRTIO_NETWORK=true  # we only support virtio on armv7
     diskoption="-sd $OUTPUT/disk-image.raw" ;;
   aarch64)
-    qemu_sysoptions="-M virt -cpu cortex-a57 -m 2G"
+    qemu_sysoptions="-M virt -cpu cortex-a57 -m 500M"
     qemu_console=ttyAMA0
     USE_VIRTIO_NETWORK=true  # we only support virtio on armv8
     diskoption="-device sdhci-pci -device sd-card,drive=sdcard -drive file=$OUTPUT/disk-image.raw,id=sdcard,cache=unsafe,if=none,format=raw" ;;
