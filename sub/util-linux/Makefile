@@ -13,12 +13,62 @@ UTLX_CONFIGURE_OPTIONS := \
 --disable-shared \
 --disable-widechar \
 --disable-libuuid \
---disable-all-programs \
 --enable-libsmartcols \
 --enable-losetup \
 --enable-libblkid \
 --enable-libmount \
 --enable-mount \
+--disable-zramctl \
+--disable-fsck \
+--disable-partx \
+--disable-uuidd \
+--disable-mountpoint \
+--disable-fallocate \
+--disable-unshare \
+--disable-nsenter \
+--disable-setpriv \
+--disable-eject \
+--disable-agetty \
+--disable-plymouth-support \
+--disable-cramfs \
+--disable-bfs \
+--disable-minix \
+--disable-fdformat \
+--disable-hwclock \
+--disable-lslogins \
+--disable-wdctl \
+--disable-cal \
+--disable-logger \
+--disable-switch_root \
+--disable-pivot_root \
+--disable-lsmem \
+--disable-chmem \
+--disable-ipcrm \
+--disable-ipcs \
+--disable-rfkill \
+--disable-tunelp \
+--disable-kill \
+--disable-last \
+--disable-utmpdump \
+--disable-line \
+--disable-mesg \
+--disable-raw \
+--disable-rename \
+--disable-vipw \
+--disable-newgrp \
+--disable-chfn-chsh \
+--disable-login \
+--disable-nologin \
+--disable-sulogin \
+--disable-su \
+--disable-runuser \
+--disable-ul \
+--disable-more \
+--disable-pg \
+--disable-setterm \
+--disable-schedutils \
+--disable-wall \
+--disable-write \
 --disable-bash-completion \
 --disable-pylibmount \
 --disable-pg-bell \
@@ -61,7 +111,7 @@ $(OUTPUT)/build-build/.lh_$(UTLX_NAME)_configured: $(OUTPUT)/build-build/.lh_$(U
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
 $(OUTPUT)/build-build/.lh_$(UTLX_NAME)_built: $(OUTPUT)/build-build/.lh_$(UTLX_NAME)_configured | $(OUTPUT)/build-build/.lh_skarnet_installed
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-build/opt/$(UTLX_NAME)-$(UTLX_VERSION)/src $(MAKE) fdisk mount umount losetup mkswap LDFLAGS=$(UTLX_MAKELDFLAGS)
+	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-build/opt/$(UTLX_NAME)-$(UTLX_VERSION)/src $(MAKE) LDFLAGS=$(UTLX_MAKELDFLAGS)
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
 $(OUTPUT)/build-build/.lh_$(UTLX_NAME)_installed: $(OUTPUT)/build-build/.lh_$(UTLX_NAME)_built | $(OUTPUT)/tmp/.lh_prepared $(OUTPUT)/build-build/.lh_skarnet_installed
