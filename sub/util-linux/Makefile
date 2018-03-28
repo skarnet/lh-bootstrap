@@ -10,9 +10,8 @@ UTLX_CONFIGURE_OPTIONS := \
 --prefix=$(OUTPUT)/build-build/opt/$(UTLX_NAME)-$(UTLX_VERSION) \
 --disable-assert \
 --disable-nls \
---disable-shared \
 --disable-widechar \
---disable-libuuid \
+--enable-libuuid \
 --enable-libsmartcols \
 --enable-losetup \
 --enable-libblkid \
@@ -117,4 +116,5 @@ $(OUTPUT)/build-build/.lh_$(UTLX_NAME)_built: $(OUTPUT)/build-build/.lh_$(UTLX_N
 $(OUTPUT)/build-build/.lh_$(UTLX_NAME)_installed: $(OUTPUT)/build-build/.lh_$(UTLX_NAME)_built | $(OUTPUT)/tmp/.lh_prepared $(OUTPUT)/build-build/.lh_skarnet_installed
 	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-build/opt/$(UTLX_NAME)-$(UTLX_VERSION)/src $(MAKE) install
 	exec setuidgid $(NORMALUSER) makelinks $(OUTPUT)/build-build /bin /opt/$(UTLX_NAME)/bin
+	exec setuidgid $(NORMALUSER) makelinks $(OUTPUT)/build-build /bin /opt/$(UTLX_NAME)/sbin
 	exec setuidgid $(NORMALUSER) s6-touch $@
