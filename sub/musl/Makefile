@@ -14,7 +14,7 @@ $(OUTPUT)/build-build/.lh_gcc: $(OUTPUT)/build-build/bin/gcc
 	exec setuidgid $(NORMALUSER) touch $@
 
 $(OUTPUT)/build-build/bin/gcc: | $(OUTPUT)/tmp/.lh_prepared
-	ln -sf $(BUILD_BUILD_CC) $(OUTPUT)/build-build/bin/gcc
+	exec setuidgid $(NORMALUSER) ln -sf $(BUILD_BUILD_CC) $(OUTPUT)/build-build/bin/gcc
 
 
 # Build-host
