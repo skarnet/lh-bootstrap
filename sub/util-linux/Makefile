@@ -13,14 +13,12 @@ UTLX_CONFIGURE_OPTIONS := \
 --disable-shared \
 --disable-widechar \
 --disable-libuuid \
---disable-libblkid \
---disable-libsmartcols \
 --disable-all-programs \
+--enable-libsmartcols \
 --enable-losetup \
---enable-fdisk \
---enable-mkswap \
+--enable-libblkid \
+--enable-libmount \
 --enable-mount \
---enable-umount \
 --disable-bash-completion \
 --disable-pylibmount \
 --disable-pg-bell \
@@ -29,7 +27,6 @@ UTLX_CONFIGURE_OPTIONS := \
 --disable-colors-default \
 --with-gnu-ld \
 --without-util \
---without-termcap \
 --without-libiconv-prefix \
 --without-selinux \
 --without-audit \
@@ -64,7 +61,7 @@ $(OUTPUT)/build-build/.lh_$(UTLX_NAME)_configured: $(OUTPUT)/build-build/.lh_$(U
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
 $(OUTPUT)/build-build/.lh_$(UTLX_NAME)_built: $(OUTPUT)/build-build/.lh_$(UTLX_NAME)_configured | $(OUTPUT)/build-build/.lh_skarnet_installed
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-build/opt/$(UTLX_NAME)-$(UTLX_VERSION)/src $(MAKE) LDFLAGS=$(UTLX_MAKELDFLAGS)
+	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-build/opt/$(UTLX_NAME)-$(UTLX_VERSION)/src $(MAKE) fdisk mount umount losetup mkswap LDFLAGS=$(UTLX_MAKELDFLAGS)
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
 $(OUTPUT)/build-build/.lh_$(UTLX_NAME)_installed: $(OUTPUT)/build-build/.lh_$(UTLX_NAME)_built | $(OUTPUT)/tmp/.lh_prepared $(OUTPUT)/build-build/.lh_skarnet_installed
