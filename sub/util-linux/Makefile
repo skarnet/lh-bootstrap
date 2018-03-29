@@ -11,7 +11,9 @@ UTLX_CONFIGURE_OPTIONS := \
 --disable-assert \
 --disable-nls \
 --disable-widechar \
+# --disable-all-programs \
 --enable-libuuid \
+--enable-libfdisk \
 --enable-libsmartcols \
 --enable-losetup \
 --enable-libblkid \
@@ -85,7 +87,14 @@ UTLX_CONFIGURE_OPTIONS := \
 --without-ncurses \
 --without-ncursesw \
 --without-slang \
---without-tinfo
+--without-tinfo \
+--without-readline \
+--without-utempter \
+--without-cap-ng \
+--without-user \
+--without-btrfs \
+--without-systemd \
+--without-smack
 
 UTLX_CFLAGS := ""
 UTLX_CONFLDFLAGS := ""
