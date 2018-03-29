@@ -73,8 +73,10 @@ UTLX_CONFIGURE_OPTIONS := \
 --disable-bash-completion \
 --disable-pylibmount \
 --disable-pg-bell \
+--disable-sulogin-emergency-mount \
 --disable-makeinstall-chown \
 --disable-makeinstall-setuid \
+--disable-use-tty-group \
 --disable-colors-default \
 --with-gnu-ld \
 --without-util \
