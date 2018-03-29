@@ -1,0 +1,15 @@
+--- util-linux-2.32.old/src/Makefile
++++ util-linux-2.32/src/Makefile
+@@ -372,9 +372,9 @@
+ am__append_125 = $(NCURSES_CFLAGS)
+ am__append_126 = mesg
+ am__append_127 = term-utils/mesg.1
+-am__append_128 = wall
+-am__append_129 = term-utils/wall.1
+-am__append_130 = install-exec-hook-wall
++#am__append_128 = wall
++#am__append_129 = term-utils/wall.1
++#am__append_130 = install-exec-hook-wall
+ #am__append_131 = write
+ #am__append_132 = term-utils/write.1
+ #am__append_133 = install-exec-hook-write
