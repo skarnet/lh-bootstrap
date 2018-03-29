@@ -1,6 +1,6 @@
 # The initramfs
 
-INITRAMFS_SKARNET_LIST := background cd execlineb export fdclose fdmove forstdin if importas piperw pipeline redirfd s6-echo s6-mount mdevd-coldplug mdevd
+INITRAMFS_SKARNET_LIST := background cd execlineb exit export fdclose fdmove forstdin if importas piperw pipeline redirfd s6-echo s6-mount mdevd-coldplug mdevd
 
 $(OUTPUT)/tmp/.lh_initramfs_installed: $(OUTPUT)/tmp/.lh_layout_copied $(OUTPUT)/build-host/.lh_skarnet_installed $(OUTPUT)/initramfs/bin/kill
 	for i in $(INITRAMFS_SKARNET_LIST) ; do cp -f -L $(OUTPUT)/rootfs/command/$$i $(OUTPUT)/initramfs/command/$$i ; done
