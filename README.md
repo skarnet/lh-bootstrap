@@ -217,16 +217,17 @@ The filesystems will be built under the `./output` directory, or
 whatever directory you specified in the OUTPUT variable in `lh-config`.
 
 Under this directory, once the build has completed:
-- `initramfs`, `rootfs`, `rwfs` and `userfs` are the contents of the
+- `rootfs`, `rwfs` and `userfs` are the contents of the
 respective filesystems of the target. You can use those to make tarballs,
 for instance.
 - `kernel` is the kernel binary, to be given to qemu.
-- `initramfs.img.gz` is the compressed initramfs image, to be given to qemu.
 - `disk-image.raw` is the complete raw disk image, suitable for qemu or to be
 burned onto a real disk or SD card. By default it is huge, but it's a
 sparse file, i.e. it's not really using all that space, only the parts
 that have actually been written to (which is a small portion of the total
 space).
+- Previous versions of `lh-bootstrap` built an initramfs. This has
+been removed.
 
 
 ### Running on backends

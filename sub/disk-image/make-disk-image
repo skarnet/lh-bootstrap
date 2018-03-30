@@ -1,7 +1,5 @@
 #!/bin/sh -e
 
-# umount is given with -l because some operating systems have triggers that will launch processes keep file descriptors open to the mount, preventing unmounting
-
 output="$1"
 rootfs_size="$2"
 swap_size="$3"
@@ -18,7 +16,9 @@ if s6-test ${KERNEL_GENERIC_ARCH} = x86 ; then
   if ${USE_GRAPHIC} ; then
     consolearg=
   fi
-  if s6-test ${KERNEL_ARCH} = x86_64 ; then
+  if ${USE_VIRTIO_DISK} ; then
+    bootpartition=/dev/vda1
+  elif s6-test ${KERNEL_ARCH} = x86_64 ; then
     bootpartition=/dev/sda1
   else
     bootpartition=/dev/hda1
@@ -32,8 +32,7 @@ totaltimeout 1200
 say extlinux booting
 label linux
   linux /boot/vmlinuz
-  initrd /boot/initramfs.gz
-  append ro root=$bootpartition rootfstype=ext4 loglevel=4 initrd=/boot/initramfs.gz $consolearg
+  append ro root=$bootpartition rootfstype=ext4 loglevel=4 $consolearg
 EOF
 fi
 
@@ -83,7 +82,6 @@ losetup -P "$loop" "$output/disk-image.raw"
   mkfs.ext4 -O ^huge_file ${loop}p3
   mkfs.ext4 -O ^huge_file ${loop}p5
   mkfs.ext4 -O ^huge_file ${loop}p6
-
 
   s6-mkdir -p "$output/tmp/rootfs" "$output/tmp/rwfs" "$output/tmp/userfs" "$output/tmp/stagingfs"
   mount -t ext4 ${loop}p1 "$output/tmp/rootfs"

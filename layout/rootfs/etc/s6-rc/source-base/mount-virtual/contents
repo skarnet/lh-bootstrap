@@ -1,2 +1,4 @@
+mount-proc
+mount-sys
 mount-devpts
 mount-cgroups

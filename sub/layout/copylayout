@@ -21,8 +21,6 @@ if $USE_VIRTIO_NETWORK ; then
   netmodule=virtio_net
 fi
 
-s6-hiercopy layout/initramfs $output/initramfs
-find "$output/initramfs" -type f -name .empty -size 0c -exec s6-rmrf {} \;
 s6-hiercopy layout/rootfs $output/rootfs
 find "$output/rootfs" -type f -name .empty -size 0c -exec s6-rmrf {} \;
 s6-hiercopy layout/rwfs $output/rwfs
@@ -54,11 +52,11 @@ else
 fi
 # echo ${eth0_service} > $output/rootfs/etc/s6-rc/source-base/activate-eth0/contents
 
-for i in $output/initramfs/init $output/rootfs/etc/s6-rc/source-base/mount-*/* ; do
+for i in $output/rootfs/etc/s6-rc/source-base/mount-*/* ; do
   sed -i -e "s/%%DISK%%/$disk/g" -e "s/%%PARTITION%%/$partition/g" $i
 done
 
-chown -R root.root $output/initramfs $output/rootfs $output/rwfs $output/userfs
+chown -R root.root $output/rootfs $output/rwfs $output/userfs
 
 s6-mkfifo -m 0600 -- $output/rootfs/etc/s6-linux-init/run-image/service/s6-svscan-log/fifo || s6-true
 

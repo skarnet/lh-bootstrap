@@ -61,11 +61,9 @@ fi
 # echo qemu-system-$QEMU_ARCH $nographic $qemu_sysoptions $qemu_guestnetoptions $qemu_hostnetoptions \
 #   -append "console=$qemu_console" \
 #   -kernel "$OUTPUT/kernel" \
-#   -initrd "$OUTPUT/initramfs.img.gz" \
 #   $diskoption
 
 exec qemu-system-$QEMU_ARCH $nographic $qemu_sysoptions $qemu_guestnetoptions $qemu_hostnetoptions \
   -append "console=$qemu_console" \
   -kernel "$OUTPUT/kernel" \
-  -initrd "$OUTPUT/initramfs.img.gz" \
   $diskoption

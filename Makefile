@@ -72,7 +72,7 @@ clean:
 # Prepare the output directory. This is at the bottom of the dependency tree.
 
 $(OUTPUT)/tmp/.lh_prepared: lh-config
-	exec mkdir -p -m 0755 -- $(OUTPUT)/tmp $(OUTPUT)/initramfs $(OUTPUT)/rootfs $(OUTPUT)/rwfs $(OUTPUT)/userfs $(OUTPUT)/build-build/bin $(OUTPUT)/build-build/opt $(OUTPUT)/build-build/tmp $(OUTPUT)/build-host/bin $(OUTPUT)/build-host/opt $(OUTPUT)/build-host/tmp $(OUTPUT)/host-host $(OUTPUT)/sources
+	exec mkdir -p -m 0755 -- $(OUTPUT)/tmp $(OUTPUT)/rootfs $(OUTPUT)/rwfs $(OUTPUT)/userfs $(OUTPUT)/build-build/bin $(OUTPUT)/build-build/opt $(OUTPUT)/build-build/tmp $(OUTPUT)/build-host/bin $(OUTPUT)/build-host/opt $(OUTPUT)/build-host/tmp $(OUTPUT)/host-host $(OUTPUT)/sources
 	exec chown -R -- $(NORMALUSER_UID):$(NORMALUSER_GID) $(OUTPUT)/tmp $(OUTPUT)/build-build $(OUTPUT)/build-host $(OUTPUT)/host-host
 	exec chown -- $(NORMALUSER_UID):$(NORMALUSER_GID) $(OUTPUT)/sources $(OUTPUT)
 	exec setuidgid $(NORMALUSER) touch $@
@@ -86,13 +86,13 @@ $(OUTPUT)/build-build/.lh_done: $(OUTPUT)/build-build/.lh_gcc $(OUTPUT)/build-bu
 
 # The rootfs
 
-$(OUTPUT)/tmp/.lh_rootfs_installed: $(OUTPUT)/tmp/.lh_layout_installed $(OUTPUT)/build-host/.lh_skarnet_installed $(OUTPUT)/build-host/.lh_socklog_installed $(OUTPUT)/build-host/.lh_bb_installed $(OUTPUT)/build-host/.lh_bbsuid_installed $(OUTPUT)/build-host/.lh_dnscache_installed $(OUTPUT)/build-host/.lh_dropbear_installed $(OUTPUT)/tmp/.lh_initramfs_done $(OUTPUT)/build-host/kernel/.lh_installed
+$(OUTPUT)/tmp/.lh_rootfs_installed: $(OUTPUT)/tmp/.lh_layout_installed $(OUTPUT)/build-host/.lh_skarnet_installed $(OUTPUT)/build-host/.lh_socklog_installed $(OUTPUT)/build-host/.lh_bb_installed $(OUTPUT)/build-host/.lh_bbsuid_installed $(OUTPUT)/build-host/.lh_dnscache_installed $(OUTPUT)/build-host/.lh_dropbear_installed $(OUTPUT)/build-host/kernel/.lh_installed
 	exec setuidgid $(NORMALUSER) touch $@
 
 
 # Disk images (raw for qemu, vmdk for virtualbox and vmware)
 
-$(OUTPUT)/tmp/.lh_installed: $(OUTPUT)/tmp/.lh_rootfs_installed $(OUTPUT)/tmp/.lh_initramfs_done $(OUTPUT)/build-host/kernel/.lh_installed
+$(OUTPUT)/tmp/.lh_installed: $(OUTPUT)/tmp/.lh_rootfs_installed $(OUTPUT)/build-host/kernel/.lh_installed
 	exec setuidgid $(NORMALUSER) touch $@
 
 $(OUTPUT)/tmp/.lh_diskimage_done: $(OUTPUT)/tmp/.lh_installed $(OUTPUT)/build-build/.lh_done
@@ -134,7 +134,6 @@ include sub/kmod/Makefile
 ## rootfs contents, what's necessary to get an image to boot and connect to it via ssh
 
 include sub/layout/Makefile
-include sub/initramfs/Makefile
 include sub/bearssl/Makefile
 include sub/skarnet.org/Makefile
 include sub/socklog/Makefile

@@ -24,8 +24,7 @@ $(OUTPUT)/build-host/kernel/.lh_unpacked: $(OUTPUT)/sources/linux-$(KERNEL_VERSI
 	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-host/kernel tar Jxpvf $(OUTPUT)/sources/linux-$(KERNEL_VERSION).tar.xz
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
-$(OUTPUT)/build-host/kernel/.lh_configured: $(OUTPUT)/build-host/kernel/.lh_unpacked sub/kernel/wireless-db.txt $(KERNEL_CONFIG) | $(OUTPUT)/build-build/.lh_skarnet_installed
-	exec setuidgid $(NORMALUSER) cp -f sub/kernel/wireless-db.txt $(OUTPUT)/build-host/kernel/linux-$(KERNEL_VERSION)/net/wireless/db.txt
+$(OUTPUT)/build-host/kernel/.lh_configured: $(OUTPUT)/build-host/kernel/.lh_unpacked $(KERNEL_CONFIG) | $(OUTPUT)/build-build/.lh_skarnet_installed
 	exec setuidgid $(NORMALUSER) cp -f $(KERNEL_CONFIG) $(OUTPUT)/build-host/kernel/linux-$(KERNEL_VERSION)/.config
 	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-host/kernel/linux-$(KERNEL_VERSION) $(MAKE) olddefconfig $(KERNEL_ENV)
 	exec setuidgid $(NORMALUSER) s6-touch $@
