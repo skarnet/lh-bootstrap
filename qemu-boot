@@ -12,6 +12,7 @@ case "$QEMU_ARCH" in
     qemu_console=ttyS0
     nic=e1000
     diskoption="-drive file=$OUTPUT/disk-image.raw,media=disk,format=raw,if=none,id=sata0 -device ich9-ahci,id=ahci -device ide-drive,drive=sata0,bus=ahci.0" ;;
+    rootpartition=/dev/sda1
   x86_64)
     qemu_sysoptions="-enable-kvm -cpu host -smp 4 -m 500M"
     qemu_console=ttyS0
@@ -19,16 +20,19 @@ case "$QEMU_ARCH" in
     virtioblk=virtio-blk-pci
     virtionet=virtio-net-pci
     diskoption="-drive file=$OUTPUT/disk-image.raw,media=disk,format=raw,if=none,id=sata0 -device ich9-ahci,id=ahci -device ide-drive,drive=sata0,bus=ahci.0" ;;
+    rootpartition=/dev/sda1
   arm)
     qemu_sysoptions="-m 500M -M vexpress-a9 -cpu cortex-a9 -dtb sub/disk-image/vexpress-v2p-ca9.dtb"
     qemu_console=ttyAMA0
     USE_VIRTIO_NETWORK=true  # we only support virtio on armv7
     diskoption="-sd $OUTPUT/disk-image.raw" ;;
+    rootpartition=/dev/hda1
   aarch64)
     qemu_sysoptions="-M virt -cpu cortex-a57 -m 500M"
     qemu_console=ttyAMA0
     USE_VIRTIO_NETWORK=true  # we only support virtio on armv8
     diskoption="-device sdhci-pci -device sd-card,drive=sdcard -drive file=$OUTPUT/disk-image.raw,id=sdcard,cache=unsafe,if=none,format=raw" ;;
+    rootpartition=/dev/hda1
 esac
 
 nographic=-nographic
@@ -42,6 +46,7 @@ fi
 # If the image has been compiled for a virtual disk (/dev/vda)
 if $USE_VIRTIO_DISK ; then
   diskoption="-drive file=$OUTPUT/disk-image.raw,format=raw,if=none,id=disk -device $virtioblk,drive=disk"
+  rootpartition=/dev/vda1
 fi
 
 if $USE_VIRTIO_NETWORK ; then
@@ -58,12 +63,7 @@ else
   qemu_hostnetoptions="-netdev user,id=network,hostfwd=tcp:127.0.0.1:${SSH_PORTFORWARD}-:22"
 fi
 
-# echo qemu-system-$QEMU_ARCH $nographic $qemu_sysoptions $qemu_guestnetoptions $qemu_hostnetoptions \
-#   -append "console=$qemu_console" \
-#   -kernel "$OUTPUT/kernel" \
-#   $diskoption
-
 exec qemu-system-$QEMU_ARCH $nographic $qemu_sysoptions $qemu_guestnetoptions $qemu_hostnetoptions \
-  -append "console=$qemu_console" \
+  -append "console=$qemu_console root=$rootpartition" \
   -kernel "$OUTPUT/kernel" \
   $diskoption
