@@ -22,7 +22,6 @@ signeddev: no
 sizeofino: 8
 signedino: no
 accept4: yes
-ancilautoclose: no
 cmsgcloexec: yes
 devurandom: yes
 dirfd: yes
@@ -59,3 +58,4 @@ getrandom: yes
 itimer: yes
 namespaces: yes
 nsgetparent: yes
+explicit_bzero: yes

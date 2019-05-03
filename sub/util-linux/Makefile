@@ -1,6 +1,6 @@
 
 UTLX_NAME := util-linux
-UTLX_VERSION := 2.32
+UTLX_VERSION := 2.33.2
 UTLX_MAJOR := $(word 1, $(subst ., ,$(UTLX_VERSION)))
 UTLX_MINOR := $(word 2, $(subst ., ,$(UTLX_VERSION)))
 UTLX_URLDIR := https://cdn.kernel.org/pub/linux/utils/$(UTLX_NAME)/v$(UTLX_MAJOR).$(UTLX_MINOR)
@@ -114,7 +114,7 @@ $(OUTPUT)/build-build/.lh_$(UTLX_NAME)_copied: $(OUTPUT)/sources/.lh_$(UTLX_NAME
 	exec setuidgid $(NORMALUSER) makenamelink $(OUTPUT)/build-build/opt $(UTLX_NAME) $(UTLX_NAME)-$(UTLX_VERSION) $(OUTPUT)/tmp
 	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-build/opt/$(UTLX_NAME)-$(UTLX_VERSION) tar $(UTLX_TARLETTER)xpvf $(OUTPUT)/sources/$(UTLX_NAME)-$(UTLX_VERSION).$(UTLX_TAREXT)
 	exec setuidgid $(NORMALUSER) s6-rename $(OUTPUT)/build-build/opt/$(UTLX_NAME)-$(UTLX_VERSION)/$(UTLX_NAME)-$(UTLX_VERSION) $(OUTPUT)/build-build/opt/$(UTLX_NAME)-$(UTLX_VERSION)/src
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-build/opt/$(UTLX_NAME)-$(UTLX_VERSION) redirfd -r 0 $(WD)/sub/util-linux/nowall.patch patch -p1
+#	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-build/opt/$(UTLX_NAME)-$(UTLX_VERSION) redirfd -r 0 $(WD)/sub/util-linux/nowall.patch patch -p1
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
 $(OUTPUT)/build-build/.lh_$(UTLX_NAME)_configured: $(OUTPUT)/build-build/.lh_$(UTLX_NAME)_copied $(OUTPUT)/build-build/.lh_kernel_headers_installed | $(OUTPUT)/build-build/.lh_skarnet_installed

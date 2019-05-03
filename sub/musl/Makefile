@@ -1,7 +1,7 @@
 MUSL_BASE ?= /opt/musl-git
 
-# Latest version at 2018-03-23
-MUSL_VERSION := 0cf50581ec5f04feeaa77f2eb8b734a4b69ca8ed
+# Latest version at 2019-05-03
+MUSL_VERSION := 2df8b1d806c3e1fd4b6b10e13794855a93fe6628
 
 
 # Build-build
