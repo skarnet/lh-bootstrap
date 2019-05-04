@@ -35,12 +35,6 @@ $(OUTPUT)/sources/.lh_s6pu_cloned: | $(OUTPUT)/tmp/.lh_prepared
 	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/sources/s6-portable-utils redirfd -w 1 package/deps-build true
 	exec setuidgid $(NORMALUSER) touch $@
 
-$(OUTPUT)/sources/.lh_s6lu_cloned: | $(OUTPUT)/tmp/.lh_prepared
-	if test -d $(OUTPUT)/sources/s6-linux-utils ; then cd $(OUTPUT)/sources/s6-linux-utils && setuidgid $(NORMALUSER) git fetch ; else cd $(OUTPUT)/sources && setuidgid $(NORMALUSER) git clone $(url)/s6-linux-utils$(suffix) s6-linux-utils ; fi
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/sources/s6-linux-utils git checkout $(S6_LINUX_UTILS_VERSION)
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/sources/s6-linux-utils redirfd -w 1 package/deps-build true
-	exec setuidgid $(NORMALUSER) touch $@
-
 $(OUTPUT)/sources/.lh_s6dns_cloned: | $(OUTPUT)/tmp/.lh_prepared
 	if test -d $(OUTPUT)/sources/s6-dns ; then cd $(OUTPUT)/sources/s6-dns && setuidgid $(NORMALUSER) git fetch ; else cd $(OUTPUT)/sources && setuidgid $(NORMALUSER) git clone $(url)/s6-dns$(suffix) s6-dns ; fi
 	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/sources/s6-dns git checkout $(S6_DNS_VERSION)
@@ -57,12 +51,6 @@ $(OUTPUT)/sources/.lh_s6_cloned: | $(OUTPUT)/tmp/.lh_prepared
 	if test -d $(OUTPUT)/sources/s6 ; then cd $(OUTPUT)/sources/s6 && setuidgid $(NORMALUSER) git fetch ; else cd $(OUTPUT)/sources && setuidgid $(NORMALUSER) git clone $(url)/s6$(suffix) s6 ; fi
 	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/sources/s6 git checkout $(S6_VERSION)
 	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/sources/s6 redirfd -w 1 package/deps-build true
-	exec setuidgid $(NORMALUSER) touch $@
-
-$(OUTPUT)/sources/.lh_s6rc_cloned: | $(OUTPUT)/tmp/.lh_prepared
-	if test -d $(OUTPUT)/sources/s6-rc ; then cd $(OUTPUT)/sources/s6-rc && setuidgid $(NORMALUSER) git fetch ; else cd $(OUTPUT)/sources && setuidgid $(NORMALUSER) git clone $(url)/s6-rc$(suffix) s6-rc ; fi
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/sources/s6-rc git checkout $(S6_RC_VERSION)
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/sources/s6-rc redirfd -w 1 package/deps-build true
 	exec setuidgid $(NORMALUSER) touch $@
 
 $(OUTPUT)/sources/.lh_s6li_cloned: | $(OUTPUT)/tmp/.lh_prepared
@@ -159,24 +147,6 @@ $(OUTPUT)/build-build/.lh_s6_installed: $(OUTPUT)/build-build/.lh_s6_built
 	exec setuidgid $(NORMALUSER) touch $@
 
 
-$(OUTPUT)/build-build/.lh_s6rc_copied: $(OUTPUT)/sources/.lh_s6rc_cloned
-	exec setuidgid $(NORMALUSER) rm -rf $(OUTPUT)/build-build/tmp/s6-rc
-	exec setuidgid $(NORMALUSER) cp -a $(OUTPUT)/sources/s6-rc $(OUTPUT)/build-build/tmp/s6-rc
-	exec setuidgid $(NORMALUSER) touch $@
-
-$(OUTPUT)/build-build/.lh_s6rc_configured: $(OUTPUT)/build-build/.lh_s6rc_copied $(OUTPUT)/build-build/.lh_skalibs_installed $(OUTPUT)/build-build/.lh_execline_installed $(OUTPUT)/build-build/.lh_s6_installed
-	cd $(OUTPUT)/build-build/tmp/s6-rc && setuidgid $(NORMALUSER) export CC $(BUILD_BUILD_CC) ./configure --enable-slashpackage --disable-shared --with-sysdeps=$(OUTPUT)/build-build/package/prog/skalibs/sysdeps --with-include=$(OUTPUT)/build-build/package/prog/skalibs/include --with-lib=$(OUTPUT)/build-build/package/prog/skalibs/library --with-include=$(OUTPUT)/build-build/package/admin/execline/include --with-lib=$(OUTPUT)/build-build/package/admin/execline/library --with-include=$(OUTPUT)/build-build/package/admin/s6/include --with-lib=$(OUTPUT)/build-build/package/admin/s6/library
-	exec setuidgid $(NORMALUSER) touch $@
-
-$(OUTPUT)/build-build/.lh_s6rc_built: $(OUTPUT)/build-build/.lh_s6rc_configured $(OUTPUT)/build-build/.lh_skalibs_installed $(OUTPUT)/build-build/.lh_execline_installed $(OUTPUT)/build-build/.lh_s6_installed
-	cd $(OUTPUT)/build-build/tmp/s6-rc && setuidgid $(NORMALUSER) $(MAKE) all strip
-	exec setuidgid $(NORMALUSER) touch $@
-
-$(OUTPUT)/build-build/.lh_s6rc_installed: $(OUTPUT)/build-build/.lh_s6rc_built
-	cd $(OUTPUT)/build-build/tmp/s6-rc && setuidgid $(NORMALUSER) $(MAKE) install update global-links DESTDIR=$(OUTPUT)/build-build
-	exec setuidgid $(NORMALUSER) touch $@
-
-
 $(OUTPUT)/build-build/.lh_s6dns_copied: $(OUTPUT)/sources/.lh_s6dns_cloned
 	exec setuidgid $(NORMALUSER) rm -rf $(OUTPUT)/build-build/tmp/s6-dns
 	exec setuidgid $(NORMALUSER) cp -a $(OUTPUT)/sources/s6-dns $(OUTPUT)/build-build/tmp/s6-dns
@@ -195,7 +165,7 @@ $(OUTPUT)/build-build/.lh_s6dns_installed: $(OUTPUT)/build-build/.lh_s6dns_built
 	exec setuidgid $(NORMALUSER) touch $@
 
 
-$(OUTPUT)/build-build/.lh_skarnet_installed: $(OUTPUT)/build-build/.lh_skalibs_installed $(OUTPUT)/build-build/.lh_execline_installed $(OUTPUT)/build-build/.lh_s6pu_installed $(OUTPUT)/build-build/.lh_s6_installed $(OUTPUT)/build-build/.lh_s6rc_installed $(OUTPUT)/build-build/.lh_s6dns_installed
+$(OUTPUT)/build-build/.lh_skarnet_installed: $(OUTPUT)/build-build/.lh_skalibs_installed $(OUTPUT)/build-build/.lh_execline_installed $(OUTPUT)/build-build/.lh_s6pu_installed $(OUTPUT)/build-build/.lh_s6_installed $(OUTPUT)/build-build/.lh_s6dns_installed
 	exec setuidgid $(NORMALUSER) touch $@
 
 
@@ -236,42 +206,6 @@ $(OUTPUT)/build-host/.lh_execline_built: $(OUTPUT)/build-host/.lh_execline_confi
 
 $(OUTPUT)/build-host/.lh_execline_installed: $(OUTPUT)/build-host/.lh_execline_built | $(OUTPUT)/tmp/.lh_prepared $(OUTPUT)/build-build/.lh_skarnet_installed
 	exec cd $(OUTPUT)/build-host/execline $(MAKE) install update global-links DESTDIR=$(OUTPUT)/rootfs
-	exec setuidgid $(NORMALUSER) s6-touch $@
-
-
-$(OUTPUT)/build-host/.lh_s6pu_copied: $(OUTPUT)/sources/.lh_s6pu_cloned | $(OUTPUT)/build-build/.lh_skarnet_installed
-	exec setuidgid $(NORMALUSER) s6-rmrf $(OUTPUT)/build-host/s6-portable-utils
-	exec setuidgid $(NORMALUSER) s6-hiercopy $(OUTPUT)/sources/s6-portable-utils $(OUTPUT)/build-host/s6-portable-utils
-	exec setuidgid $(NORMALUSER) s6-touch $@
-
-$(OUTPUT)/build-host/.lh_s6pu_configured: $(OUTPUT)/build-host/.lh_s6pu_copied $(OUTPUT)/build-host/.lh_skalibs_installed | $(OUTPUT)/build-build/.lh_skarnet_installed
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-host/s6-portable-utils ./configure --host=$(TRIPLE) --enable-slashpackage --enable-static-libc --with-sysdeps=$(OUTPUT)/rootfs/package/prog/skalibs/sysdeps --with-include=$(OUTPUT)/rootfs/package/prog/skalibs/include --with-lib=$(OUTPUT)/rootfs/package/prog/skalibs/library
-	exec setuidgid $(NORMALUSER) s6-touch $@
-
-$(OUTPUT)/build-host/.lh_s6pu_built: $(OUTPUT)/build-host/.lh_s6pu_configured $(OUTPUT)/build-host/.lh_skalibs_installed | $(OUTPUT)/build-build/.lh_skarnet_installed
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-host/s6-portable-utils $(MAKE) all strip
-	exec setuidgid $(NORMALUSER) s6-touch $@
-
-$(OUTPUT)/build-host/.lh_s6pu_installed: $(OUTPUT)/build-host/.lh_s6pu_built | $(OUTPUT)/tmp/.lh_prepared $(OUTPUT)/build-build/.lh_skarnet_installed
-	exec cd $(OUTPUT)/build-host/s6-portable-utils $(MAKE) install update global-links DESTDIR=$(OUTPUT)/rootfs
-	exec setuidgid $(NORMALUSER) s6-touch $@
-
-
-$(OUTPUT)/build-host/.lh_s6lu_copied: $(OUTPUT)/sources/.lh_s6lu_cloned | $(OUTPUT)/build-build/.lh_skarnet_installed
-	exec setuidgid $(NORMALUSER) s6-rmrf $(OUTPUT)/build-host/s6-linux-utils
-	exec setuidgid $(NORMALUSER) s6-hiercopy $(OUTPUT)/sources/s6-linux-utils $(OUTPUT)/build-host/s6-linux-utils
-	exec setuidgid $(NORMALUSER) s6-touch $@
-
-$(OUTPUT)/build-host/.lh_s6lu_configured: $(OUTPUT)/build-host/.lh_s6lu_copied $(OUTPUT)/build-host/.lh_skalibs_installed | $(OUTPUT)/build-build/.lh_skarnet_installed
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-host/s6-linux-utils ./configure --host=$(TRIPLE) --enable-slashpackage --enable-static-libc --with-sysdeps=$(OUTPUT)/rootfs/package/prog/skalibs/sysdeps --with-include=$(OUTPUT)/rootfs/package/prog/skalibs/include --with-lib=$(OUTPUT)/rootfs/package/prog/skalibs/library
-	exec setuidgid $(NORMALUSER) s6-touch $@
-
-$(OUTPUT)/build-host/.lh_s6lu_built: $(OUTPUT)/build-host/.lh_s6lu_configured $(OUTPUT)/build-host/.lh_skalibs_installed | $(OUTPUT)/build-build/.lh_skarnet_installed
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-host/s6-linux-utils $(MAKE) all strip
-	exec setuidgid $(NORMALUSER) s6-touch $@
-
-$(OUTPUT)/build-host/.lh_s6lu_installed: $(OUTPUT)/build-host/.lh_s6lu_built | $(OUTPUT)/tmp/.lh_prepared $(OUTPUT)/build-build/.lh_skarnet_installed
-	exec cd $(OUTPUT)/build-host/s6-linux-utils $(MAKE) install update global-links DESTDIR=$(OUTPUT)/rootfs
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
 
@@ -329,24 +263,6 @@ $(OUTPUT)/build-host/.lh_s6_installed: $(OUTPUT)/build-host/.lh_s6_built | $(OUT
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
 
-$(OUTPUT)/build-host/.lh_s6rc_copied: $(OUTPUT)/sources/.lh_s6rc_cloned | $(OUTPUT)/build-build/.lh_skarnet_installed
-	exec setuidgid $(NORMALUSER) s6-rmrf $(OUTPUT)/build-host/s6-rc
-	exec setuidgid $(NORMALUSER) s6-hiercopy $(OUTPUT)/sources/s6-rc $(OUTPUT)/build-host/s6-rc
-	exec setuidgid $(NORMALUSER) s6-touch $@
-
-$(OUTPUT)/build-host/.lh_s6rc_configured: $(OUTPUT)/build-host/.lh_s6rc_copied $(OUTPUT)/build-host/.lh_skalibs_installed $(OUTPUT)/build-host/.lh_execline_installed $(OUTPUT)/build-host/.lh_s6_installed | $(OUTPUT)/build-build/.lh_skarnet_installed
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-host/s6-rc ./configure --host=$(TRIPLE) --enable-slashpackage --enable-static-libc --with-sysdeps=$(OUTPUT)/rootfs/package/prog/skalibs/sysdeps --with-include=$(OUTPUT)/rootfs/package/prog/skalibs/include --with-lib=$(OUTPUT)/rootfs/package/prog/skalibs/library --with-include=$(OUTPUT)/rootfs/package/admin/execline/include --with-lib=$(OUTPUT)/rootfs/package/admin/execline/library --with-include=$(OUTPUT)/rootfs/package/admin/s6/include --with-lib=$(OUTPUT)/rootfs/package/admin/s6/library
-	exec setuidgid $(NORMALUSER) touch $@
-
-$(OUTPUT)/build-host/.lh_s6rc_built: $(OUTPUT)/build-host/.lh_s6rc_configured $(OUTPUT)/build-host/.lh_skalibs_installed $(OUTPUT)/build-host/.lh_execline_installed $(OUTPUT)/build-host/.lh_s6_installed | $(OUTPUT)/build-build/.lh_skarnet_installed
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-host/s6-rc $(MAKE) all strip
-	exec setuidgid $(NORMALUSER) s6-touch $@
-
-$(OUTPUT)/build-host/.lh_s6rc_installed: $(OUTPUT)/build-host/.lh_s6rc_built | $(OUTPUT)/tmp/.lh_prepared $(OUTPUT)/build-build/.lh_skarnet_installed
-	exec cd $(OUTPUT)/build-host/s6-rc $(MAKE) install update global-links DESTDIR=$(OUTPUT)/rootfs
-	exec setuidgid $(NORMALUSER) s6-touch $@
-
-
 $(OUTPUT)/build-host/.lh_s6li_copied: $(OUTPUT)/sources/.lh_s6li_cloned | $(OUTPUT)/build-build/.lh_skarnet_installed
 	exec setuidgid $(NORMALUSER) s6-rmrf $(OUTPUT)/build-host/s6-linux-init
 	exec setuidgid $(NORMALUSER) s6-hiercopy $(OUTPUT)/sources/s6-linux-init $(OUTPUT)/build-host/s6-linux-init
@@ -401,5 +317,5 @@ $(OUTPUT)/build-host/.lh_bcnm_installed: $(OUTPUT)/build-host/.lh_bcnm_built | $
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
 
-$(OUTPUT)/build-host/.lh_skarnet_installed: $(OUTPUT)/build-host/.lh_skalibs_installed $(OUTPUT)/build-host/.lh_execline_installed $(OUTPUT)/build-host/.lh_s6pu_installed $(OUTPUT)/build-host/.lh_s6lu_installed $(OUTPUT)/build-host/.lh_s6dns_installed $(OUTPUT)/build-host/.lh_s6net_installed $(OUTPUT)/build-host/.lh_s6_installed $(OUTPUT)/build-host/.lh_s6rc_installed $(OUTPUT)/build-host/.lh_s6li_installed $(OUTPUT)/build-host/.lh_mdevd_installed $(OUTPUT)/build-host/.lh_mdevd_installed $(OUTPUT)/build-host/.lh_bcnm_installed | $(OUTPUT)/build-build/.lh_skarnet_installed
+$(OUTPUT)/build-host/.lh_skarnet_installed: $(OUTPUT)/build-host/.lh_skalibs_installed $(OUTPUT)/build-host/.lh_execline_installed $(OUTPUT)/build-host/.lh_s6dns_installed $(OUTPUT)/build-host/.lh_s6net_installed $(OUTPUT)/build-host/.lh_s6_installed $(OUTPUT)/build-host/.lh_s6li_installed $(OUTPUT)/build-host/.lh_mdevd_installed $(OUTPUT)/build-host/.lh_bcnm_installed | $(OUTPUT)/build-build/.lh_skarnet_installed
 	exec setuidgid $(NORMALUSER) s6-touch $@
