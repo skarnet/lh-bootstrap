@@ -1,2 +1,0 @@
-foreground { modprobe %%NETMODULE%% }
-ip link set dev eth0 up

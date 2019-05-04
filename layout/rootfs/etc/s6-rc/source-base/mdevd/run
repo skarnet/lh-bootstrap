@@ -1,4 +1,0 @@
-#!/command/execlineb -P
-exec -c
-export PATH /command:/bin
-mdevd -D 3

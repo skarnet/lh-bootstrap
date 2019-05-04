@@ -108,25 +108,24 @@ $(OUTPUT)/sources/$(UTLX_NAME)-$(UTLX_VERSION).$(UTLX_TAREXT): | $(OUTPUT)/tmp/.
 $(OUTPUT)/sources/.lh_$(UTLX_NAME)_dled: $(OUTPUT)/sources/$(UTLX_NAME)-$(UTLX_VERSION).$(UTLX_TAREXT)
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
-$(OUTPUT)/build-build/.lh_$(UTLX_NAME)_copied: $(OUTPUT)/sources/.lh_$(UTLX_NAME)_dled sub/util-linux/nowall.patch | $(OUTPUT)/build-build/.lh_skarnet_installed
+$(OUTPUT)/build-build/.lh_$(UTLX_NAME)_copied: $(OUTPUT)/sources/.lh_$(UTLX_NAME)_dled | $(OUTPUT)/build-build/.lh_skarnet_installed
 	exec setuidgid $(NORMALUSER) s6-rmrf $(OUTPUT)/build-build/opt/$(UTLX_NAME)-$(UTLX_VERSION)/src
 	exec setuidgid $(NORMALUSER) s6-mkdir -p $(OUTPUT)/build-build/opt/$(UTLX_NAME)-$(UTLX_VERSION)
 	exec setuidgid $(NORMALUSER) makenamelink $(OUTPUT)/build-build/opt $(UTLX_NAME) $(UTLX_NAME)-$(UTLX_VERSION) $(OUTPUT)/tmp
 	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-build/opt/$(UTLX_NAME)-$(UTLX_VERSION) tar $(UTLX_TARLETTER)xpvf $(OUTPUT)/sources/$(UTLX_NAME)-$(UTLX_VERSION).$(UTLX_TAREXT)
 	exec setuidgid $(NORMALUSER) s6-rename $(OUTPUT)/build-build/opt/$(UTLX_NAME)-$(UTLX_VERSION)/$(UTLX_NAME)-$(UTLX_VERSION) $(OUTPUT)/build-build/opt/$(UTLX_NAME)-$(UTLX_VERSION)/src
-#	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-build/opt/$(UTLX_NAME)-$(UTLX_VERSION) redirfd -r 0 $(WD)/sub/util-linux/nowall.patch patch -p1
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
 $(OUTPUT)/build-build/.lh_$(UTLX_NAME)_configured: $(OUTPUT)/build-build/.lh_$(UTLX_NAME)_copied $(OUTPUT)/build-build/.lh_kernel_headers_installed | $(OUTPUT)/build-build/.lh_skarnet_installed
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-build/opt/$(UTLX_NAME)-$(UTLX_VERSION)/src export CFLAGS $(UTLX_CFLAGS) export LDFLAGS $(UTLX_CONFLDFLAGS) ./configure --prefix=$(OUTPUT)/build-build/opt/$(UTLX_NAME)-$(UTLX_VERSION) $(UTLX_CONFIGURE_OPTIONS)
+	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-build/opt/$(UTLX_NAME)-$(UTLX_VERSION)/src export CC $(BUILD_BUILD_CC) export CFLAGS $(UTLX_CFLAGS) export LDFLAGS $(UTLX_CONFLDFLAGS) ./configure --prefix=$(OUTPUT)/build-build/opt/$(UTLX_NAME)-$(UTLX_VERSION) $(UTLX_CONFIGURE_OPTIONS)
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
 $(OUTPUT)/build-build/.lh_$(UTLX_NAME)_built: $(OUTPUT)/build-build/.lh_$(UTLX_NAME)_configured | $(OUTPUT)/build-build/.lh_skarnet_installed
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-build/opt/$(UTLX_NAME)-$(UTLX_VERSION)/src $(MAKE) LDFLAGS=$(UTLX_MAKELDFLAGS)
+	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-build/opt/$(UTLX_NAME)-$(UTLX_VERSION)/src $(MAKE) CC=$(BUILD_BUILD_CC) LDFLAGS=$(UTLX_MAKELDFLAGS)
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
 $(OUTPUT)/build-build/.lh_$(UTLX_NAME)_installed: $(OUTPUT)/build-build/.lh_$(UTLX_NAME)_built | $(OUTPUT)/tmp/.lh_prepared $(OUTPUT)/build-build/.lh_skarnet_installed
-	exec cd $(OUTPUT)/build-build/opt/$(UTLX_NAME)-$(UTLX_VERSION)/src $(MAKE) install
+	exec cd $(OUTPUT)/build-build/opt/$(UTLX_NAME)-$(UTLX_VERSION)/src $(MAKE) install CC=$(BUILD_BUILD_CC)
 	exec setuidgid $(NORMALUSER) makelinks $(OUTPUT)/build-build /bin /opt/$(UTLX_NAME)/bin
 	exec setuidgid $(NORMALUSER) makelinks $(OUTPUT)/build-build /bin /opt/$(UTLX_NAME)/sbin
 	exec setuidgid $(NORMALUSER) s6-touch $@

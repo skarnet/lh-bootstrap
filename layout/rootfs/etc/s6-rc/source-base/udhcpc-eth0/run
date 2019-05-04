@@ -1,5 +1,0 @@
-#!/command/execlineb -P
-fdmove -c 2 1
-s6-envdir -nI env
-importas -usd" " IPARG IPARG
-udhcpc -f -C -i eth0 -x lease:86400 $IPARG -s /etc/udhcpc/udhcpc-script

@@ -1,4 +1,0 @@
-#!/package/admin/execline/command/execlineb -P
-
-foreground { "/etc/rc.shutdown" }
-s6-svscanctl -h -- "/run"/service

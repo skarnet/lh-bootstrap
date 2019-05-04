@@ -1,9 +1,0 @@
-s6-envdir /etc/s6-linux-init/env-stage2
-multisubstitute
-{
-  importas -i ETH0_IP4 ETH0_IP4
-  importas DEFAULT_ROUTER_IP4 DEFAULT_ROUTER_IP4
-}
-if { ip addr add ${ETH0_IP4}/24 dev eth0 }
-foreground { ip route del default }
-route add default gw ${DEFAULT_ROUTER_IP4}

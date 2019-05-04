@@ -1,1 +1,0 @@
-s6-umount /sys/fs/cgroup

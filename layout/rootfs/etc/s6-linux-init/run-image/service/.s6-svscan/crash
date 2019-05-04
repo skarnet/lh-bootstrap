@@ -1,7 +1,0 @@
-#!/command/execlineb -P
-
-redirfd -r 0 /dev/console
-redirfd -w 1 /dev/console
-fdmove -c 2 1
-foreground { s6-echo -- "s6-svscan crashed. Dropping to an interactive shell." }
-/bin/sh -i

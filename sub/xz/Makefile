@@ -24,16 +24,16 @@ $(OUTPUT)/build-build/.lh_$(XZ_NAME)_copied: $(OUTPUT)/sources/.lh_$(XZ_NAME)_dl
 	exec setuidgid $(NORMALUSER) s6-rename $(OUTPUT)/build-build/opt/$(XZ_NAME)-$(XZ_VERSION)/$(XZ_NAME)-$(XZ_VERSION) $(OUTPUT)/build-build/opt/$(XZ_NAME)-$(XZ_VERSION)/src
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
-$(OUTPUT)/build-build/.lh_$(XZ_NAME)_configured: $(OUTPUT)/build-build/.lh_$(XZ_NAME)_copied $(OUTPUT)/build-build/.lh_gcc | $(OUTPUT)/build-build/.lh_skarnet_installed
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-build/opt/$(XZ_NAME)-$(XZ_VERSION)/src export CFLAGS $(XZ_CFLAGS) export LDFLAGS $(XZ_CONFLDFLAGS) ./configure --prefix=$(OUTPUT)/build-build/opt/$(XZ_NAME)-$(XZ_VERSION) $(XZ_CONFIGURE_OPTIONS)
+$(OUTPUT)/build-build/.lh_$(XZ_NAME)_configured: $(OUTPUT)/build-build/.lh_$(XZ_NAME)_copied | $(OUTPUT)/build-build/.lh_skarnet_installed
+	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-build/opt/$(XZ_NAME)-$(XZ_VERSION)/src export CC $(BUILD_BUILD_CC) export CFLAGS $(XZ_CFLAGS) export LDFLAGS $(XZ_CONFLDFLAGS) ./configure --prefix=$(OUTPUT)/build-build/opt/$(XZ_NAME)-$(XZ_VERSION) $(XZ_CONFIGURE_OPTIONS)
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
-$(OUTPUT)/build-build/.lh_$(XZ_NAME)_built: $(OUTPUT)/build-build/.lh_$(XZ_NAME)_configured $(OUTPUT)/build-build/.lh_gcc | $(OUTPUT)/build-build/.lh_skarnet_installed
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-build/opt/$(XZ_NAME)-$(XZ_VERSION)/src $(MAKE) LDFLAGS=$(XZ_MAKELDFLAGS)
+$(OUTPUT)/build-build/.lh_$(XZ_NAME)_built: $(OUTPUT)/build-build/.lh_$(XZ_NAME)_configured | $(OUTPUT)/build-build/.lh_skarnet_installed
+	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-build/opt/$(XZ_NAME)-$(XZ_VERSION)/src $(MAKE) CC=$(BUILD_BUILD_CC) LDFLAGS=$(XZ_MAKELDFLAGS)
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
-$(OUTPUT)/build-build/.lh_$(XZ_NAME)_installed: $(OUTPUT)/build-build/.lh_$(XZ_NAME)_built $(OUTPUT)/build-build/.lh_gcc | $(OUTPUT)/tmp/.lh_prepared $(OUTPUT)/build-build/.lh_skarnet_installed
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-build/opt/$(XZ_NAME)-$(XZ_VERSION)/src $(MAKE) install
+$(OUTPUT)/build-build/.lh_$(XZ_NAME)_installed: $(OUTPUT)/build-build/.lh_$(XZ_NAME)_built | $(OUTPUT)/tmp/.lh_prepared $(OUTPUT)/build-build/.lh_skarnet_installed
+	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-build/opt/$(XZ_NAME)-$(XZ_VERSION)/src $(MAKE) install CC=$(BUILD_BUILD_CC)
 	exec setuidgid $(NORMALUSER) makenamelink $(OUTPUT)/build-build/opt $(XZ_NAME) $(XZ_NAME)-$(XZ_VERSION) $(OUTPUT)/tmp
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
@@ -43,16 +43,16 @@ $(OUTPUT)/build-host/.lh_$(XZ_NAME)_copied: $(OUTPUT)/sources/.lh_$(XZ_NAME)_dle
 	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-host tar $(XZ_TARLETTER)xpvf $(OUTPUT)/sources/$(XZ_NAME)-$(XZ_VERSION).$(XZ_TAREXT)
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
-$(OUTPUT)/build-host/.lh_$(XZ_NAME)_configured: $(OUTPUT)/build-host/.lh_$(XZ_NAME)_copied $(OUTPUT)/build-host/bin/muslgcc | $(OUTPUT)/build-build/.lh_skarnet_installed
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-host/$(XZ_NAME)-$(XZ_VERSION) export CFLAGS $(XZ_CFLAGS) export LDFLAGS $(XZ_CONFLDFLAGS) export CC muslgcc ./configure --host=$(TRIPLE) --prefix=/opt/$(XZ_NAME)-$(XZ_VERSION) $(XZ_CONFIGURE_OPTIONS)
+$(OUTPUT)/build-host/.lh_$(XZ_NAME)_configured: $(OUTPUT)/build-host/.lh_$(XZ_NAME)_copied | $(OUTPUT)/build-build/.lh_skarnet_installed
+	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-host/$(XZ_NAME)-$(XZ_VERSION) export CC $(BUILD_HOST_CC) export CFLAGS $(XZ_CFLAGS) export LDFLAGS $(XZ_CONFLDFLAGS) ./configure --host=$(TRIPLE) --prefix=/opt/$(XZ_NAME)-$(XZ_VERSION) $(XZ_CONFIGURE_OPTIONS)
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
-$(OUTPUT)/build-host/.lh_$(XZ_NAME)_built: $(OUTPUT)/build-host/.lh_$(XZ_NAME)_configured $(OUTPUT)/build-host/bin/muslgcc | $(OUTPUT)/build-build/.lh_skarnet_installed
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-host/$(XZ_NAME)-$(XZ_VERSION) $(MAKE) LDFLAGS=$(XZ_MAKELDFLAGS) CC=muslgcc
+$(OUTPUT)/build-host/.lh_$(XZ_NAME)_built: $(OUTPUT)/build-host/.lh_$(XZ_NAME)_configured | $(OUTPUT)/build-build/.lh_skarnet_installed
+	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-host/$(XZ_NAME)-$(XZ_VERSION) $(MAKE) LDFLAGS=$(XZ_MAKELDFLAGS) CC=$(BUILD_HOST_CC)
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
-$(OUTPUT)/build-host/.lh_$(XZ_NAME)_installed: $(OUTPUT)/build-host/.lh_$(XZ_NAME)_built $(OUTPUT)/build-host/bin/muslgcc | $(OUTPUT)/tmp/.lh_prepared $(OUTPUT)/build-build/.lh_skarnet_installed
-	exec cd $(OUTPUT)/build-host/$(XZ_NAME)-$(XZ_VERSION) $(MAKE) install DESTDIR=$(OUTPUT)/rootfs
+$(OUTPUT)/build-host/.lh_$(XZ_NAME)_installed: $(OUTPUT)/build-host/.lh_$(XZ_NAME)_built | $(OUTPUT)/tmp/.lh_prepared $(OUTPUT)/build-build/.lh_skarnet_installed
+	exec cd $(OUTPUT)/build-host/$(XZ_NAME)-$(XZ_VERSION) $(MAKE) install CC=$(BUILD_HOST_CC) DESTDIR=$(OUTPUT)/rootfs
 	exec makenamelink $(OUTPUT)/rootfs/opt $(XZ_NAME) $(XZ_NAME)-$(XZ_VERSION) $(OUTPUT)/tmp
 	exec makelinks $(OUTPUT)/rootfs /bin /opt/$(XZ_NAME)/bin
 	exec setuidgid $(NORMALUSER) s6-touch $@

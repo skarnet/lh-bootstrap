@@ -1,3 +1,0 @@
-#!/command/execlineb -S0
-export PS1 "${USER}@%%HOSTNAME%%:${PWD} $ "
-/bin/ash $@

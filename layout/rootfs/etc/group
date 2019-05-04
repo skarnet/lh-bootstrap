@@ -3,7 +3,3 @@ catchlog:x:98:
 nogroup:x:65534:
 log:x:61:
 ntp:x:62:
-dns:x:64:
-lock:x:74:
-fdh:x:76:
-dhcpc:x:78:

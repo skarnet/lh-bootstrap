@@ -16,7 +16,7 @@
 #define DROPBEAR_DH_GROUP16 1
 
 #define XAUTH_COMMAND "/bin/xauth -q"
-#define SFTPSERVER_PATH "/opt/dropbear/bin/sftp-server"
+#undef SFTPSERVER_PATH
 #define DROPBEAR_PATH_SSH_PROGRAM "/bin/dbclient"
 #define DEFAULT_PATH "/command:/bin"
 

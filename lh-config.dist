@@ -1,28 +1,3 @@
-# Not all country codes are supported.
-# See sub/layout/configure-localoptions.
-# When in doubt, leave to uk, and adjust the timezone
-# and NTP client script later by hand.
-COUNTRY_CODE=uk
-
-# If you use DHCP, then LOCAL_IP and ROUTER_IP will be ignored.
-# LOCAL_IP=192.168.0.7
-# ROUTER_IP=192.168.0.1
-USE_DHCP=true
-
-# If you have a graphics card, set to true: the console will be on tty1.
-# Else, leave to false: you will have a serial console.
-USE_GRAPHIC=false
-
-# Set to true if you use TAP networking (you need to be root to set up
-# the bridge on the host); false if you use qemu's user networking.
-USE_TAP=false
-
-# Set to true if your virtual machine manager supports virtio disks. qemu does.
-USE_VIRTIO_DISK=false
-
-# Set to true if your virtual machine manager supports virtio networks. qemu and virtualbox do, at least.
-USE_VIRTIO_NETWORK=false
-
 # Set to the output directory.
 # By default, it's a subdirectory named "output" in lh-bootstrap's base directory.
 OUTPUT=

@@ -1,3 +1,0 @@
-#!/command/execlineb -S0
-/command/importas -D /etc/execline-shell SHELL SHELL
-$SHELL $@

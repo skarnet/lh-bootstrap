@@ -1,64 +1,17 @@
 #!/bin/sh -e
 
-# TODO: need comments
-
 output="$1"
-
-
-case "$QEMU_ARCH" in
-  x86_64) disk=sda ; partition=sda ; netmodule=e1000 ; console=ttyS0 ;;
-  x86) disk=sda ; partition=sda ; netmodule=e1000 ; console=ttyS0 ;;
-  arm) disk=mmcblk0 ; partition=mmcblk0p ; netmodule=virtio_net ; console=ttyAMA0 ;;
-  aarch64) disk=mmcblk0 ; partition=mmcblk0p ; netmodule=virtio_net ; console=ttyAMA0 ;;
-esac
-
-if $USE_VIRTIO_DISK ; then
-  disk=vda
-  partition=vda
-fi
-
-if $USE_VIRTIO_NETWORK ; then
-  netmodule=virtio_net
-fi
 
 s6-hiercopy layout/rootfs $output/rootfs
 find "$output/rootfs" -type f -name .empty -size 0c -exec s6-rmrf {} \;
-s6-hiercopy layout/rwfs $output/rwfs
-find "$output/rwfs" -type f -name .empty -size 0c -exec s6-rmrf {} \;
-s6-hiercopy layout/userfs $output/userfs
-find "$output/userfs" -type f -name .empty -size 0c -exec s6-rmrf {} \;
-s6-hiercopy layout/stagingfs $output/stagingfs
-find "$output/stagingfs" -type f -name .empty -size 0c -exec s6-rmrf {} \;
 
-if $USE_GRAPHIC ; then
-  console=tty1
-  echo "load-essential-modules" >> $output/rootfs/etc/s6-rc/source-base/ok-local/contents
-fi
-
-timeout=${S6RC_TIMEOUT}
 buildtime=$(s6-clock)
 
 hostarch=$(s6-echo $TRIPLE | cut -f1 -d-)
-sed -i -e "s/%%HOSTNAME%%/lh-$hostarch/g" $output/rootfs/etc/s6-rc/source-base/00/up $output/rootfs/etc/s6-linux-init/run-image/service/s6-linux-init-early-getty/run $output/rootfs/etc/motd $output/rootfs/etc/issue.net $output/rootfs/root/.execline-shell $output/userfs/home/guest/.execline-shell
-sed -i -e "s/%%CONSOLE%%/$console/g" $output/rootfs/etc/s6-linux-init/run-image/service/s6-linux-init-early-getty/run
-sed -i -e "s/%%NETMODULE%%/$netmodule/g" $output/rootfs/etc/s6-rc/source-base/init-eth0/up
-sed -i -e "s/%%RCTIMEOUT%%/$timeout/g" -e "s/%%BUILDTIME%%/$buildtime/g" $output/rootfs/etc/rc.init
+sed -i -e "s/%%HOSTNAME%%/lh-$hostarch/g" $output/rootfs/run/service/s6-linux-init-early-getty/run $output/rootfs/etc/motd $output/rootfs/etc/issue.net $output/rootfs/root/.execline-shell
+sed -i -e "s/%%CONSOLE%%/$console/g" $output/rootfs/run/service/s6-linux-init-early-getty/run
 
-
-if $USE_DHCP ; then
-  eth0_service=udhcpc-eth0-pipeline
-else
-  eth0_service=static-eth0
-fi
-# echo ${eth0_service} > $output/rootfs/etc/s6-rc/source-base/activate-eth0/contents
-
-for i in $output/rootfs/etc/s6-rc/source-base/mount-*/* ; do
-  sed -i -e "s/%%DISK%%/$disk/g" -e "s/%%PARTITION%%/$partition/g" $i
-done
-
-chown -R root.root $output/rootfs $output/rwfs $output/userfs
-
-s6-mkfifo -m 0600 -- $output/rootfs/etc/s6-linux-init/run-image/service/s6-svscan-log/fifo || s6-true
+s6-mkfifo -m 0600 $output/rootfs/run/service/s6-svscan-log/fifo
 
 while read file user group perms ; do
   if s6-test -n "$file" -a "$file" != "#" ; then

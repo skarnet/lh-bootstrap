@@ -1,1 +1,0 @@
-s6-mount -wt ext4 /dev/%%PARTITION%%5 /mnt/userfs
