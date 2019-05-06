@@ -7,68 +7,58 @@ suffix :=
 SKALIBS_VERSION := 8052d3396ddcbbbfabd0a06ea66c36cec8439ea4
 EXECLINE_VERSION := 093161d9ae606141027efa597ed9d57bc88d0ce2
 S6_PORTABLE_UTILS_VERSION := 9e064f1da7921319c342f121602c61a9f3f7a0ec
-S6_LINUX_UTILS_VERSION := e4344751c2f1bd7a2f73cbd068de42cea844d460
 S6_DNS_VERSION := 89c0ec11d4f10401f6d2311f7d8af7b17a1732ce
 S6_NETWORKING_VERSION := 10f60c0d4dd8882e5a7553efe33522c958f73e57
 S6_VERSION := 2051574efa08de08488810669b21d15f387aa3e8
 S6_RC_VERSION := 9343e7be5ac2941359808f013e107a03f232a377
-S6_LINUX_INIT_VERSION := 22d026b0616dff48b5bed70ced91b7578c8222c7
+S6_LINUX_INIT_VERSION := cc5e22c27db8a2d3bf26791fe8533243d0fb9d75
 MDEVD_VERSION := d44a4f72892a89f757bdf7c0243f1917d27ee889
 BCNM_VERSION := 7677bcd347d9d8b53f4d3c01bd62838a08d40a6f
 
 
 $(OUTPUT)/sources/.lh_skalibs_cloned: | $(OUTPUT)/tmp/.lh_prepared
 	if test -d $(OUTPUT)/sources/skalibs ; then cd $(OUTPUT)/sources/skalibs && setuidgid $(NORMALUSER) git fetch ; else cd $(OUTPUT)/sources && setuidgid $(NORMALUSER) git clone $(url)/skalibs$(suffix) skalibs ; fi
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/sources/skalibs git checkout $(SKALIBS_VERSION)
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/sources/skalibs redirfd -w 1 package/deps-build true
+	exec setuidgid $(NORMALUSER) sh -c "cd $(OUTPUT)/sources/skalibs && git checkout $(SKALIBS_VERSION) && :> package/deps-build"
 	exec setuidgid $(NORMALUSER) touch $@
 
 $(OUTPUT)/sources/.lh_execline_cloned: | $(OUTPUT)/tmp/.lh_prepared
 	if test -d $(OUTPUT)/sources/execline ; then cd $(OUTPUT)/sources/execline && setuidgid $(NORMALUSER) git fetch ; else cd $(OUTPUT)/sources && setuidgid $(NORMALUSER) git clone $(url)/execline$(suffix) execline ; fi
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/sources/execline git checkout $(EXECLINE_VERSION)
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/sources/execline redirfd -w 1 package/deps-build true
+	exec setuidgid $(NORMALUSER) sh -c "cd $(OUTPUT)/sources/execline && git checkout $(EXECLINE_VERSION) && :> package/deps-build"
 	exec setuidgid $(NORMALUSER) touch $@
 
 $(OUTPUT)/sources/.lh_s6pu_cloned: | $(OUTPUT)/tmp/.lh_prepared
 	if test -d $(OUTPUT)/sources/s6-portable-utils ; then cd $(OUTPUT)/sources/s6-portable-utils && setuidgid $(NORMALUSER) git fetch ; else cd $(OUTPUT)/sources && setuidgid $(NORMALUSER) git clone $(url)/s6-portable-utils$(suffix) s6-portable-utils ; fi
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/sources/s6-portable-utils git checkout $(S6_PORTABLE_UTILS_VERSION)
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/sources/s6-portable-utils redirfd -w 1 package/deps-build true
+	exec setuidgid $(NORMALUSER) sh -c "cd $(OUTPUT)/sources/s6-portable-utils && git checkout $(S6_PORTABLE_UTILS_VERSION) && :> package/deps-build"
 	exec setuidgid $(NORMALUSER) touch $@
 
 $(OUTPUT)/sources/.lh_s6dns_cloned: | $(OUTPUT)/tmp/.lh_prepared
 	if test -d $(OUTPUT)/sources/s6-dns ; then cd $(OUTPUT)/sources/s6-dns && setuidgid $(NORMALUSER) git fetch ; else cd $(OUTPUT)/sources && setuidgid $(NORMALUSER) git clone $(url)/s6-dns$(suffix) s6-dns ; fi
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/sources/s6-dns git checkout $(S6_DNS_VERSION)
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/sources/s6-dns redirfd -w 1 package/deps-build true
+	exec setuidgid $(NORMALUSER) sh -c "cd $(OUTPUT)/sources/s6-dns && git checkout $(S6_DNS_VERSION) && :> package/deps-build"
 	exec setuidgid $(NORMALUSER) touch $@
 
 $(OUTPUT)/sources/.lh_s6net_cloned: | $(OUTPUT)/tmp/.lh_prepared
 	if test -d $(OUTPUT)/sources/s6-networking ; then cd $(OUTPUT)/sources/s6-networking && setuidgid $(NORMALUSER) git fetch ; else cd $(OUTPUT)/sources && setuidgid $(NORMALUSER) git clone $(url)/s6-networking$(suffix) s6-networking ; fi
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/sources/s6-networking git checkout $(S6_NETWORKING_VERSION)
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/sources/s6-networking redirfd -w 1 package/deps-build true
+	exec setuidgid $(NORMALUSER) sh -c "cd $(OUTPUT)/sources/s6-networking && git checkout $(S6_NETWORKING_VERSION) && :> package/deps-build"
 	exec setuidgid $(NORMALUSER) touch $@
 
 $(OUTPUT)/sources/.lh_s6_cloned: | $(OUTPUT)/tmp/.lh_prepared
 	if test -d $(OUTPUT)/sources/s6 ; then cd $(OUTPUT)/sources/s6 && setuidgid $(NORMALUSER) git fetch ; else cd $(OUTPUT)/sources && setuidgid $(NORMALUSER) git clone $(url)/s6$(suffix) s6 ; fi
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/sources/s6 git checkout $(S6_VERSION)
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/sources/s6 redirfd -w 1 package/deps-build true
+	exec setuidgid $(NORMALUSER) sh -c "cd $(OUTPUT)/sources/s6 && git checkout $(S6_VERSION) && :> package/deps-build"
 	exec setuidgid $(NORMALUSER) touch $@
 
 $(OUTPUT)/sources/.lh_s6li_cloned: | $(OUTPUT)/tmp/.lh_prepared
 	if test -d $(OUTPUT)/sources/s6-linux-init ; then cd $(OUTPUT)/sources/s6-linux-init && setuidgid $(NORMALUSER) git fetch ; else cd $(OUTPUT)/sources && setuidgid $(NORMALUSER) git clone $(url)/s6-linux-init$(suffix) s6-linux-init ; fi
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/sources/s6-linux-init git checkout $(S6_LINUX_INIT_VERSION)
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/sources/s6-linux-init redirfd -w 1 package/deps-build true
+	exec setuidgid $(NORMALUSER) sh -c "cd $(OUTPUT)/sources/s6-linux-init && git checkout $(S6_LINUX_INIT_VERSION) && :> package/deps-build"
 	exec setuidgid $(NORMALUSER) touch $@
 
 $(OUTPUT)/sources/.lh_mdevd_cloned: | $(OUTPUT)/tmp/.lh_prepared
 	if test -d $(OUTPUT)/sources/mdevd ; then cd $(OUTPUT)/sources/mdevd && setuidgid $(NORMALUSER) git fetch ; else cd $(OUTPUT)/sources && setuidgid $(NORMALUSER) git clone $(url)/mdevd$(suffix) mdevd ; fi
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/sources/mdevd git checkout $(MDEVD_VERSION)
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/sources/mdevd redirfd -w 1 package/deps-build true
+	exec setuidgid $(NORMALUSER) sh -c "cd $(OUTPUT)/sources/mdevd && git checkout $(MDEVD_VERSION) && :> package/deps-build"
 	exec setuidgid $(NORMALUSER) touch $@
 
 $(OUTPUT)/sources/.lh_bcnm_cloned: | $(OUTPUT)/tmp/.lh_prepared
 	if test -d $(OUTPUT)/sources/bcnm ; then cd $(OUTPUT)/sources/bcnm && setuidgid $(NORMALUSER) git fetch ; else cd $(OUTPUT)/sources && setuidgid $(NORMALUSER) git clone $(url)/bcnm$(suffix) bcnm ; fi
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/sources/bcnm git checkout $(BCNM_VERSION)
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/sources/bcnm redirfd -w 1 package/deps-build true
+	exec setuidgid $(NORMALUSER) sh -c "cd $(OUTPUT)/sources/bcnm && git checkout $(BCNM_VERSION) && :> package/deps-build"
 	exec setuidgid $(NORMALUSER) touch $@
 
 
@@ -81,7 +71,7 @@ $(OUTPUT)/build-build/.lh_skalibs_copied: $(OUTPUT)/sources/.lh_skalibs_cloned
 	exec setuidgid $(NORMALUSER) touch $@
 
 $(OUTPUT)/build-build/.lh_skalibs_configured: $(OUTPUT)/build-build/.lh_skalibs_copied
-	cd $(OUTPUT)/build-build/tmp/skalibs && setuidgid $(NORMALUSER) export CC $(BUILD_BUILD_CC) ./configure --enable-tai-clock --enable-slashpackage --with-default-path=/command:/bin --disable-shared
+	cd $(OUTPUT)/build-build/tmp/skalibs && setuidgid $(NORMALUSER) env CC=$(BUILD_BUILD_CC) ./configure --enable-tai-clock --enable-slashpackage --with-default-path=/command:/bin --disable-shared
 	exec setuidgid $(NORMALUSER) touch $@
 
 $(OUTPUT)/build-build/.lh_skalibs_built: $(OUTPUT)/build-build/.lh_skalibs_configured
@@ -99,7 +89,7 @@ $(OUTPUT)/build-build/.lh_execline_copied: $(OUTPUT)/sources/.lh_execline_cloned
 	exec setuidgid $(NORMALUSER) touch $@
 
 $(OUTPUT)/build-build/.lh_execline_configured: $(OUTPUT)/build-build/.lh_execline_copied $(OUTPUT)/build-build/.lh_skalibs_installed
-	cd $(OUTPUT)/build-build/tmp/execline && setuidgid $(NORMALUSER) export CC $(BUILD_BUILD_CC) ./configure --enable-slashpackage --disable-shared --with-sysdeps=$(OUTPUT)/build-build/package/prog/skalibs/sysdeps --with-include=$(OUTPUT)/build-build/package/prog/skalibs/include --with-lib=$(OUTPUT)/build-build/package/prog/skalibs/library
+	cd $(OUTPUT)/build-build/tmp/execline && setuidgid $(NORMALUSER) env CC=$(BUILD_BUILD_CC) ./configure --enable-slashpackage --disable-shared --with-sysdeps=$(OUTPUT)/build-build/package/prog/skalibs/sysdeps --with-include=$(OUTPUT)/build-build/package/prog/skalibs/include --with-lib=$(OUTPUT)/build-build/package/prog/skalibs/library
 	exec setuidgid $(NORMALUSER) touch $@
 
 $(OUTPUT)/build-build/.lh_execline_built: $(OUTPUT)/build-build/.lh_execline_configured $(OUTPUT)/build-build/.lh_skalibs_installed
@@ -117,7 +107,7 @@ $(OUTPUT)/build-build/.lh_s6pu_copied: $(OUTPUT)/sources/.lh_s6pu_cloned
 	exec setuidgid $(NORMALUSER) touch $@
 
 $(OUTPUT)/build-build/.lh_s6pu_configured: $(OUTPUT)/build-build/.lh_s6pu_copied $(OUTPUT)/build-build/.lh_skalibs_installed
-	cd $(OUTPUT)/build-build/tmp/s6-portable-utils && setuidgid $(NORMALUSER) export CC $(BUILD_BUILD_CC) ./configure --enable-slashpackage --with-sysdeps=$(OUTPUT)/build-build/package/prog/skalibs/sysdeps --with-include=$(OUTPUT)/build-build/package/prog/skalibs/include --with-lib=$(OUTPUT)/build-build/package/prog/skalibs/library
+	cd $(OUTPUT)/build-build/tmp/s6-portable-utils && setuidgid $(NORMALUSER) env CC=$(BUILD_BUILD_CC) ./configure --enable-slashpackage --with-sysdeps=$(OUTPUT)/build-build/package/prog/skalibs/sysdeps --with-include=$(OUTPUT)/build-build/package/prog/skalibs/include --with-lib=$(OUTPUT)/build-build/package/prog/skalibs/library
 	exec setuidgid $(NORMALUSER) touch $@
 
 $(OUTPUT)/build-build/.lh_s6pu_built: $(OUTPUT)/build-build/.lh_s6pu_configured $(OUTPUT)/build-build/.lh_skalibs_installed
@@ -153,7 +143,7 @@ $(OUTPUT)/build-build/.lh_s6dns_copied: $(OUTPUT)/sources/.lh_s6dns_cloned
 	exec setuidgid $(NORMALUSER) touch $@
 
 $(OUTPUT)/build-build/.lh_s6dns_configured: $(OUTPUT)/build-build/.lh_s6dns_copied $(OUTPUT)/build-build/.lh_skalibs_installed
-	cd $(OUTPUT)/build-build/tmp/s6-dns && setuidgid $(NORMALUSER) export CC $(BUILD_BUILD_CC) ./configure --enable-slashpackage --disable-shared --with-sysdeps=$(OUTPUT)/build-build/package/prog/skalibs/sysdeps --with-include=$(OUTPUT)/build-build/package/prog/skalibs/include --with-lib=$(OUTPUT)/build-build/package/prog/skalibs/library
+	cd $(OUTPUT)/build-build/tmp/s6-dns && setuidgid $(NORMALUSER) env CC=$(BUILD_BUILD_CC) ./configure --enable-slashpackage --disable-shared --with-sysdeps=$(OUTPUT)/build-build/package/prog/skalibs/sysdeps --with-include=$(OUTPUT)/build-build/package/prog/skalibs/include --with-lib=$(OUTPUT)/build-build/package/prog/skalibs/library
 	exec setuidgid $(NORMALUSER) touch $@
 
 $(OUTPUT)/build-build/.lh_s6dns_built: $(OUTPUT)/build-build/.lh_s6dns_configured $(OUTPUT)/build-build/.lh_skalibs_installed
