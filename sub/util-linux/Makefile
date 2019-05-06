@@ -117,15 +117,15 @@ $(OUTPUT)/build-build/.lh_$(UTLX_NAME)_copied: $(OUTPUT)/sources/.lh_$(UTLX_NAME
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
 $(OUTPUT)/build-build/.lh_$(UTLX_NAME)_configured: $(OUTPUT)/build-build/.lh_$(UTLX_NAME)_copied $(OUTPUT)/build-build/.lh_kernel_headers_installed | $(OUTPUT)/build-build/.lh_skarnet_installed
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-build/opt/$(UTLX_NAME)-$(UTLX_VERSION)/src export CC $(BUILD_BUILD_CC) export CFLAGS $(UTLX_CFLAGS) export LDFLAGS $(UTLX_CONFLDFLAGS) ./configure --prefix=$(OUTPUT)/build-build/opt/$(UTLX_NAME)-$(UTLX_VERSION) $(UTLX_CONFIGURE_OPTIONS)
+	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-build/opt/$(UTLX_NAME)-$(UTLX_VERSION)/src export CC "$(BUILD_BUILD_CC)" export CFLAGS $(UTLX_CFLAGS) export LDFLAGS $(UTLX_CONFLDFLAGS) ./configure --prefix=$(OUTPUT)/build-build/opt/$(UTLX_NAME)-$(UTLX_VERSION) $(UTLX_CONFIGURE_OPTIONS)
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
 $(OUTPUT)/build-build/.lh_$(UTLX_NAME)_built: $(OUTPUT)/build-build/.lh_$(UTLX_NAME)_configured | $(OUTPUT)/build-build/.lh_skarnet_installed
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-build/opt/$(UTLX_NAME)-$(UTLX_VERSION)/src $(MAKE) CC=$(BUILD_BUILD_CC) LDFLAGS=$(UTLX_MAKELDFLAGS)
+	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-build/opt/$(UTLX_NAME)-$(UTLX_VERSION)/src $(MAKE) CC="$(BUILD_BUILD_CC)" LDFLAGS=$(UTLX_MAKELDFLAGS)
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
 $(OUTPUT)/build-build/.lh_$(UTLX_NAME)_installed: $(OUTPUT)/build-build/.lh_$(UTLX_NAME)_built | $(OUTPUT)/tmp/.lh_prepared $(OUTPUT)/build-build/.lh_skarnet_installed
-	exec cd $(OUTPUT)/build-build/opt/$(UTLX_NAME)-$(UTLX_VERSION)/src $(MAKE) install CC=$(BUILD_BUILD_CC)
+	exec cd $(OUTPUT)/build-build/opt/$(UTLX_NAME)-$(UTLX_VERSION)/src $(MAKE) install CC="$(BUILD_BUILD_CC)"
 	exec setuidgid $(NORMALUSER) makelinks $(OUTPUT)/build-build /bin /opt/$(UTLX_NAME)/bin
 	exec setuidgid $(NORMALUSER) makelinks $(OUTPUT)/build-build /bin /opt/$(UTLX_NAME)/sbin
 	exec setuidgid $(NORMALUSER) s6-touch $@

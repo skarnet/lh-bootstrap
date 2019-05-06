@@ -33,15 +33,15 @@ $(OUTPUT)/build-build/.lh_$(KMOD_NAME)_copied: $(OUTPUT)/sources/.lh_$(KMOD_NAME
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
 $(OUTPUT)/build-build/.lh_$(KMOD_NAME)_configured: $(OUTPUT)/build-build/.lh_$(KMOD_NAME)_copied $(OUTPUT)/build-build/.lh_xz_installed | $(OUTPUT)/build-build/.lh_skarnet_installed
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-build/opt/$(KMOD_NAME)-$(KMOD_VERSION)/src export CC $(BUILD_BUILD_CC) export CFLAGS $(KMOD_CFLAGS) export LDFLAGS $(KMOD_LDFLAGS) ./configure --prefix=$(OUTPUT)/build-build/opt/$(KMOD_NAME)-$(KMOD_VERSION) $(KMOD_CONFIGURE_OPTIONS)
+	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-build/opt/$(KMOD_NAME)-$(KMOD_VERSION)/src export CC "$(BUILD_BUILD_CC)" export CFLAGS $(KMOD_CFLAGS) export LDFLAGS $(KMOD_LDFLAGS) ./configure --prefix=$(OUTPUT)/build-build/opt/$(KMOD_NAME)-$(KMOD_VERSION) $(KMOD_CONFIGURE_OPTIONS)
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
 $(OUTPUT)/build-build/.lh_$(KMOD_NAME)_built: $(OUTPUT)/build-build/.lh_$(KMOD_NAME)_configured | $(OUTPUT)/build-build/.lh_skarnet_installed
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-build/opt/$(KMOD_NAME)-$(KMOD_VERSION)/src $(MAKE) CC=$(BUILD_BUILD_CC) CFLAGS="-I $(OUTPUT)/build-build/opt/xz/include" LDFLAGS=$(KMOD_LDFLAGS) LIBS="-llzma"
+	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-build/opt/$(KMOD_NAME)-$(KMOD_VERSION)/src $(MAKE) CC="$(BUILD_BUILD_CC)" CFLAGS="-I $(OUTPUT)/build-build/opt/xz/include" LDFLAGS=$(KMOD_LDFLAGS) LIBS="-llzma"
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
 $(OUTPUT)/build-build/.lh_$(KMOD_NAME)_installed: $(OUTPUT)/build-build/.lh_$(KMOD_NAME)_built | $(OUTPUT)/tmp/.lh_prepared $(OUTPUT)/build-build/.lh_skarnet_installed
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-build/opt/$(KMOD_NAME)-$(KMOD_VERSION)/src $(MAKE) install CC=$(BUILD_BUILD_CC)
+	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-build/opt/$(KMOD_NAME)-$(KMOD_VERSION)/src $(MAKE) install CC="$(BUILD_BUILD_CC)"
 	exec setuidgid $(NORMALUSER) makenamelink $(OUTPUT)/build-build/opt $(KMOD_NAME) $(KMOD_NAME)-$(KMOD_VERSION) $(OUTPUT)/tmp
 	exec setuidgid $(NORMALUSER) rm -f $(OUTPUT)/build-build/opt/$(KMOD_NAME)-$(KMOD_VERSION)/bin/depmod
 	exec setuidgid $(NORMALUSER) s6-ln -s kmod $(OUTPUT)/build-build/opt/$(KMOD_NAME)-$(KMOD_VERSION)/bin/depmod
