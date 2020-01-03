@@ -1,5 +1,5 @@
 
-KERNEL_VERSION ?= 5.0.11
+KERNEL_VERSION ?= 5.4.7
 KERNEL_MAJOR := $(firstword $(subst ., ,$(KERNEL_VERSION)))
 KERNEL_ENV := DEPMOD=$(OUTPUT)/build-build/opt/kmod/bin/depmod INSTALL_MOD_PATH=$(OUTPUT)/rootfs CROSS_COMPILE=$(BUILD_HOST_PREFIX)- ARCH=$(KERNEL_GENERIC_ARCH) INSTALL_MOD_STRIP="-R .note -R .comment -R .note.GNU-stack --strip-debug"
 

@@ -1,3 +1,0 @@
-#!/command/execlineb -P
-
-getty -L -H %%HOSTNAME%% 38400 /dev/%%CONSOLE%%

@@ -8,10 +8,7 @@ find "$output/rootfs" -type f -name .empty -size 0c -exec s6-rmrf {} \;
 buildtime=$(s6-clock)
 
 hostarch=$(s6-echo $TRIPLE | cut -f1 -d-)
-sed -i -e "s/%%HOSTNAME%%/lh-$hostarch/g" $output/rootfs/run/service/s6-linux-init-early-getty/run $output/rootfs/etc/motd $output/rootfs/etc/issue.net $output/rootfs/root/.execline-shell
-sed -i -e "s/%%CONSOLE%%/$console/g" $output/rootfs/run/service/s6-linux-init-early-getty/run
-
-s6-mkfifo -m 0600 $output/rootfs/run/service/s6-svscan-log/fifo
+sed -i -e "s/%%HOSTNAME%%/lh-$hostarch/g" $output/rootfs/etc/motd $output/rootfs/etc/issue.net $output/rootfs/root/.execline-shell
 
 while read file user group perms ; do
   if s6-test -n "$file" -a "$file" != "#" ; then

@@ -6,21 +6,23 @@ OUTPUT=
 # Most of the build will be performed as that user.
 NORMALUSER=nobody
 
-# Kernel config. Leave commented to use the one provided with the bootstrap,
-# which is suitable for qemu.
-# KERNEL_CONFIG=
+# The toolchain for your BUILD system
+# BUILD_TRIPLE is the triplet of your native build toolchain (if you want to cross libcs for instance)
+# BUILD_BASE is the base directory where to find your native build toolchain's binaries
+# Leave them empty if you're using your distro's native compiler.
+# BUILD_TRIPLE=
+# BUILD_BASE=
 
-# Uncomment, and define the triplet of the target system,
-# and the absolute path to the base of the toolchains.
+
+# The toolchain for your TARGET system
 # TRIPLE=x86_64-linux-musl
 # CROSS_BASE=/home/ska/toolchains/cross/$TRIPLE
-# HOST_HOST_BASE=/home/ska/toolchains/native/$TRIPLE
 
 
 # Filesystems size, in megabytes.
 
 ROOTFS_SIZE=32768
-SWAP_SIZE=4096
-RWFS_SIZE=4096
-USERFS_SIZE=1024
-EXTRA_SIZE=2048
+
+# The device on which to spawn an early getty.
+# Leave empty for no early getty.
+CONSOLE=

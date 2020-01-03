@@ -1,6 +1,4 @@
-rootfs/etc/shadow					0	0	0600
-rootfs/run/uncaught-logs	98	98	2700
-
+rootfs/etc/shadow		0	0	0600
 rootfs/tmp			0	0	1777
 rootfs/var/log/klogd		102	61	2700
 rootfs/var/log/ntpclient	106	62	2700
