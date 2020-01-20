@@ -41,6 +41,7 @@ case $hostarch in
   default) echo "make: fatal: invalid TRIPLE variable" 1>&2 ; exit 100 ;;
 esac
 
+KERNEL_CONFIG=${KERNEL_CONFIG:-sub/kernel/qemu-system-${hostarch}-config}
 PATH="$WD/bin:$OUTPUT/build-build/command:$OUTPUT/build-build/bin:$OUTPUT/build-host/bin:$CROSS_BASE/bin:$PATH"
 
 umask 022
