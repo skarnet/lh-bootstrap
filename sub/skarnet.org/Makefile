@@ -9,9 +9,9 @@ EXECLINE_VERSION := fc71200d67593c4a2d7b3105dc592c3ac96e725c
 S6_PORTABLE_UTILS_VERSION := 41eb4700c94191f168bca13f4c630ed17259ed84
 S6_DNS_VERSION := 2a9ec169562d289667ec485a090ecc33f72c5e2f
 S6_NETWORKING_VERSION := 1b77e5d7ced260b8d9a8d4f90d9ed9a5ac06da37
-S6_VERSION := f59b79de8c8f49ffd5133b2a37e11a52edc2bdbd
+S6_VERSION := 67fe7156d9e5fb07d87742e148918329c362ae78
 S6_RC_VERSION := efe2eb4bbf383864ff2bb83fb0d10d98ce8fd1da
-S6_LINUX_INIT_VERSION := f13cdf2fa9609644dd0556669889e8c83fa053ff
+S6_LINUX_INIT_VERSION := 203b2b6f21764f4535bed9779ea7e2cbeb6e43cb
 MDEVD_VERSION := a3a658cc3373cd0c11cc6e14cf1ef8a7e2676e7c
 BCNM_VERSION := e2cb9de752149d6b5b61775c53534554cd57f75f
 
@@ -301,7 +301,10 @@ $(OUTPUT)/build-host/.lh_s6li_installed: $(OUTPUT)/build-host/.lh_s6li_built | $
 $(OUTPUT)/build-host/.lh_s6li_laidout: $(OUTPUT)/build-host/.lh_s6li_installed | $(OUTPUT)/tmp/.lh_prepared $(OUTPUT)/build-build/.lh_skarnet_installed
 	exec mkdir -p $(OUTPUT)/rootfs/etc/s6-linux-init
 	exec rm -rf $(OUTPUT)/rootfs/etc/s6-linux-init/s6lidir
-	exec s6-linux-init-maker -u catchlog $(EARLY_GETTY) -1 -p /command:/bin -s /run/kernel_env -f $(OUTPUT)/build-build/etc/s6-linux-init-skel -- $(OUTPUT)/rootfs/etc/s6-linux-init/s6lidir
+	exec s6-linux-init-maker -u $(NORMALUSER) $(EARLY_GETTY) -1 -p /command:/bin -s /run/kernel_env -f $(OUTPUT)/build-build/etc/s6-linux-init/skel -- $(OUTPUT)/rootfs/etc/s6-linux-init/s6lidir
+	exec sed -i 's/ "$(NORMALUSER)" / catchlog /' $(OUTPUT)/rootfs/etc/s6-linux-init/s6lidir/run-image/service/s6-svscan-log/run
+	exec chown 98:98 $(OUTPUT)/rootfs/etc/s6-linux-init/s6lidir/run-image/uncaught-logs
+	exec chmod 02750 $(OUTPUT)/rootfs/etc/s6-linux-init/s6lidir/run-image/uncaught-logs
 	exec rm -rf $(OUTPUT)/rootfs/etc/s6-linux-init/current
 	exec mv -f $(OUTPUT)/build-host/s6lidir $(OUTPUT)/rootfs/etc/s6-linux-init/current
 	exec setuidgid $(NORMALUSER) s6-touch $@
