@@ -306,7 +306,7 @@ $(OUTPUT)/build-host/.lh_s6li_laidout: $(OUTPUT)/build-host/.lh_s6li_installed |
 	exec chown 98:98 $(OUTPUT)/rootfs/etc/s6-linux-init/s6lidir/run-image/uncaught-logs
 	exec chmod 02750 $(OUTPUT)/rootfs/etc/s6-linux-init/s6lidir/run-image/uncaught-logs
 	exec rm -rf $(OUTPUT)/rootfs/etc/s6-linux-init/current
-	exec mv -f $(OUTPUT)/build-host/s6lidir $(OUTPUT)/rootfs/etc/s6-linux-init/current
+	exec mv -f $(OUTPUT)/rootfs/etc/s6-linux-init/s6lidir $(OUTPUT)/rootfs/etc/s6-linux-init/current
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
 $(OUTPUT)/build-host/.lh_mdevd_copied: $(OUTPUT)/sources/.lh_mdevd_cloned | $(OUTPUT)/build-build/.lh_skarnet_installed
