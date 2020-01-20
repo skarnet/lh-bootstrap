@@ -87,7 +87,7 @@ $(OUTPUT)/tmp/.lh_rootfs_installed: $(OUTPUT)/tmp/.lh_layout_installed $(OUTPUT)
 
 ## libc, toolchains, utilities, for the build itself, or for building the host
 
-# include sub/kernel/Makefile
+include sub/kernel/Makefile
 include sub/util-linux/Makefile
 include sub/xz/Makefile
 include sub/kmod/Makefile
