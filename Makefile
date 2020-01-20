@@ -48,7 +48,7 @@ it: all
 .PHONY: it all clean distclean
 
 
-all: $(OUTPUT)/tmp/.lh_rootfs_installed
+all: $(OUTPUT)/tmp/.lh_rootfs_installed $(OUTPUT)/build-host/kernel/.lh_installed
 
 
 

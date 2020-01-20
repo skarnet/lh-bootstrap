@@ -27,6 +27,7 @@ $(OUTPUT)/build-host/kernel/.lh_unpacked: $(OUTPUT)/sources/linux-$(KERNEL_VERSI
 $(OUTPUT)/build-host/kernel/.lh_configured: $(OUTPUT)/build-host/kernel/.lh_unpacked $(KERNEL_CONFIG) | $(OUTPUT)/build-build/.lh_skarnet_installed
 	exec setuidgid $(NORMALUSER) cp -f $(KERNEL_CONFIG) $(OUTPUT)/build-host/kernel/linux-$(KERNEL_VERSION)/.config
 	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-host/kernel/linux-$(KERNEL_VERSION) $(MAKE) olddefconfig $(KERNEL_ENV)
+	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-host/kernel/linux-$(KERNEL_VERSION) $(MAKE) menuconfig $(KERNEL_ENV)
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
 $(OUTPUT)/build-host/kernel/.lh_prepared: | $(OUTPUT)/tmp/.lh_prepared $(OUTPUT)/build-build/.lh_skarnet_installed
