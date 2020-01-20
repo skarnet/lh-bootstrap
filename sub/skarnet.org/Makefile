@@ -76,7 +76,7 @@ $(OUTPUT)/build-build/.lh_skalibs_copied: $(OUTPUT)/sources/.lh_skalibs_cloned
 	exec setuidgid $(NORMALUSER) touch $@
 
 $(OUTPUT)/build-build/.lh_skalibs_configured: $(OUTPUT)/build-build/.lh_skalibs_copied
-	cd $(OUTPUT)/build-build/tmp/skalibs && setuidgid $(NORMALUSER) env CC="$(BUILD_BUILD_CC)" ./configure --enable-tai-clock --enable-slashpackage --with-default-path=/command:/bin --disable-shared
+	cd $(OUTPUT)/build-build/tmp/skalibs && setuidgid $(NORMALUSER) env CC="$(BUILD_BUILD_CC)" ./configure --enable-tai-clock --enable-slashpackage --with-default-path=/command:/bin --disable-shared --with-sysdep-devurandom=yes
 	exec setuidgid $(NORMALUSER) touch $@
 
 $(OUTPUT)/build-build/.lh_skalibs_built: $(OUTPUT)/build-build/.lh_skalibs_configured
@@ -197,7 +197,7 @@ $(OUTPUT)/build-host/.lh_skalibs_copied: $(OUTPUT)/sources/.lh_skalibs_cloned | 
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
 $(OUTPUT)/build-host/.lh_skalibs_configured: $(OUTPUT)/build-host/.lh_skalibs_copied | $(OUTPUT)/build-build/.lh_skarnet_installed
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-host/skalibs ./configure --host=$(TRIPLE) --with-sysdeps=$(WD)/sysdeps/$(TRIPLE) --enable-tai-clock --enable-slashpackage --with-default-path=/command:/bin --disable-shared
+	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-host/skalibs ./configure --host=$(TRIPLE) --enable-tai-clock --enable-slashpackage --with-default-path=/command:/bin --disable-shared --with-sysdep-devurandom=yes
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
 $(OUTPUT)/build-host/.lh_skalibs_built: $(OUTPUT)/build-host/.lh_skalibs_configured | $(OUTPUT)/build-build/.lh_skarnet_installed
