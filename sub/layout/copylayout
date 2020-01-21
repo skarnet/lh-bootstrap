@@ -3,6 +3,7 @@
 output="$1"
 
 s6-hiercopy layout/rootfs $output/rootfs
+chown -R 0:0 $output/rootfs
 find "$output/rootfs" -type f -name .empty -size 0c -exec s6-rmrf {} \;
 
 buildtime=$(s6-clock)

@@ -2,7 +2,7 @@ include sub/kernel/Makefile.ncurses
 
 KERNEL_VERSION ?= 5.4.13
 KERNEL_MAJOR := $(firstword $(subst ., ,$(KERNEL_VERSION)))
-KERNEL_ENV := DEPMOD=$(OUTPUT)/build-build/opt/kmod/bin/depmod INSTALL_MOD_PATH=$(OUTPUT)/rootfs CROSS_COMPILE=$(BUILD_HOST_PREFIX)- ARCH=$(KERNEL_GENERIC_ARCH) INSTALL_MOD_STRIP="-R .note -R .comment -R .note.GNU-stack --strip-debug"
+KERNEL_ENV := HOSTCC=$(BUILD_BUILD_CC) DEPMOD=$(OUTPUT)/build-build/opt/kmod/bin/depmod INSTALL_MOD_PATH=$(OUTPUT)/rootfs CROSS_COMPILE=$(BUILD_HOST_PREFIX)- ARCH=$(KERNEL_GENERIC_ARCH) INSTALL_MOD_STRIP="-R .note -R .comment -R .note.GNU-stack --strip-debug"
 
 $(OUTPUT)/sources/linux-$(KERNEL_VERSION).tar.xz: | $(OUTPUT)/tmp/.lh_prepared
 	cd $(OUTPUT)/sources && setuidgid $(NORMALUSER) wget https://cdn.kernel.org/pub/linux/kernel/v$(KERNEL_MAJOR).x/linux-$(KERNEL_VERSION).tar.xz
