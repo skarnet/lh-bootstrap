@@ -5,7 +5,7 @@ NCURSES_URLDIR := https://invisible-mirror.net/archives/$(NCURSES_NAME)/current
 NCURSES_TAREXT := tgz
 NCURSES_TARLETTER := z
 
-NCURSES_CONFIGURE_OPTIONS := --without-ada --without-cxx-binding --without-manpages --without-progs --without-tack --without-tests --without-curses-h --disable-pc-files --without-shared --without-debug --without-profile --enable-rpath --disable-home-terminfo --enable-widec --with-pthread --enable-weak-symbols --without-develop --enable-reentrant --enable-symlinks
+NCURSES_CONFIGURE_OPTIONS := --without-ada --without-cxx-binding --without-manpages --without-progs --without-tack --without-tests --without-curses-h --disable-pc-files --without-shared --without-debug --without-profile --enable-rpath --disable-home-terminfo --enable-widec --with-pthread --enable-weak-symbols --without-develop --enable-reentrant --enable-symlinks --with-build-cc=$(BUILD_BUILD_CC) --with-build-ldflags="-s -static"
 NCURSES_CFLAGS := ""
 NCURSES_LDFLAGS := ""
 
