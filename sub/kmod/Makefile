@@ -5,11 +5,12 @@ KMOD_URLDIR := https://cdn.kernel.org/pub/linux/utils/kernel/$(KMOD_NAME)
 KMOD_TAREXT := tar.xz
 KMOD_TARLETTER := J
 
-# Do not use --enable-static or --disable-shared: the kmod configure script is voluntarily broken. m(
+# Do not use --enable-static or --disable-shared: the kmod configure script is voluntarily broken.
 # Use make variables instead to link kmod statically.
 
 KMOD_CONFIGURE_OPTIONS := --with-gnu-ld --disable-gtk-doc-html --with-xz --disable-manpages --with-bashcompletiondir=$(OUTPUT)/build-build/opt/$(KMOD_NAME)-$(KMOD_VERSION)/bash-completions
-
+KMOD_CFLAGS := -I$(OUTPUT)/build-build/opt/xz/include
+KMOD_LDFLAGS := -L$(OUTPUT)/build-build/opt/xz/lib
 
 $(OUTPUT)/sources/$(KMOD_NAME)-$(KMOD_VERSION).$(KMOD_TAREXT): | $(OUTPUT)/tmp/.lh_prepared $(OUTPUT)/build-build/.lh_skarnet_installed
 	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/sources wget $(KMOD_URLDIR)/$(KMOD_NAME)-$(KMOD_VERSION).$(KMOD_TAREXT)
@@ -26,7 +27,7 @@ $(OUTPUT)/build-build/.lh_$(KMOD_NAME)_copied: $(OUTPUT)/sources/.lh_$(KMOD_NAME
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
 $(OUTPUT)/build-build/.lh_$(KMOD_NAME)_configured: $(OUTPUT)/build-build/.lh_$(KMOD_NAME)_copied $(OUTPUT)/build-build/.lh_xz_installed | $(OUTPUT)/build-build/.lh_skarnet_installed
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-build/opt/$(KMOD_NAME)-$(KMOD_VERSION)/src export CC "$(BUILD_BUILD_CC)" export liblzma_CFLAGS "-I$(OUTPUT)/build-build/opt/xz/include -L$(OUTPUT)/build-build/opt/xz/lib" export liblzma_LIBS "-llzma" ./configure --prefix=$(OUTPUT)/build-build/opt/$(KMOD_NAME)-$(KMOD_VERSION) $(KMOD_CONFIGURE_OPTIONS)
+	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-build/opt/$(KMOD_NAME)-$(KMOD_VERSION)/src export CC "$(BUILD_BUILD_CC)" export liblzma_CFLAGS "-I$(OUTPUT)/build-build/opt/xz/include -L$(OUTPUT)/build-build/opt/xz/lib" export liblzma_LIBS "-llzma" export CFLAGS "$(KMOD_CFLAGS)" export LDFLAGS "$(KMOD_LDFLAGS)" ./configure --prefix=$(OUTPUT)/build-build/opt/$(KMOD_NAME)-$(KMOD_VERSION) $(KMOD_CONFIGURE_OPTIONS)
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
 $(OUTPUT)/build-build/.lh_$(KMOD_NAME)_built: $(OUTPUT)/build-build/.lh_$(KMOD_NAME)_configured | $(OUTPUT)/build-build/.lh_skarnet_installed
