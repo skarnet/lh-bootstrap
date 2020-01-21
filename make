@@ -16,13 +16,7 @@ fi
 
 
 WD=$(pwd)
-if test -z "$BUILD_BUILD_CC" ; then
-  if test -n "${BUILD_TRIPLE}${BUILD_BASE}" ; then
-    BUILD_BUILD_CC="${BUILD_BASE}/${BUILD_TRIPLE}-gcc"
-  else
-    BUILD_BUILD_CC=${BUILD_BUILD_CC:-gcc}
-  fi
-fi
+BUILD_BUILD_CC=${BUILD_BUILD_CC:-gcc}
 OUTPUT=${OUTPUT:-$WD/output}
 BUILD_HOST_CC="$TRIPLE-${CROSS_CC:-gcc}"
 
