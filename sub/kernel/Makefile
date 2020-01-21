@@ -32,8 +32,8 @@ $(OUTPUT)/build-host/kernel/.lh_configured: $(OUTPUT)/build-host/kernel/.lh_unpa
 
 kernel-menuconfig: $(OUTPUT)/build-host/kernel/.lh_configured $(OUTPUT)/build-build/.lh_$(NCURSES_NAME)_installed | $(OUTPUT)/build-build/.lh_skarnet_installed
 	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-host/kernel/linux-$(KERNEL_VERSION) $(MAKE) menuconfig $(KERNEL_ENV) \
-	  HOST_EXTRACFLAGS="-I$(OUTPUT)/build-build/opt/$(NCURSES_NAME)/include -DKBUILD_NO_NLS -DCURSES_LOC=\"<ncurses/ncurses.h>\"" \
-	  HOST_LOADLIBES="-L$(OUTPUT)/build-build/opt/$(NCURSES_NAME)/ncurses/lib -static -lncurses"
+	  HOSTCXXFLAGS="-I$(OUTPUT)/build-build/opt/$(NCURSES_NAME)/include -DKBUILD_NO_NLS -DCURSES_LOC=\"<ncurses/ncurses.h>\"" \
+	  HOSTLDFLAGS="-L$(OUTPUT)/build-build/opt/$(NCURSES_NAME)/ncurses/lib -static"
 
 $(OUTPUT)/build-host/kernel/.lh_prepared: | $(OUTPUT)/tmp/.lh_prepared $(OUTPUT)/build-build/.lh_skarnet_installed
 	exec s6-mkdir -p $(OUTPUT)/rootfs/opt/linux-kernel-headers-$(KERNEL_VERSION)
