@@ -7,9 +7,6 @@ KMOD_TARLETTER := J
 
 # Do not use --enable-static or --disable-shared: the kmod configure script is voluntarily broken. m(
 # Use make variables instead to link kmod statically.
-# The -L directories need to be specified again, and the -I directory for liblzma
-# also needs to appear in the CFLAGS make variable, because the kmod configure script
-# is REALLY broken.
 
 KMOD_CONFIGURE_OPTIONS := --with-gnu-ld --disable-gtk-doc-html --with-xz --disable-manpages --with-bashcompletiondir=$(OUTPUT)/build-build/opt/$(KMOD_NAME)-$(KMOD_VERSION)/bash-completions
 
@@ -33,7 +30,7 @@ $(OUTPUT)/build-build/.lh_$(KMOD_NAME)_configured: $(OUTPUT)/build-build/.lh_$(K
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
 $(OUTPUT)/build-build/.lh_$(KMOD_NAME)_built: $(OUTPUT)/build-build/.lh_$(KMOD_NAME)_configured | $(OUTPUT)/build-build/.lh_skarnet_installed
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-build/opt/$(KMOD_NAME)-$(KMOD_VERSION)/src $(MAKE) CC="$(BUILD_BUILD_CC)" CFLAGS="-I $(OUTPUT)/build-build/opt/xz/include" LDFLAGS=$(KMOD_LDFLAGS) LIBS="-llzma"
+	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-build/opt/$(KMOD_NAME)-$(KMOD_VERSION)/src $(MAKE)
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
 $(OUTPUT)/build-build/.lh_$(KMOD_NAME)_installed: $(OUTPUT)/build-build/.lh_$(KMOD_NAME)_built | $(OUTPUT)/tmp/.lh_prepared $(OUTPUT)/build-build/.lh_skarnet_installed
