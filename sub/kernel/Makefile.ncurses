@@ -1,0 +1,38 @@
+
+NCURSES_NAME := ncurses
+NCURSES_VERSION := 6.1-20200118
+NCURSES_URLDIR := https://invisible-mirror.net/archives/$(NCURSES_NAME)/current
+NCURSES_TAREXT := tgz
+NCURSES_TARLETTER := z
+
+NCURSES_CONFIGURE_OPTIONS := --without-ada --without-cxx-binding --without-manpages --without-progs --without-tack --without-tests --without-curses-h --disable-pc-files --without-shared --without-debug --without-profile --enable-rpath --disable-home-terminfo --enable-widec --with-pthread --enable-weak-symbols --without-develop --enable-reentrant --enable-symlinks
+NCURSES_CFLAGS := ""
+NCURSES_LDFLAGS := ""
+
+
+$(OUTPUT)/sources/$(NCURSES_NAME)-$(NCURSES_VERSION).$(NCURSES_TAREXT): | $(OUTPUT)/tmp/.lh_prepared $(OUTPUT)/build-build/.lh_skarnet_installed
+	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/sources wget $(NCURSES_URLDIR)/$(NCURSES_NAME)-$(NCURSES_VERSION).$(NCURSES_TAREXT)
+
+$(OUTPUT)/sources/.lh_$(NCURSES_NAME)_dled: $(OUTPUT)/sources/$(NCURSES_NAME)-$(NCURSES_VERSION).$(NCURSES_TAREXT) | $(OUTPUT)/build-build/.lh_skarnet_installed
+	exec setuidgid $(NORMALUSER) s6-touch $@
+
+
+$(OUTPUT)/build-build/.lh_$(NCURSES_NAME)_copied: $(OUTPUT)/sources/.lh_$(NCURSES_NAME)_dled | $(OUTPUT)/build-build/.lh_skarnet_installed
+	exec setuidgid $(NORMALUSER) s6-rmrf $(OUTPUT)/build-build/opt/$(NCURSES_NAME)-$(NCURSES_VERSION)
+	exec setuidgid $(NORMALUSER) s6-mkdir -p $(OUTPUT)/build-build/opt/$(NCURSES_NAME)-$(NCURSES_VERSION)
+	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-build/opt/$(NCURSES_NAME)-$(NCURSES_VERSION) tar $(NCURSES_TARLETTER)xpvf $(OUTPUT)/sources/$(NCURSES_NAME)-$(NCURSES_VERSION).$(NCURSES_TAREXT)
+	exec setuidgid $(NORMALUSER) s6-rename $(OUTPUT)/build-build/opt/$(NCURSES_NAME)-$(NCURSES_VERSION)/$(NCURSES_NAME)-$(NCURSES_VERSION) $(OUTPUT)/build-build/opt/$(NCURSES_NAME)-$(NCURSES_VERSION)/src
+	exec setuidgid $(NORMALUSER) s6-touch $@
+
+$(OUTPUT)/build-build/.lh_$(NCURSES_NAME)_configured: $(OUTPUT)/build-build/.lh_$(NCURSES_NAME)_copied | $(OUTPUT)/build-build/.lh_skarnet_installed
+	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-build/opt/$(NCURSES_NAME)-$(NCURSES_VERSION)/src export CC "$(BUILD_BUILD_CC)" export CFLAGS $(NCURSES_CFLAGS) export LDFLAGS $(NCURSES_LDFLAGS) ./configure --prefix=$(OUTPUT)/build-build/opt/$(NCURSES_NAME)-$(NCURSES_VERSION) $(NCURSES_CONFIGURE_OPTIONS)
+	exec setuidgid $(NORMALUSER) s6-touch $@
+
+$(OUTPUT)/build-build/.lh_$(NCURSES_NAME)_built: $(OUTPUT)/build-build/.lh_$(NCURSES_NAME)_configured | $(OUTPUT)/build-build/.lh_skarnet_installed
+	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-build/opt/$(NCURSES_NAME)-$(NCURSES_VERSION)/src $(MAKE)
+	exec setuidgid $(NORMALUSER) s6-touch $@
+
+$(OUTPUT)/build-build/.lh_$(NCURSES_NAME)_installed: $(OUTPUT)/build-build/.lh_$(NCURSES_NAME)_built | $(OUTPUT)/tmp/.lh_prepared $(OUTPUT)/build-build/.lh_skarnet_installed
+	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-build/opt/$(NCURSES_NAME)-$(NCURSES_VERSION)/src $(MAKE) install
+	exec setuidgid $(NORMALUSER) makenamelink $(OUTPUT)/build-build/opt $(NCURSES_NAME) $(NCURSES_NAME)-$(NCURSES_VERSION) $(OUTPUT)/tmp
+	exec setuidgid $(NORMALUSER) s6-touch $@

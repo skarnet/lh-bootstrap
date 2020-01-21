@@ -1,5 +1,3 @@
-# TODO: the goal of all this seems to just have depmod available
-
 
 KMOD_NAME := kmod
 KMOD_VERSION := 26
