@@ -5,7 +5,7 @@ NCURSES_URLDIR := https://invisible-mirror.net/archives/$(NCURSES_NAME)/current
 NCURSES_TAREXT := tgz
 NCURSES_TARLETTER := z
 
-NCURSES_CONFIGURE_OPTIONS := --without-ada --without-cxx-binding --without-manpages --without-progs --without-tack --without-tests --without-curses-h --disable-pc-files --without-shared --without-debug --without-profile --enable-rpath --disable-home-terminfo --enable-widec --with-pthread --enable-weak-symbols --without-develop --enable-reentrant --enable-symlinks --with-build-cc=$(BUILD_BUILD_CC) --with-build-ldflags="-s -static"
+NCURSES_CONFIGURE_OPTIONS := --without-ada --without-cxx-binding --without-manpages --without-progs --without-tack --without-tests --without-curses-h --disable-pc-files --without-shared --without-debug --without-profile --enable-rpath --disable-home-terminfo --enable-widec --with-pthread --enable-weak-symbols --without-develop --enable-reentrant --enable-symlinks --with-build-cc="$(BUILD_BUILD_CC)" --with-build-ldflags="-s -static"
 NCURSES_CFLAGS := ""
 NCURSES_LDFLAGS := ""
 
@@ -25,7 +25,7 @@ $(OUTPUT)/build-build/.lh_$(NCURSES_NAME)_copied: $(OUTPUT)/sources/.lh_$(NCURSE
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
 $(OUTPUT)/build-build/.lh_$(NCURSES_NAME)_configured: $(OUTPUT)/build-build/.lh_$(NCURSES_NAME)_copied | $(OUTPUT)/build-build/.lh_skarnet_installed
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-build/opt/$(NCURSES_NAME)-$(NCURSES_VERSION)/src export CC "$(BUILD_BUILD_CC)" export CFLAGS $(NCURSES_CFLAGS) export LDFLAGS $(NCURSES_LDFLAGS) ./configure --prefix=$(OUTPUT)/build-build/opt/$(NCURSES_NAME)-$(NCURSES_VERSION) $(NCURSES_CONFIGURE_OPTIONS)
+	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-build/opt/$(NCURSES_NAME)-$(NCURSES_VERSION)/src export CC "$(BUILD_BUILD_CC)" ./configure --prefix=$(OUTPUT)/build-build/opt/$(NCURSES_NAME)-$(NCURSES_VERSION) $(NCURSES_CONFIGURE_OPTIONS)
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
 $(OUTPUT)/build-build/.lh_$(NCURSES_NAME)_built: $(OUTPUT)/build-build/.lh_$(NCURSES_NAME)_configured | $(OUTPUT)/build-build/.lh_skarnet_installed
