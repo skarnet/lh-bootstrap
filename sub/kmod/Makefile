@@ -12,8 +12,6 @@ KMOD_TARLETTER := J
 # is REALLY broken.
 
 KMOD_CONFIGURE_OPTIONS := --with-gnu-ld --disable-gtk-doc-html --with-xz --disable-manpages --with-bashcompletiondir=$(OUTPUT)/build-build/opt/$(KMOD_NAME)-$(KMOD_VERSION)/bash-completions
-KMOD_CFLAGS := "-I $(OUTPUT)/build-build/opt/xz/include"
-KMOD_LDFLAGS := "-s -L$(OUTPUT)/build-build/opt/xz/lib"
 
 
 $(OUTPUT)/sources/$(KMOD_NAME)-$(KMOD_VERSION).$(KMOD_TAREXT): | $(OUTPUT)/tmp/.lh_prepared $(OUTPUT)/build-build/.lh_skarnet_installed
@@ -31,7 +29,7 @@ $(OUTPUT)/build-build/.lh_$(KMOD_NAME)_copied: $(OUTPUT)/sources/.lh_$(KMOD_NAME
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
 $(OUTPUT)/build-build/.lh_$(KMOD_NAME)_configured: $(OUTPUT)/build-build/.lh_$(KMOD_NAME)_copied $(OUTPUT)/build-build/.lh_xz_installed | $(OUTPUT)/build-build/.lh_skarnet_installed
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-build/opt/$(KMOD_NAME)-$(KMOD_VERSION)/src export CC "$(BUILD_BUILD_CC)" export CFLAGS $(KMOD_CFLAGS) export LDFLAGS $(KMOD_LDFLAGS) ./configure --prefix=$(OUTPUT)/build-build/opt/$(KMOD_NAME)-$(KMOD_VERSION) $(KMOD_CONFIGURE_OPTIONS)
+	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-build/opt/$(KMOD_NAME)-$(KMOD_VERSION)/src export CC "$(BUILD_BUILD_CC)" export liblzma_CFLAGS "-I$(OUTPUT)/build-build/opt/xz/include -L$(OUTPUT)/build-build/opt/xz/lib" export liblzma_LIBS "-llzma" ./configure --prefix=$(OUTPUT)/build-build/opt/$(KMOD_NAME)-$(KMOD_VERSION) $(KMOD_CONFIGURE_OPTIONS)
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
 $(OUTPUT)/build-build/.lh_$(KMOD_NAME)_built: $(OUTPUT)/build-build/.lh_$(KMOD_NAME)_configured | $(OUTPUT)/build-build/.lh_skarnet_installed

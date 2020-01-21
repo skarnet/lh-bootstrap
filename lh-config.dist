@@ -6,12 +6,9 @@ OUTPUT=
 # Most of the build will be performed as that user.
 NORMALUSER=nobody
 
-# The toolchain for your BUILD system
-# BUILD_TRIPLE is the triplet of your native build toolchain (if you want to cross libcs for instance)
-# BUILD_BASE is the base directory where to find your native build toolchain's binaries
-# Leave them empty if you're using your distro's native compiler.
-# BUILD_TRIPLE=
-# BUILD_BASE=
+# The C compiler for your BUILD system.
+# Leave empty if you're using your distro's native compiler.
+# BUILD_BUILD_CC=
 
 
 # The toolchain for your TARGET system
