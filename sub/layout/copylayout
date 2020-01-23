@@ -8,7 +8,7 @@ find "$output/rootfs" -type f -name .empty -size 0c -exec s6-rmrf {} \;
 
 buildtime=$(s6-clock)
 
-hostarch=$(s6-echo $TRIPLE | cut -f1 -d-)
+hostarch=$(s6-echo -- $TRIPLE | cut -f1 -d-)
 sed -i -e "s/%%HOSTNAME%%/lh-$hostarch/g" $output/rootfs/etc/motd $output/rootfs/etc/issue.net $output/rootfs/root/.execline-shell
 
 while read file user group perms ; do
@@ -17,3 +17,18 @@ while read file user group perms ; do
     $output/build-build/command/s6-chmod $perms $output/$file
   fi
 done < sub/layout/permissions
+
+
+# If dynamic: copy shared libs from the toolchain into the target
+
+if ! ${BUILD_HOST_STATIC} ; then
+  sysroot=`${BUILD_HOST_CC} -print-sysroot`
+  for lib in lib lib32 lib64 ; do
+    if s6-test -d "$sysroot/$lib" ; then
+      s6-mkdir -p "$output/rootfs/$lib"
+      for i in `ls -1 "$sysroot/$lib" | grep -e '\.so$' -e '\.so\.'` ; do
+        s6-hiercopy "$sysroot/$lib/$i" "$output/rootfs/$lib/$i"
+      done
+    fi
+  done
+fi
