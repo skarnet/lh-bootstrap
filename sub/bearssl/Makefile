@@ -21,9 +21,9 @@ $(OUTPUT)/build-host/.lh_$(BEARSSL_NAME)_built: $(OUTPUT)/build-host/.lh_$(BEARS
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
 $(OUTPUT)/build-host/.lh_$(BEARSSL_NAME)_installed: $(OUTPUT)/build-host/.lh_$(BEARSSL_NAME)_built | $(OUTPUT)/tmp/.lh_prepared $(OUTPUT)/build-build/.lh_skarnet_installed
-	exec s6-mkdir -p $(OUTPUT)/rootfs/opt/$(BEARSSL_NAME)-$(BEARSSL_VERSION)/lib $(OUTPUT)/rootfs/opt/$(BEARSSL_NAME)-$(BEARSSL_VERSION)/bin
+	exec s6-mkdir -p $(OUTPUT)/rootfs/opt/$(BEARSSL_NAME)-$(BEARSSL_VERSION)/lib
 	exec cp $(OUTPUT)/build-host/$(BEARSSL_NAME)-$(BEARSSL_VERSION)/build/libbearssl.a $(OUTPUT)/rootfs/opt/$(BEARSSL_NAME)-$(BEARSSL_VERSION)/lib/
 	exec s6-hiercopy $(OUTPUT)/build-host/$(BEARSSL_NAME)-$(BEARSSL_VERSION)/inc $(OUTPUT)/rootfs/opt/$(BEARSSL_NAME)-$(BEARSSL_VERSION)/include
-	exec chown -R root.root $(OUTPUT)/rootfs/opt/$(BEARSSL_NAME)-$(BEARSSL_VERSION)/include
+	exec chown -R root:root $(OUTPUT)/rootfs/opt/$(BEARSSL_NAME)-$(BEARSSL_VERSION)/include
 	exec makenamelink $(OUTPUT)/rootfs/opt $(BEARSSL_NAME) $(BEARSSL_NAME)-$(BEARSSL_VERSION) $(OUTPUT)/tmp
 	exec setuidgid $(NORMALUSER) s6-touch $@

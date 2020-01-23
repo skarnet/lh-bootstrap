@@ -74,7 +74,7 @@ qemu-boot: $(OUTPUT)/build-host/kernel/.lh_installed $(OUTPUT)/tmp/.lh_diskimage
 ## libc, toolchains, utilities, for the build itself, or for building the host
 
 include sub/kernel/Makefile
-include sub/util-linux/Makefile
+# include sub/util-linux/Makefile
 include sub/xz/Makefile
 include sub/kmod/Makefile
 

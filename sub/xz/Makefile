@@ -4,10 +4,12 @@ XZ_VERSION := 5.2.4
 XZ_URLDIR := http://tukaani.org/$(XZ_NAME)
 XZ_TAREXT := tar.xz
 XZ_TARLETTER := J
-XZ_CONFIGURE_OPTIONS := --disable-nls --with-gnu-ld --enable-threads=posix --disable-shared --disable-scripts --disable-doc --disable-lzma-links --disable-lzmainfo --disable-lzmadec --disable-xzdec --disable-xz
+XZ_CONF_STATIC := $(if $(filter true,$(BUILD_HOST_STATIC)),--disable-shared,)
+XZ_MAKE_STATIC := $(if $(filter true,$(BUILD_HOST_STATIC)),-static,)
+XZ_CONFIGURE_OPTIONS := --disable-nls --with-gnu-ld --enable-threads=posix --disable-scripts --disable-doc --disable-lzma-links --disable-lzmainfo --disable-lzmadec --disable-xzdec --disable-xz
 XZ_CFLAGS := ""
-XZ_CONFLDFLAGS := "-s"
-XZ_MAKELDFLAGS := "-s"
+XZ_CONFLDFLAGS := "-s $(XZ_MAKE_STATIC)"
+XZ_MAKELDFLAGS := "-s $(XZ_MAKE_STATIC)"
 
 
 $(OUTPUT)/sources/$(XZ_NAME)-$(XZ_VERSION).$(XZ_TAREXT): | $(OUTPUT)/tmp/.lh_prepared $(OUTPUT)/build-build/.lh_skarnet_installed
@@ -25,11 +27,11 @@ $(OUTPUT)/build-build/.lh_$(XZ_NAME)_copied: $(OUTPUT)/sources/.lh_$(XZ_NAME)_dl
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
 $(OUTPUT)/build-build/.lh_$(XZ_NAME)_configured: $(OUTPUT)/build-build/.lh_$(XZ_NAME)_copied | $(OUTPUT)/build-build/.lh_skarnet_installed
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-build/opt/$(XZ_NAME)-$(XZ_VERSION)/src export CC "$(BUILD_BUILD_CC)" export CFLAGS $(XZ_CFLAGS) export LDFLAGS $(XZ_CONFLDFLAGS) ./configure --prefix=$(OUTPUT)/build-build/opt/$(XZ_NAME)-$(XZ_VERSION) $(XZ_CONFIGURE_OPTIONS)
+	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-build/opt/$(XZ_NAME)-$(XZ_VERSION)/src export CC "$(BUILD_BUILD_CC)" export CFLAGS $(XZ_CFLAGS) export LDFLAGS -s ./configure --prefix=$(OUTPUT)/build-build/opt/$(XZ_NAME)-$(XZ_VERSION) $(XZ_CONFIGURE_OPTIONS)
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
 $(OUTPUT)/build-build/.lh_$(XZ_NAME)_built: $(OUTPUT)/build-build/.lh_$(XZ_NAME)_configured | $(OUTPUT)/build-build/.lh_skarnet_installed
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-build/opt/$(XZ_NAME)-$(XZ_VERSION)/src $(MAKE) CC="$(BUILD_BUILD_CC)" LDFLAGS=$(XZ_MAKELDFLAGS)
+	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-build/opt/$(XZ_NAME)-$(XZ_VERSION)/src $(MAKE) CC="$(BUILD_BUILD_CC)" LDFLAGS=-s
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
 $(OUTPUT)/build-build/.lh_$(XZ_NAME)_installed: $(OUTPUT)/build-build/.lh_$(XZ_NAME)_built | $(OUTPUT)/tmp/.lh_prepared $(OUTPUT)/build-build/.lh_skarnet_installed
@@ -44,7 +46,7 @@ $(OUTPUT)/build-host/.lh_$(XZ_NAME)_copied: $(OUTPUT)/sources/.lh_$(XZ_NAME)_dle
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
 $(OUTPUT)/build-host/.lh_$(XZ_NAME)_configured: $(OUTPUT)/build-host/.lh_$(XZ_NAME)_copied | $(OUTPUT)/build-build/.lh_skarnet_installed
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-host/$(XZ_NAME)-$(XZ_VERSION) export CC "$(BUILD_HOST_CC)" export CFLAGS $(XZ_CFLAGS) export LDFLAGS $(XZ_CONFLDFLAGS) ./configure --host=$(TRIPLE) --prefix=/opt/$(XZ_NAME)-$(XZ_VERSION) $(XZ_CONFIGURE_OPTIONS)
+	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-host/$(XZ_NAME)-$(XZ_VERSION) export CC "$(BUILD_HOST_CC)" export CFLAGS $(XZ_CFLAGS) export LDFLAGS $(XZ_CONFLDFLAGS) ./configure --host=$(TRIPLE) --prefix=/opt/$(XZ_NAME)-$(XZ_VERSION) $(XZ_CONFIGURE_OPTIONS) $(XZ_CONF_STATIC)
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
 $(OUTPUT)/build-host/.lh_$(XZ_NAME)_built: $(OUTPUT)/build-host/.lh_$(XZ_NAME)_configured | $(OUTPUT)/build-build/.lh_skarnet_installed

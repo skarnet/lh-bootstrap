@@ -16,6 +16,9 @@ NORMALUSER=nobody
 # CROSS_BASE=/home/ska/toolchains/cross/$TRIPLE
 
 
+# Set this to true if you want your created rootfs to be statically linked
+# BUILD_HOST_STATIC=false
+
 # Filesystems size, in megabytes.
 
 ROOTFS_SIZE=32768

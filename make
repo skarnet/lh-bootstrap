@@ -20,6 +20,13 @@ BUILD_BUILD_CC=${BUILD_BUILD_CC:-gcc}
 OUTPUT=${OUTPUT:-$WD/output}
 BUILD_HOST_CC="$TRIPLE-${CROSS_CC:-gcc}"
 
+if test -z "$BUILD_HOST_STATIC" ; then
+  case "$TRIPLE" in
+    *-*-musl*) BUILD_HOST_STATIC=true ;;
+    *) BUILD_HOST_STATIC=false ;;
+  esac
+fi
+
 if test -n "$CROSS_BASE" ; then
   crossenv=""
 else
