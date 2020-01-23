@@ -232,12 +232,12 @@ been removed.
 
 ### Running on backends
 
+To use qemu with lh-bootstrap, you need the qemu package installed
+(obviously), and *also* the libguestfs package; some distributions
+call it `libguestfs-tools`. (The lh-bootstrap uses the `virt-make-fs`
+and `virt-copy-in` binaries.)
+
 To launch qemu on an image you just created, run `./make qemu-boot`.
 This will start a qemu process running the image you just created.
-You can look at the ./qemu-boot script to see exactly what it does.
-
-You can also "./make vmware-image" or "./make virtualbox-image" to create
-a "disk-image.vmdk" file, which will be suitable as a main disk image
-for VMWare or Virtualbox. Running those emulators, however, is out of
-scope for this document.
+You can look at the ./run-qemu script to see exactly what it does.
 

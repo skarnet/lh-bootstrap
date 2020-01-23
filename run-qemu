@@ -1,0 +1,15 @@
+#!/bin/sh -e
+
+case "$QEMU_ARCH" in
+  aarch64)
+    qemucpu=cortex-a57
+    qemuconsole=ttyAMA0 ;;
+esac
+
+exec qemu-system-${QEMU_ARCH} -nographic -M virt -cpu $qemucpu -smp 4 -m 2G \
+  -kernel "$OUTPUT/kernel" \
+  -append "root=/dev/vda1 console=$qemuconsole" \
+  -drive if=none,file=$OUTPUT/disk-image.qcow2,format=qcow2,id=disk \
+  -netdev user,id=network,hostfwd=tcp:127.0.0.1:2222-:22 \
+  -device virtio-blk-pci,drive=disk \
+  -device virtio-net-device,netdev=network

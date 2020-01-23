@@ -7,31 +7,6 @@
 # used by make to handle dependencies. Each of these files is
 # being touched at the end of each recipe to update its date,
 # since make relies on dates to handle updates of targets.
-# 
-# * why these "exec" at the beginning at each line?
-# => make spawns a shell for every line in every recipe.
-# The "exec" keyword at the beginning of the recipe lines
-# is just a small optimization: it ensures that the shell
-# doesn't stay around while the recipe line is running,
-# so it saves a little RAM and CPU. On most build machines,
-# this should not be noticeable.
-#
-# * why these "setuidgid $(NORMALUSER)" ?
-# => to drop privileges, from root to a normal user, for recipes
-# that do not need root privileges. The user's name is defined in
-# lh-config.
-#
-# * why do we need to be root?
-# => Because some unavoidable operations in the build process need root privileges:
-#     + correctly handling several different uids for the target.
-#     + manipulating and deleting a loopback device, to create the disk images.
-#
-# * why is skarnet.org often an order-only prerequisite in the sub-Makefiles?
-# => When it's the case, it means the build process, not the target,
-# depends on a skarnet.org tool (for instance s6-touch) built for the
-# BUILD machine. There's no need to rebuild everything if the tool
-# changes, since the HOST image does not depend on its details; we
-# just need to ensure that the tool is there.
 
 
 ifndef LH_MAKE_MARKER
@@ -45,7 +20,7 @@ NORMALUSER_GID := $(shell id -g $(NORMALUSER))
 
 it: all
 
-.PHONY: it all rootfs kernel clean distclean
+.PHONY: it all rootfs kernel qemu-boot clean distclean
 
 
 all: $(OUTPUT)/tmp/.lh_rootfs_installed $(OUTPUT)/build-host/kernel/.lh_installed
@@ -81,6 +56,17 @@ $(OUTPUT)/build-build/.lh_done: $(OUTPUT)/build-build/.lh_skarnet_installed $(OU
 
 $(OUTPUT)/tmp/.lh_rootfs_installed: $(OUTPUT)/tmp/.lh_layout_installed $(OUTPUT)/build-host/.lh_skarnet_installed $(OUTPUT)/build-host/.lh_bb_installed $(OUTPUT)/build-host/.lh_dropbear_installed
 	exec setuidgid $(NORMALUSER) touch $@
+
+
+# The qemu disk image (requires qemu and libguestfs-tools)
+
+$(OUTPUT)/tmp/.lh_diskimage_done: $(OUTPUT)/tmp/.lh_rootfs_installed
+	exec setuidgid $(NORMALUSER) qemu-img create -f qcow2 $(OUTPUT)/disk-image.qcow2 1G
+	exec virt-make-fs --format=qcow2 --size=2G --type=ext4 $(OUTPUT)/rootfs $(OUTPUT)/disk-image.qcow2
+	exec setuidgid $(NORMALUSER) touch $@
+
+qemu-boot: $(OUTPUT)/build-host/kernel/.lh_installed $(OUTPUT)/tmp/.lh_diskimage_done run-qemu
+	exec ./run-qemu
 
 
 # Subsystems
