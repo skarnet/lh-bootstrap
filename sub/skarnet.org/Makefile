@@ -258,7 +258,7 @@ $(OUTPUT)/build-host/.lh_s6net_copied: $(OUTPUT)/sources/.lh_s6net_cloned | $(OU
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
 $(OUTPUT)/build-host/.lh_s6net_configured: $(OUTPUT)/build-host/.lh_s6net_copied $(OUTPUT)/build-host/.lh_skalibs_installed $(OUTPUT)/build-host/.lh_s6dns_installed $(OUTPUT)/build-host/.lh_execline_installed $(OUTPUT)/build-host/.lh_s6_installed $(OUTPUT)/build-host/.lh_bearssl_installed | $(OUTPUT)/build-build/.lh_skarnet_installed
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-host/s6-networking ./configure --host=$(TRIPLE) --enable-slashpackage $(SKARNET_CONF_STATIC) --enable-ssl=bearssl --with-ssl-path=$(OUTPUT)/rootfs/opt/bearssl $(SKALIBS_FIND_OPTIONS) $(EXECLINE_FIND_OPTIONS) $(S6_FIND_OPTIONS) $(S6DNS_FIND_OPTIONS)
+	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-host/s6-networking ./configure --host=$(TRIPLE) --enable-slashpackage $(SKARNET_CONF_STATIC) --enable-ssl=bearssl --with-ssl-path=$(OUTPUT)/rootfs/opt/bearssl $(SKALIBS_FIND_OPTIONS) $(EXECLINE_FIND_OPTIONS) $(S6_FIND_OPTIONS) $(S6_DNS_FIND_OPTIONS)
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
 $(OUTPUT)/build-host/.lh_s6net_built: $(OUTPUT)/build-host/.lh_s6net_configured $(OUTPUT)/build-host/.lh_skalibs_installed $(OUTPUT)/build-host/.lh_s6dns_installed $(OUTPUT)/build-host/.lh_execline_installed $(OUTPUT)/build-host/.lh_s6_installed $(OUTPUT)/build-host/.lh_bearssl_installed | $(OUTPUT)/build-build/.lh_skarnet_installed
