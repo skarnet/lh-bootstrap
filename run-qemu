@@ -6,7 +6,7 @@ case "$QEMU_ARCH" in
     qemuconsole=ttyAMA0 ;;
 esac
 
-exec qemu-system-${QEMU_ARCH} -nographic -M virt -cpu $qemucpu -smp 4 -m 2G \
+exec qemu-system-${QEMU_ARCH} -nographic -M virt -cpu $qemucpu -smp 4 -m 2G -nodefaults -display none -serial mon:stdio \
   -kernel "$OUTPUT/kernel" \
   -append "root=/dev/vda1 console=$qemuconsole" \
   -drive if=none,file=$OUTPUT/disk-image.qcow2,format=qcow2,id=disk \
