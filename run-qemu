@@ -8,7 +8,7 @@ esac
 
 exec qemu-system-${QEMU_ARCH} -nographic -M virt -cpu $qemucpu -smp 4 -m 2G -nodefaults -display none -serial mon:stdio \
   -kernel "$OUTPUT/kernel" \
-  -append "root=/dev/vda1 console=$qemuconsole" \
+  -append "root=/dev/vda console=$qemuconsole" \
   -drive if=none,file=$OUTPUT/disk-image.qcow2,format=qcow2,id=disk \
   -netdev user,id=network,hostfwd=tcp:127.0.0.1:2222-:22 \
   -device virtio-blk-pci,drive=disk \
