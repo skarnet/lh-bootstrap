@@ -1,2 +1,2 @@
-if { s6-echo "init stage2 starting" }
-s6-hostname %%HOSTNAME%%
+if { echo "init stage2 starting" }
+hostname %%HOSTNAME%%

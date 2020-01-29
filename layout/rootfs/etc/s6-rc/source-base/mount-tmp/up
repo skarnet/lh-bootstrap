@@ -1,3 +1,1 @@
-foreground { s6-mount -wt tmpfs -o nodev,mode=1777 tmpfs /tmp }
-importas ? ?
-s6-test $? -le 1
+mount -wt tmpfs -o nodev,mode=1777 tmpfs /tmp

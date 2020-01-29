@@ -3,3 +3,4 @@ catchlog:x:98:
 nogroup:x:65534:
 log:x:61:
 ntp:x:62:
+fdh:x:76:

@@ -1,8 +1,8 @@
-foreground { s6-ln -sf /proc/self/fd /dev }
-foreground { s6-ln -sf /proc/kcore /dev/core }
-foreground { s6-ln -sf loop0 /dev/loop }
-foreground { s6-ln -sf /run/shm /dev }
-foreground { s6-ln -sf fd/0 /dev/stdin }
-foreground { s6-ln -sf fd/1 /dev/stdout }
-foreground { s6-ln -sf fd/2 /dev/stderr }
+foreground { ln -sf /proc/self/fd /dev }
+foreground { ln -sf /proc/kcore /dev/core }
+foreground { ln -sf loop0 /dev/loop }
+foreground { ln -sf /run/shm /dev }
+foreground { ln -sf fd/0 /dev/stdin }
+foreground { ln -sf fd/1 /dev/stdout }
+foreground { ln -sf fd/2 /dev/stderr }
 exit 0

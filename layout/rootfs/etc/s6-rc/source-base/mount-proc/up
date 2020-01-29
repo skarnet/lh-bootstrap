@@ -1,3 +1,1 @@
-foreground { s6-mount -wt proc proc /proc }
-importas ? ?
-s6-test $? -le 1
+mount -wt proc proc /proc

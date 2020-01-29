@@ -7,6 +7,7 @@ suffix :=
 SKALIBS_VERSION := d200635a4c624c687b3387f937425d12239eb5c3
 EXECLINE_VERSION := 1c14235c4055f9e9ae5664c81909d6f1b2e4ba1e
 S6_PORTABLE_UTILS_VERSION := c7bd01088dc5a15500fb91d58f4fff5bbe4d3438
+S6_LINUX_UTILS_VERSION := 47473861bd8c5629ad51fbe5a8aa7ff243f3348a
 S6_DNS_VERSION := 4a27fef217491f03aab8497d899ecb58289897d2
 S6_NETWORKING_VERSION := cfc739a5ec6e408faadef3b17250c50bca0f0b38
 S6_VERSION := 4ad28c83818e3b7b351ac328e3753d8dab8b2804
@@ -25,7 +26,7 @@ S6_DNS_FIND_OPTIONS := --with-include=$(OUTPUT)/rootfs/package/web/s6-dns/includ
 ifeq ($(CONSOLE),)
 EARLY_GETTY :=
 else
-EARLY_GETTY := -G "getty -H lh-$(word 1,$(subst -, ,$(TRIPLE))) $(CONSOLE)"
+EARLY_GETTY := -G "getty -H lh-$(word 1,$(subst -, ,$(TRIPLE))) 115200 $(CONSOLE)"
 endif
 
 $(OUTPUT)/sources/.lh_skalibs_cloned: | $(OUTPUT)/tmp/.lh_prepared
@@ -41,6 +42,11 @@ $(OUTPUT)/sources/.lh_execline_cloned: | $(OUTPUT)/tmp/.lh_prepared
 $(OUTPUT)/sources/.lh_s6pu_cloned: | $(OUTPUT)/tmp/.lh_prepared
 	if test -d $(OUTPUT)/sources/s6-portable-utils ; then cd $(OUTPUT)/sources/s6-portable-utils && setuidgid $(NORMALUSER) git fetch ; else cd $(OUTPUT)/sources && setuidgid $(NORMALUSER) git clone $(url)/s6-portable-utils$(suffix) s6-portable-utils ; fi
 	exec setuidgid $(NORMALUSER) sh -c "cd $(OUTPUT)/sources/s6-portable-utils && git checkout $(S6_PORTABLE_UTILS_VERSION) && :> package/deps-build"
+	exec setuidgid $(NORMALUSER) touch $@
+
+$(OUTPUT)/sources/.lh_s6lu_cloned: | $(OUTPUT)/tmp/.lh_prepared
+	if test -d $(OUTPUT)/sources/s6-linux-utils ; then cd $(OUTPUT)/sources/s6-linux-utils && setuidgid $(NORMALUSER) git fetch ; else cd $(OUTPUT)/sources && setuidgid $(NORMALUSER) git clone $(url)/s6-linux-utils$(suffix) s6-linux-utils ; fi
+	exec setuidgid $(NORMALUSER) sh -c "cd $(OUTPUT)/sources/s6-linux-utils && git checkout $(S6_LINUX_UTILS_VERSION) && :> package/deps-build"
 	exec setuidgid $(NORMALUSER) touch $@
 
 $(OUTPUT)/sources/.lh_s6dns_cloned: | $(OUTPUT)/tmp/.lh_prepared
@@ -358,6 +364,7 @@ $(OUTPUT)/build-host/.lh_s6li_laidout: $(OUTPUT)/build-host/.lh_s6li_installed |
 	for i in `ls -1 $(OUTPUT)/rootfs/etc/s6-linux-init/current/bin` ; do ln -sf ../etc/s6-linux-init/current/bin/$$i $(OUTPUT)/rootfs/bin/$$i ; done
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
+
 $(OUTPUT)/build-host/.lh_mdevd_copied: $(OUTPUT)/sources/.lh_mdevd_cloned | $(OUTPUT)/build-build/.lh_skarnet_installed
 	exec setuidgid $(NORMALUSER) s6-rmrf $(OUTPUT)/build-host/mdevd
 	exec setuidgid $(NORMALUSER) s6-hiercopy $(OUTPUT)/sources/mdevd $(OUTPUT)/build-host/mdevd
@@ -373,24 +380,6 @@ $(OUTPUT)/build-host/.lh_mdevd_built: $(OUTPUT)/build-host/.lh_mdevd_configured 
 
 $(OUTPUT)/build-host/.lh_mdevd_installed: $(OUTPUT)/build-host/.lh_mdevd_built | $(OUTPUT)/tmp/.lh_prepared $(OUTPUT)/build-build/.lh_skarnet_installed
 	exec cd $(OUTPUT)/build-host/mdevd $(MAKE) install update global-links DESTDIR=$(OUTPUT)/rootfs
-	exec setuidgid $(NORMALUSER) s6-touch $@
-
-
-$(OUTPUT)/build-host/.lh_bcnm_copied: $(OUTPUT)/sources/.lh_bcnm_cloned | $(OUTPUT)/build-build/.lh_skarnet_installed
-	exec setuidgid $(NORMALUSER) s6-rmrf $(OUTPUT)/build-host/bcnm
-	exec setuidgid $(NORMALUSER) s6-hiercopy $(OUTPUT)/sources/bcnm $(OUTPUT)/build-host/bcnm
-	exec setuidgid $(NORMALUSER) s6-touch $@
-
-$(OUTPUT)/build-host/.lh_bcnm_configured: $(OUTPUT)/build-host/.lh_bcnm_copied $(OUTPUT)/build-host/.lh_skalibs_installed | $(OUTPUT)/build-build/.lh_skarnet_installed
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-host/bcnm ./configure --host=$(TRIPLE) --enable-slashpackage $(SKARNET_CONF_STATIC) $(SKALIBS_FIND_OPTIONS)
-	exec setuidgid $(NORMALUSER) touch $@
-
-$(OUTPUT)/build-host/.lh_bcnm_built: $(OUTPUT)/build-host/.lh_bcnm_configured $(OUTPUT)/build-host/.lh_skalibs_installed | $(OUTPUT)/build-build/.lh_skarnet_installed
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-host/bcnm $(MAKE) all strip
-	exec setuidgid $(NORMALUSER) s6-touch $@
-
-$(OUTPUT)/build-host/.lh_bcnm_installed: $(OUTPUT)/build-host/.lh_bcnm_built | $(OUTPUT)/tmp/.lh_prepared $(OUTPUT)/build-build/.lh_skarnet_installed
-	exec cd $(OUTPUT)/build-host/bcnm $(MAKE) install update global-links DESTDIR=$(OUTPUT)/rootfs
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
 
