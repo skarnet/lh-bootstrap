@@ -70,9 +70,9 @@ $(OUTPUT)/tmp/.lh_userfs_installed: $(OUTPUT)/tmp/.lh_layout_installed
 # The qemu disk images (requires qemu and libguestfs-tools)
 
 $(OUTPUT)/tmp/.lh_diskimages_done: $(OUTPUT)/tmp/.lh_rootfs_installed $(OUTPUT)/tmp/.lh_rwfs_installed $(OUTPUT)/tmp/.lh_userfs_installed
-	exec virt-make-fs --format=qcow2 --size=1G --type=ext4 $(OUTPUT)/rootfs $(OUTPUT)/rootfs.qcow2
-	exec virt-make-fs --format=qcow2 --size=512M --type=ext4 $(OUTPUT)/rwfs $(OUTPUT)/rwfs.qcow2
-	exec virt-make-fs --format=qcow2 --size=512M --type=ext4 $(OUTPUT)/userfs $(OUTPUT)/userfs.qcow2
+	setuidgid $(NORMALUSER) virt-make-fs --format=qcow2 --type=ext4 --size=$(ROOTFS_SIZE) $(OUTPUT)/rootfs $(OUTPUT)/rootfs.qcow2 & \
+	setuidgid $(NORMALUSER) virt-make-fs --format=qcow2 --type=ext4 --size=$(RWFS_SIZE) $(OUTPUT)/rwfs $(OUTPUT)/rwfs.qcow2 & \
+	setuidgid $(NORMALUSER) virt-make-fs --format=qcow2 --type=ext4 --size=$(USERFS_SIZE) $(OUTPUT)/userfs $(OUTPUT)/userfs.qcow2
 	exec setuidgid $(NORMALUSER) touch $@
 
 qemu-boot: $(OUTPUT)/build-host/kernel/.lh_installed $(OUTPUT)/tmp/.lh_diskimages_done run-qemu

@@ -16,12 +16,14 @@ NORMALUSER=nobody
 # CROSS_BASE=/home/ska/toolchains/cross/$TRIPLE
 
 
-# Set this to true if you want your created rootfs to be statically linked
+# Set this to true if you want your created rootfs to be statically linked.
+# By default, it will be true for musl toolchains, false for glibc toolchains.
 # BUILD_HOST_STATIC=false
 
-# Filesystems size, in megabytes.
-
-ROOTFS_SIZE=32768
+# Filesystems size, as understood by libguestfs's virt-make-fs
+ROOTFS_SIZE=1024M
+RWFS_SIZE=512M
+USERFS_SIZE=512M
 
 # The device on which to spawn an early getty.
 # Leave empty for no early getty.
