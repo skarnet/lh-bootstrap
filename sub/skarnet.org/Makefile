@@ -332,7 +332,7 @@ $(OUTPUT)/build-host/.lh_s6li_laidout: $(OUTPUT)/build-host/.lh_s6li_installed |
 	exec mkdir -p $(OUTPUT)/rootfs/etc/s6-linux-init
 	exec rm -rf $(OUTPUT)/rootfs/etc/s6-linux-init/s6lidir
 	exec s6-linux-init-maker -u $(NORMALUSER) $(EARLY_GETTY) -1 -p /command:/bin -s /run/kernel_env -f $(OUTPUT)/build-build/etc/s6-linux-init/skel -- $(OUTPUT)/rootfs/etc/s6-linux-init/s6lidir
-	exec sed -i 's/ "$(NORMALUSER)" / catchlog /' $(OUTPUT)/rootfs/etc/s6-linux-init/s6lidir/run-image/service/s6-svscan-log/run
+	exec sed -i 's/s6-setuidgid "$(NORMALUSER)"/s6-setuidgid catchlog/' $(OUTPUT)/rootfs/etc/s6-linux-init/s6lidir/run-image/service/s6-svscan-log/run
 	exec chown 98:98 $(OUTPUT)/rootfs/etc/s6-linux-init/s6lidir/run-image/uncaught-logs
 	exec chmod 02750 $(OUTPUT)/rootfs/etc/s6-linux-init/s6lidir/run-image/uncaught-logs
 	exec rm -rf $(OUTPUT)/rootfs/etc/s6-linux-init/current
