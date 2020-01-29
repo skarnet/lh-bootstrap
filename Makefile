@@ -76,7 +76,7 @@ $(OUTPUT)/tmp/.lh_diskimages_done: $(OUTPUT)/tmp/.lh_rootfs_installed $(OUTPUT)/
 	exec setuidgid $(NORMALUSER) touch $@
 
 qemu-boot: $(OUTPUT)/build-host/kernel/.lh_installed $(OUTPUT)/tmp/.lh_diskimages_done run-qemu
-	exec ./run-qemu
+	exec setuidgid $(NORMALUSER) ./run-qemu
 
 
 # Subsystems
