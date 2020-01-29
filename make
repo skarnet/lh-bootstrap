@@ -22,7 +22,6 @@ BUILD_HOST_CC="$TRIPLE-${CROSS_CC:-gcc}"
 ROOTFS_SIZE=${ROOTFS_SIZE:-1024M}
 RWFS_SIZE=${RWFS_SIZE:-512M}
 USERFS_SIZE=${USERFS_SIZE:-512M}
-LIBC_SYSROOT=${LIBC_SYSROOT:-$(${BUILD_HOST_CC} -print-sysroot)}
 
 if test -z "$BUILD_HOST_STATIC" ; then
   case "$TRIPLE" in
@@ -48,6 +47,7 @@ fi
 BUILD_HOST_CC_FULL="$CROSS_BASE/bin/$BUILD_HOST_CC"
 BUILD_HOST_SYSROOT="$CROSS_BASE/$TRIPLE"
 BUILD_HOST_PREFIX="$CROSS_BASE/bin/$TRIPLE"
+LIBC_SYSROOT=${LIBC_SYSROOT:-$(${BUILD_HOST_CC_FULL} -print-sysroot)}
 
 hostarch=$(echo $TRIPLE | cut -f1 -d-)
 # This is used extensively throughout the whole build: different subsystems have different names for the architecture
