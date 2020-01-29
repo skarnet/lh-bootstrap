@@ -26,7 +26,7 @@ $(OUTPUT)/build-host/.lh_bb_copied: $(OUTPUT)/sources/.lh_bb_dled | $(OUTPUT)/bu
 
 $(OUTPUT)/build-host/busybox-$(BUSYBOX_VERSION)/.config: $(OUTPUT)/build-host/.lh_bb_copied sub/busybox/host-full-config | $(OUTPUT)/build-build/.lh_skarnet_installed $(OUTPUT)/tmp/.lh_prepared
 ifeq ($(BUILD_HOST_STATIC),true)
-	exec setuidgid $(NORMALUSER) sed -e "s/# CONFIG_STATIC is not set/CONFIG_STATIC=y/" $(WD)/sub/busybox/host-full-config $@
+	exec setuidgid $(NORMALUSER) redirfd -w 1 $@ sed -e 's/# CONFIG_STATIC is not set/CONFIG_STATIC=y/' $(WD)/sub/busybox/host-full-config
 else
 	exec setuidgid $(NORMALUSER) cp -f $(WD)/sub/busybox/host-full-config $@
 endif
