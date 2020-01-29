@@ -3,12 +3,12 @@
 output="$1"
 
 s6-hiercopy layout/rootfs $output/rootfs
-chown -R 0:0 $output/rootfs $output/rwfs $output/userfs
 find "$output/rootfs" -type f -name .empty -size 0c -exec s6-rmrf {} \;
 s6-hiercopy layout/rwfs $output/rwfs
 find "$output/rwfs" -type f -name .empty -size 0c -exec s6-rmrf {} \;
 s6-hiercopy layout/userfs $output/userfs
 find "$output/userfs" -type f -name .empty -size 0c -exec s6-rmrf {} \;
+chown -R 0:0 $output/rootfs $output/rwfs $output/userfs
 
 buildtime=$(s6-clock)
 
@@ -24,13 +24,12 @@ done < sub/layout/permissions
 
 # If dynamic: copy shared libs from the toolchain into the target
 
-if ! ${BUILD_HOST_STATIC} ; then
-  sysroot=`${BUILD_HOST_CC} -print-sysroot`
+if ${LIBC_COPY} ; then
   for lib in lib lib32 lib64 ; do
-    if s6-test -d "$sysroot/$lib" ; then
+    if s6-test -d "$LIBC_SYSROOT/$lib" ; then
       s6-mkdir -p "$output/rootfs/$lib"
-      for i in `ls -1 "$sysroot/$lib" | grep -e '\.so$' -e '\.so\.'` ; do
-        s6-hiercopy "$sysroot/$lib/$i" "$output/rootfs/$lib/$i"
+      for i in `ls -1 "$LIBC_SYSROOT/$lib" | grep -e '\.so$' -e '\.so\.'` ; do
+        s6-hiercopy "$LIBC_SYSROOT/$lib/$i" "$output/rootfs/$lib/$i"
       done
     fi
   done

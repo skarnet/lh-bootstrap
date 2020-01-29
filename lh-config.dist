@@ -20,6 +20,12 @@ NORMALUSER=nobody
 # By default, it will be true for musl toolchains, false for glibc toolchains.
 # BUILD_HOST_STATIC=false
 
+# Whether or not you want to copy the shared libc from the toolchain.
+# By default, the shared libs are copied if the build isn't static.
+# You can also optionally manually specify the sysroot to copy the libs from.
+# LIBC_COPY=
+# LIBC_SYSROOT=
+
 # Filesystems size, as understood by libguestfs's virt-make-fs
 ROOTFS_SIZE=1024M
 RWFS_SIZE=512M

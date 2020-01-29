@@ -16,7 +16,7 @@ S6_LINUX_INIT_VERSION := 6a1207350d876659296c6aab7cd1063bbb3d0ed1
 MDEVD_VERSION := 7430c9be1d379ae1eb0626ec67968b6edcfbf7d6
 BCNM_VERSION := fe28e76256c4ff7d1af53ad3940bf737f6000107
 
-SKARNET_CONF_STATIC := $(if $(filter true,$(BUILD_HOST_STATIC)),--enable-static-libc,--enable-shared --disable-allstatic)
+SKARNET_CONF_STATIC := $(if $(filter true,$(BUILD_HOST_STATIC)),--disable-shared --enable-static-libc,--enable-shared --disable-allstatic)
 SKALIBS_FIND_OPTIONS := --with-sysdeps=$(OUTPUT)/rootfs/package/prog/skalibs/sysdeps --with-include=$(OUTPUT)/rootfs/package/prog/skalibs/include --with-lib=$(OUTPUT)/rootfs/package/prog/skalibs/library --with-dynlib=$(OUTPUT)/rootfs/package/prog/skalibs/library.so
 EXECLINE_FIND_OPTIONS := --with-include=$(OUTPUT)/rootfs/package/admin/execline/include --with-lib=$(OUTPUT)/rootfs/package/admin/execline/library --with-dynlib=$(OUTPUT)/rootfs/package/admin/execline/library.so
 S6_FIND_OPTIONS := --with-include=$(OUTPUT)/rootfs/package/admin/s6/include --with-lib=$(OUTPUT)/rootfs/package/admin/s6/library --with-dynlib=$(OUTPUT)/rootfs/package/admin/s6/library.so
