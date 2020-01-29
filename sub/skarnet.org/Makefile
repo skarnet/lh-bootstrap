@@ -58,6 +58,12 @@ $(OUTPUT)/sources/.lh_s6_cloned: | $(OUTPUT)/tmp/.lh_prepared
 	exec setuidgid $(NORMALUSER) sh -c "cd $(OUTPUT)/sources/s6 && git checkout $(S6_VERSION) && :> package/deps-build"
 	exec setuidgid $(NORMALUSER) touch $@
 
+$(OUTPUT)/sources/.lh_s6rc_cloned: | $(OUTPUT)/tmp/.lh_prepared
+	if test -d $(OUTPUT)/sources/s6-rc ; then cd $(OUTPUT)/sources/s6-rc && setuidgid $(NORMALUSER) git fetch ; else cd $(OUTPUT)/sources && setuidgid $(NORMALUSER) git clone $(url)/s6-rc$(suffix) s6-rc ; fi
+	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/sources/s6-rc git checkout $(S6_RC_VERSION)
+	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/sources/s6-rc redirfd -w 1 package/deps-build true
+	exec setuidgid $(NORMALUSER) touch $@
+
 $(OUTPUT)/sources/.lh_s6li_cloned: | $(OUTPUT)/tmp/.lh_prepared
 	if test -d $(OUTPUT)/sources/s6-linux-init ; then cd $(OUTPUT)/sources/s6-linux-init && setuidgid $(NORMALUSER) git fetch ; else cd $(OUTPUT)/sources && setuidgid $(NORMALUSER) git clone $(url)/s6-linux-init$(suffix) s6-linux-init ; fi
 	exec setuidgid $(NORMALUSER) sh -c "cd $(OUTPUT)/sources/s6-linux-init && git checkout $(S6_LINUX_INIT_VERSION) && :> package/deps-build"
