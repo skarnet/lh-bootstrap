@@ -25,7 +25,7 @@ S6_DNS_FIND_OPTIONS := --with-include=$(OUTPUT)/rootfs/package/web/s6-dns/includ
 ifeq ($(CONSOLE),)
 EARLY_GETTY :=
 else
-EARLY_GETTY := -G "getty -H lh-$(word 1,$(subst (-, ,$(TRIPLE))) $(CONSOLE)"
+EARLY_GETTY := -G "getty -H lh-$(word 1,$(subst (-, ,$(TRIPLE)))) $(CONSOLE)"
 endif
 
 $(OUTPUT)/sources/.lh_skalibs_cloned: | $(OUTPUT)/tmp/.lh_prepared
