@@ -1,0 +1,3 @@
+foreground { s6-mount -wt sysfs sys /sys }
+importas ? ?
+s6-test $? -le 1

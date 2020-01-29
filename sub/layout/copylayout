@@ -3,13 +3,17 @@
 output="$1"
 
 s6-hiercopy layout/rootfs $output/rootfs
-chown -R 0:0 $output/rootfs
+chown -R 0:0 $output/rootfs $output/rwfs $output/userfs
 find "$output/rootfs" -type f -name .empty -size 0c -exec s6-rmrf {} \;
+s6-hiercopy layout/rwfs $output/rwfs
+find "$output/rwfs" -type f -name .empty -size 0c -exec s6-rmrf {} \;
+s6-hiercopy layout/userfs $output/userfs
+find "$output/userfs" -type f -name .empty -size 0c -exec s6-rmrf {} \;
 
 buildtime=$(s6-clock)
 
 hostarch=$(s6-echo -- $TRIPLE | cut -f1 -d-)
-sed -i -e "s/%%HOSTNAME%%/lh-$hostarch/g" $output/rootfs/etc/motd $output/rootfs/etc/issue.net $output/rootfs/root/.execline-shell
+sed -i -e "s/%%HOSTNAME%%/lh-$hostarch/g" $output/rootfs/etc/motd $output/rootfs/etc/issue.net $output/rootfs/root/.execline-shell $output/rootfs/etc/s6-rc/source-base/00/up
 
 while read file user group perms ; do
   if s6-test -n "$file" -a "$file" != "#" ; then
@@ -17,7 +21,6 @@ while read file user group perms ; do
     $output/build-build/command/s6-chmod $perms $output/$file
   fi
 done < sub/layout/permissions
-
 
 # If dynamic: copy shared libs from the toolchain into the target
 

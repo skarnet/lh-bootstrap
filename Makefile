@@ -20,12 +20,15 @@ NORMALUSER_GID := $(shell id -g $(NORMALUSER))
 
 it: all
 
-.PHONY: it all rootfs kernel qemu-boot clean distclean
+.PHONY: it all kernel rootfs rwfs userfs images qemu-boot clean distclean
 
 
-all: $(OUTPUT)/tmp/.lh_rootfs_installed $(OUTPUT)/build-host/kernel/.lh_installed
-rootfs: $(OUTPUT)/tmp/.lh_rootfs_installed
+all: kernel rootfs rwfs userfs images
 kernel: $(OUTPUT)/build-host/kernel/.lh_installed
+rootfs: $(OUTPUT)/tmp/.lh_rootfs_installed
+rwfs: $(OUTPUT)/tmp/.lh_rwfs_installed
+userfs: $(OUTPUT)/tmp/.lh_userfs_installed
+images: $(OUTPUT)/tmp/.lh_diskimages_done
 
 
 # clean everything
@@ -40,7 +43,7 @@ clean:
 # Prepare the output directory. This is at the bottom of the dependency tree.
 
 $(OUTPUT)/tmp/.lh_prepared: lh-config
-	exec mkdir -p -m 0755 -- $(OUTPUT)/tmp $(OUTPUT)/rootfs $(OUTPUT)/build-build/bin $(OUTPUT)/build-build/opt $(OUTPUT)/build-build/tmp $(OUTPUT)/build-host/bin $(OUTPUT)/build-host/opt $(OUTPUT)/build-host/tmp $(OUTPUT)/host-host $(OUTPUT)/sources
+	exec mkdir -p -m 0755 -- $(OUTPUT)/tmp $(OUTPUT)/rootfs $(OUTPUT)/rwfs $(OUTPUT)/userfs $(OUTPUT)/build-build/bin $(OUTPUT)/build-build/opt $(OUTPUT)/build-build/tmp $(OUTPUT)/build-host/bin $(OUTPUT)/build-host/opt $(OUTPUT)/build-host/tmp $(OUTPUT)/host-host $(OUTPUT)/sources
 	exec chown -R -- $(NORMALUSER_UID):$(NORMALUSER_GID) $(OUTPUT)/tmp $(OUTPUT)/build-build $(OUTPUT)/build-host $(OUTPUT)/host-host
 	exec chown -- $(NORMALUSER_UID):$(NORMALUSER_GID) $(OUTPUT)/sources $(OUTPUT)
 	exec setuidgid $(NORMALUSER) touch $@
@@ -52,20 +55,27 @@ $(OUTPUT)/build-build/.lh_done: $(OUTPUT)/build-build/.lh_skarnet_installed $(OU
 	exec setuidgid $(NORMALUSER) touch $@
 
 
-# The rootfs
+# The filesystems
 
 $(OUTPUT)/tmp/.lh_rootfs_installed: $(OUTPUT)/tmp/.lh_layout_installed $(OUTPUT)/build-host/.lh_skarnet_installed $(OUTPUT)/build-host/.lh_bb_installed $(OUTPUT)/build-host/.lh_dropbear_installed
 	exec setuidgid $(NORMALUSER) touch $@
 
-
-# The qemu disk image (requires qemu and libguestfs-tools)
-
-$(OUTPUT)/tmp/.lh_diskimage_done: $(OUTPUT)/tmp/.lh_rootfs_installed
-	exec setuidgid $(NORMALUSER) qemu-img create -f qcow2 $(OUTPUT)/disk-image.qcow2 1G
-	exec virt-make-fs --format=qcow2 --size=2G --type=ext4 $(OUTPUT)/rootfs $(OUTPUT)/disk-image.qcow2
+$(OUTPUT)/tmp/.lh_rwfs_installed: $(OUTPUT)/tmp/.lh_layout_installed
 	exec setuidgid $(NORMALUSER) touch $@
 
-qemu-boot: $(OUTPUT)/build-host/kernel/.lh_installed $(OUTPUT)/tmp/.lh_diskimage_done run-qemu
+$(OUTPUT)/tmp/.lh_userfs_installed: $(OUTPUT)/tmp/.lh_layout_installed
+	exec setuidgid $(NORMALUSER) touch $@
+
+
+# The qemu disk images (requires qemu and libguestfs-tools)
+
+$(OUTPUT)/tmp/.lh_diskimages_done: $(OUTPUT)/tmp/.lh_rootfs_installed $(OUTPUT)/tmp/.lh_rwfs_installed $(OUTPUT)/tmp/.lh_userfs_installed
+	exec virt-make-fs --format=qcow2 --size=1G --type=ext4 $(OUTPUT)/rootfs $(OUTPUT)/rootfs.qcow2
+	exec virt-make-fs --format=qcow2 --size=512M --type=ext4 $(OUTPUT)/rwfs $(OUTPUT)/rwfs.qcow2
+	exec virt-make-fs --format=qcow2 --size=512M --type=ext4 $(OUTPUT)/userfs $(OUTPUT)/userfs.qcow2
+	exec setuidgid $(NORMALUSER) touch $@
+
+qemu-boot: $(OUTPUT)/build-host/kernel/.lh_installed $(OUTPUT)/tmp/.lh_diskimages_done run-qemu
 	exec ./run-qemu
 
 
@@ -74,7 +84,6 @@ qemu-boot: $(OUTPUT)/build-host/kernel/.lh_installed $(OUTPUT)/tmp/.lh_diskimage
 ## libc, toolchains, utilities, for the build itself, or for building the host
 
 include sub/kernel/Makefile
-# include sub/util-linux/Makefile
 include sub/xz/Makefile
 include sub/kmod/Makefile
 

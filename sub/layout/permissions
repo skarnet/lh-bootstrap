@@ -1,5 +1,9 @@
 rootfs/etc/shadow		0	0	0600
-rootfs/tmp			0	0	1777
-rootfs/var/log/klogd		102	61	2700
-rootfs/var/log/ntpclient	106	62	2700
-rootfs/var/log/sshd-4		138	61	2700
+
+rwfs/var/tmp			0	0	1777
+rwfs/var/log/klogd		102	61	2700
+
+userfs/home/guest			1000	100	2755
+userfs/home/guest/.execline-shell	1000	100	0755
+userfs/home/guest/.execline-loginshell	1000	100	0755
+userfs/home/guest/.ssh			1000	100	2700

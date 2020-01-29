@@ -1,0 +1,3 @@
+#!/command/execlineb -P
+exec -c
+mdevd -D 3 -b 200000

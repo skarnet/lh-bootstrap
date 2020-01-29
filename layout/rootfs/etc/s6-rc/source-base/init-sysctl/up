@@ -1,0 +1,6 @@
+redirfd -r 0 /etc/sysctl.conf
+forstdin -nCd"\n" -- LINE
+importas -u LINE LINE
+multidefine -C $LINE { CTL VALUE }
+redirfd -w 1 /proc/sys/$CTL
+s6-echo -- $VALUE
