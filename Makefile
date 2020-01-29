@@ -73,7 +73,7 @@ $(OUTPUT)/tmp/.lh_diskimages_done: $(OUTPUT)/tmp/.lh_rootfs_installed $(OUTPUT)/
 	virt-make-fs --format=qcow2 --type=ext4 --size=$(ROOTFS_SIZE) $(OUTPUT)/rootfs $(OUTPUT)/rootfs.qcow2 & \
 	virt-make-fs --format=qcow2 --type=ext4 --size=$(RWFS_SIZE) $(OUTPUT)/rwfs $(OUTPUT)/rwfs.qcow2 & \
 	virt-make-fs --format=qcow2 --type=ext4 --size=$(USERFS_SIZE) $(OUTPUT)/userfs $(OUTPUT)/userfs.qcow2 & wait
-	exec chown -U $(NORMALUSER_UID):$(NORMALUSER_GID) $(OUTPUT)/rootfs.qcow2 $(OUTPUT)/rwfs.qcow2 $(OUTPUT)/userfs.qcow2
+	exec chown $(NORMALUSER_UID):$(NORMALUSER_GID) $(OUTPUT)/rootfs.qcow2 $(OUTPUT)/rwfs.qcow2 $(OUTPUT)/userfs.qcow2
 	exec setuidgid $(NORMALUSER) touch $@
 
 qemu-boot: $(OUTPUT)/build-host/kernel/.lh_installed $(OUTPUT)/tmp/.lh_diskimages_done run-qemu
