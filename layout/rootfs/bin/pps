@@ -1,0 +1,6 @@
+#!/command/execlineb -P
+pipeline
+{
+  s6-ps -H -o user,pid,vsize,rss,tty,s,start,cttime,args
+}
+less

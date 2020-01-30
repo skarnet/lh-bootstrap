@@ -1,5 +1,2 @@
-mdevd
-klogd-pipeline
-mount-disks
-mount-virtual
-fifodir-cleanup
+ok-local
+ok-lan

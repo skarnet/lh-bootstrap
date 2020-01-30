@@ -57,7 +57,7 @@ $(OUTPUT)/build-build/.lh_done: $(OUTPUT)/build-build/.lh_skarnet_installed $(OU
 
 # The filesystems
 
-$(OUTPUT)/tmp/.lh_rootfs_installed: $(OUTPUT)/tmp/.lh_layout_installed $(OUTPUT)/build-host/.lh_skarnet_installed $(OUTPUT)/build-host/.lh_bb_installed $(OUTPUT)/build-host/.lh_dropbear_installed
+$(OUTPUT)/tmp/.lh_rootfs_installed: $(OUTPUT)/tmp/.lh_layout_installed $(OUTPUT)/build-host/.lh_skarnet_installed $(OUTPUT)/build-host/.lh_socklog_installed $(OUTPUT)/build-host/.lh_bb_installed $(OUTPUT)/build-host/.lh_dropbear_installed
 	exec setuidgid $(NORMALUSER) touch $@
 
 $(OUTPUT)/tmp/.lh_rwfs_installed: $(OUTPUT)/tmp/.lh_layout_installed
@@ -94,5 +94,6 @@ include sub/kmod/Makefile
 include sub/layout/Makefile
 include sub/bearssl/Makefile
 include sub/skarnet.org/Makefile
+include sub/socklog/Makefile
 include sub/busybox/Makefile
 include sub/dropbear/Makefile

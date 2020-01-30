@@ -29,7 +29,7 @@ NORMALUSER=nobody
 # Filesystems size, as understood by libguestfs's virt-make-fs
 ROOTFS_SIZE=1024M
 RWFS_SIZE=512M
-USERFS_SIZE=512M
+USERFS_SIZE=128M
 
 # The device on which to spawn an early getty.
 # Leave empty for no early getty.

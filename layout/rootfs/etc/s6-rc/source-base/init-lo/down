@@ -1,0 +1,2 @@
+foreground { ip link set dev lo down }
+exit 0

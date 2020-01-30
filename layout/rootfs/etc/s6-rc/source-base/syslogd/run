@@ -1,0 +1,4 @@
+#!/command/execlineb -P
+fdclose 0
+exec -c
+socklog

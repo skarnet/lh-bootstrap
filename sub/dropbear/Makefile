@@ -15,7 +15,7 @@ $(OUTPUT)/build-host/.lh_dropbear_dled: $(OUTPUT)/sources/dropbear-$(DROPBEAR_VE
 
 $(OUTPUT)/build-host/.lh_dropbear_copied: $(OUTPUT)/build-host/.lh_dropbear_dled | $(OUTPUT)/build-build/.lh_skarnet_installed
 	exec setuidgid $(NORMALUSER) s6-rmrf $(OUTPUT)/build-host/dropbear-$(DROPBEAR_VERSION)
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-host tar jxpvf $(OUTPUT)/sources/dropbear-$(DROPBEAR_VERSION).tar.bz2
+	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-host tar -jxpvf $(OUTPUT)/sources/dropbear-$(DROPBEAR_VERSION).tar.bz2
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
 $(OUTPUT)/build-host/.lh_dropbear_patched: $(OUTPUT)/build-host/.lh_dropbear_copied sub/dropbear/localoptions.h
