@@ -3,7 +3,7 @@ fdmove -c 2 1
 if
 {
   forbacktickx -p -d"\n" i { ls -1 /run/service }
-  importas -u i
+  importas -u i i
   s6-cleanfifodir /run/service/${i}/event
 }
 s6-setuidgid nobody
