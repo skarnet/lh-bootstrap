@@ -24,7 +24,7 @@ it: all
 
 
 all: kernel rootfs rwfs userfs images
-kernel: $(OUTPUT)/build-host/kernel/.lh_installed
+kernel: $(OUTPUT)/build-host/kernel/.lh_installed $(OUTPUT)/build-host/kernel/.lh_modules_installed
 rootfs: $(OUTPUT)/tmp/.lh_rootfs_installed
 rwfs: $(OUTPUT)/tmp/.lh_rwfs_installed
 userfs: $(OUTPUT)/tmp/.lh_userfs_installed
@@ -69,7 +69,7 @@ $(OUTPUT)/tmp/.lh_userfs_installed: $(OUTPUT)/tmp/.lh_layout_installed
 
 # The qemu disk images (requires qemu and libguestfs-tools)
 
-$(OUTPUT)/tmp/.lh_diskimages_done: $(OUTPUT)/tmp/.lh_rootfs_installed $(OUTPUT)/tmp/.lh_rwfs_installed $(OUTPUT)/tmp/.lh_userfs_installed
+$(OUTPUT)/tmp/.lh_diskimages_done: $(OUTPUT)/build-host/kernel/.lh_modules_installed $(OUTPUT)/tmp/.lh_rootfs_installed $(OUTPUT)/tmp/.lh_rwfs_installed $(OUTPUT)/tmp/.lh_userfs_installed
 	virt-make-fs --format=qcow2 --type=ext4 --size=$(ROOTFS_SIZE) $(OUTPUT)/rootfs $(OUTPUT)/rootfs.qcow2 & \
 	virt-make-fs --format=qcow2 --type=ext4 --size=$(RWFS_SIZE) $(OUTPUT)/rwfs $(OUTPUT)/rwfs.qcow2 & \
 	virt-make-fs --format=qcow2 --type=ext4 --size=$(USERFS_SIZE) $(OUTPUT)/userfs $(OUTPUT)/userfs.qcow2 & wait
