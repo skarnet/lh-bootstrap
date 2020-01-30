@@ -3,4 +3,4 @@ forstdin -nCd"\n" -- LINE
 importas -u LINE LINE
 multidefine -C $LINE { CTL VALUE }
 redirfd -w 1 /proc/sys/$CTL
-echo -- $VALUE
+echo $VALUE
