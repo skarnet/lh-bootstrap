@@ -15,13 +15,19 @@ if test -z "$NORMALUSER" || test -z "$ROOTFS_SIZE" || test -z "$TRIPLE" ; then
 fi
 
 
-WD=$(pwd)
-BUILD_BUILD_CC=${BUILD_BUILD_CC:-gcc}
+WD=`pwd`
 OUTPUT=${OUTPUT:-$WD/output}
+if test $OUTPUT = ${OUTPUT#/} ; then
+  OUTPUT="$WD/$OUTPUT"
+fi
+
+BUILD_BUILD_CC=${BUILD_BUILD_CC:-gcc}
 BUILD_HOST_CC="$TRIPLE-${CROSS_CC:-gcc}"
 ROOTFS_SIZE=${ROOTFS_SIZE:-1024M}
 RWFS_SIZE=${RWFS_SIZE:-512M}
 USERFS_SIZE=${USERFS_SIZE:-512M}
+
+
 
 if test -z "$BUILD_HOST_STATIC" ; then
   case "$TRIPLE" in
