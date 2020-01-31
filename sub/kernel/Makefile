@@ -2,6 +2,8 @@ include sub/kernel/Makefile.ncurses
 
 KERNEL_VERSION ?= 5.5
 KERNEL_MAJOR := $(firstword $(subst ., ,$(KERNEL_VERSION)))
+KERNEL_FULLVERSION := $(if $(word 2,$(subst ., ,$(KERNEL_VERSION))),$(KERNEL_VERSION),$(KERNEL_VERSION).0)
+
 KERNEL_ENV := HOSTCC=$(BUILD_BUILD_CC) DEPMOD=$(OUTPUT)/build-build/opt/kmod/bin/depmod INSTALL_MOD_PATH=$(OUTPUT)/rootfs CROSS_COMPILE=$(BUILD_HOST_PREFIX)- ARCH=$(KERNEL_GENERIC_ARCH) INSTALL_MOD_STRIP="-R .note -R .comment -R .note.GNU-stack --strip-debug"
 
 $(OUTPUT)/sources/linux-$(KERNEL_VERSION).tar.xz: | $(OUTPUT)/tmp/.lh_prepared
@@ -62,5 +64,5 @@ endif
 
 $(OUTPUT)/build-host/kernel/.lh_modules_installed: $(OUTPUT)/build-host/kernel/.lh_built | $(OUTPUT)/build-build/.lh_kmod_installed $(OUTPUT)/build-build/.lh_skarnet_installed
 	exec cd $(OUTPUT)/build-host/kernel/linux-$(KERNEL_VERSION) $(MAKE) modules_install $(KERNEL_ENV)
-	exec s6-rmrf $(OUTPUT)/rootfs/lib/modules/$(KERNEL_VERSION)/build $(OUTPUT)/rootfs/lib/modules/$(KERNEL_VERSION)/source
+	exec s6-rmrf $(OUTPUT)/rootfs/lib/modules/$(KERNEL_FULLVERSION)/build $(OUTPUT)/rootfs/lib/modules/$(KERNEL_FULLVERSION)/source
 	exec setuidgid $(NORMALUSER) s6-touch $@
