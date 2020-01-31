@@ -1,4 +1,5 @@
 #!/command/execlineb -P
+s6-envuidgid syslog
 fdclose 0
 exec -c
 socklog
