@@ -30,6 +30,12 @@ rwfs: $(OUTPUT)/tmp/.lh_rwfs_installed
 userfs: $(OUTPUT)/tmp/.lh_userfs_installed
 images: $(OUTPUT)/tmp/.lh_diskimages_done
 
+ifeq ($(LH_DEV),true)
+include sub/strace/Makefile
+LH_DEV_TARGETS := $(OUTPUT)/build-host/.lh_strace_installed
+else
+LH_DEV_TARGETS :=
+endif
 
 # clean everything
 distclean:
@@ -57,7 +63,8 @@ $(OUTPUT)/build-build/.lh_done: $(OUTPUT)/build-build/.lh_skarnet_installed $(OU
 
 # The filesystems
 
-$(OUTPUT)/tmp/.lh_rootfs_installed: $(OUTPUT)/tmp/.lh_layout_installed $(OUTPUT)/build-host/.lh_skarnet_installed $(OUTPUT)/build-host/.lh_socklog_installed $(OUTPUT)/build-host/.lh_bb_installed $(OUTPUT)/build-host/.lh_dropbear_installed
+$(OUTPUT)/tmp/.lh_rootfs_installed: $(OUTPUT)/tmp/.lh_layout_installed $(OUTPUT)/build-host/.lh_skarnet_installed $(OUTPUT)/build-host/.lh_socklog_installed $(OUTPUT)/build-host/.lh_bb_installed $(OUTPUT)/build-host/.lh_dropbear_installed $(LH_DEV_TARGETS)
+
 	exec setuidgid $(NORMALUSER) touch $@
 
 $(OUTPUT)/tmp/.lh_rwfs_installed: $(OUTPUT)/tmp/.lh_layout_installed

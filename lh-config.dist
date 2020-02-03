@@ -26,6 +26,9 @@ NORMALUSER=nobody
 # LIBC_COPY=
 # LIBC_SYSROOT=
 
+# Whether or not you want development packages
+# DEVELOPMENT=false
+
 # Filesystems size, as understood by libguestfs's virt-make-fs
 ROOTFS_SIZE=1024M
 RWFS_SIZE=512M
