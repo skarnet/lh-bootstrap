@@ -4,7 +4,7 @@ KERNEL_VERSION ?= 5.5.1
 KERNEL_MAJOR := $(firstword $(subst ., ,$(KERNEL_VERSION)))
 KERNEL_FULLVERSION := $(if $(word 2,$(subst ., ,$(KERNEL_VERSION))),$(KERNEL_VERSION),$(KERNEL_VERSION).0)
 
-KERNEL_ENV := HOSTCC=$(BUILD_BUILD_CC) DEPMOD=$(OUTPUT)/build-build/opt/kmod/bin/depmod INSTALL_MOD_PATH=$(OUTPUT)/rootfs CROSS_COMPILE=$(BUILD_HOST_PREFIX)- ARCH=$(KERNEL_GENERIC_ARCH) INSTALL_MOD_STRIP="-R .note -R .comment -R .note.GNU-stack --strip-debug"
+KERNEL_ENV := HOSTCC=$(BUILD_BUILD_CC) DEPMOD=$(OUTPUT)/build-build/opt/kmod/bin/depmod INSTALL_MOD_PATH=$(OUTPUT)/rootfs CROSS_COMPILE=$(BUILD_HOST_PREFIX)- ARCH=$(KERNEL_GENERIC_ARCH) INSTALL_MOD_STRIP="-R .note -R .comment -R .note.GNU-stack --strip-debug" HOST_LFS_CFLAGS= HOST_LFS_LDFLAGS= HOST_LFS_LIBS=
 
 $(OUTPUT)/sources/linux-$(KERNEL_VERSION).tar.xz: | $(OUTPUT)/tmp/.lh_prepared
 	cd $(OUTPUT)/sources && setuidgid $(NORMALUSER) wget https://cdn.kernel.org/pub/linux/kernel/v$(KERNEL_MAJOR).x/linux-$(KERNEL_VERSION).tar.xz
