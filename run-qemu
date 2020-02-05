@@ -17,4 +17,4 @@ exec qemu-system-${QEMU_ARCH} -nographic $cpuoption -smp 4 -m 2G -nodefaults -di
   -drive if=virtio,file=$OUTPUT/rwfs.qcow2,format=qcow2,media=disk,index=2 \
   -drive if=virtio,file=$OUTPUT/userfs.qcow2,format=qcow2,media=disk,index=3 \
   -netdev user,id=eth0,hostfwd=::2222-10.0.2.1:22 \
-  -device virtio-net-device,netdev=eth0
+  -device virtio-net-pci,netdev=eth0
