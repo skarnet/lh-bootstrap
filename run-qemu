@@ -5,10 +5,12 @@ if test -n "$CONSOLE" ; then
 fi
 
 case "$QEMU_ARCH" in
-  aarch64) cpuoption="-cpu cortex-a57" ;;
+  arm) cpuoption="-M virt -cpu cortex-a15" ;;
+  aarch64) cpuoption="-M virt -cpu cortex-a57" ;;
+  x86_64) cpuoption="-M pc -cpu qemu64"
 esac
 
-exec qemu-system-${QEMU_ARCH} -nographic -M virt $cpuoption -smp 4 -m 2G -nodefaults -display none -serial mon:stdio \
+exec qemu-system-${QEMU_ARCH} -nographic $cpuoption -smp 4 -m 2G -nodefaults -display none -serial mon:stdio \
   -kernel "$OUTPUT/kernel" \
   -append "root=/dev/vda $consoleoption" \
   -drive if=virtio,file=$OUTPUT/rootfs.qcow2,format=qcow2,media=disk,index=1 \
