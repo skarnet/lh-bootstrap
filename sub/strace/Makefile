@@ -18,7 +18,7 @@ $(OUTPUT)/build-host/.lh_strace_copied: $(OUTPUT)/build-host/.lh_strace_dled | $
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
 $(OUTPUT)/build-host/.lh_strace_configured: $(OUTPUT)/build-host/.lh_strace_copied | $(OUTPUT)/build-build/.lh_skarnet_installed
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-host/strace-$(STRACE_VERSION) export CC "$(BUILD_HOST_CC)" ./configure --host=$(TRIPLE) --prefix=/opt/strace-$(STRACE_VERSION) --enable-mpers=no
+	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-host/strace-$(STRACE_VERSION) export CC "$(BUILD_HOST_CC)" export LIBS "-lrt -lpthread" ./configure --host=$(TRIPLE) --prefix=/opt/strace-$(STRACE_VERSION) --enable-mpers=no
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
 $(OUTPUT)/build-host/.lh_strace_built: $(OUTPUT)/build-host/.lh_strace_configured | $(OUTPUT)/build-build/.lh_skarnet_installed
