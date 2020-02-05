@@ -23,7 +23,7 @@ $(OUTPUT)/build-host/.lh_dropbear_patched: $(OUTPUT)/build-host/.lh_dropbear_cop
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
 $(OUTPUT)/build-host/.lh_dropbear_configured: $(OUTPUT)/build-host/.lh_dropbear_patched | $(OUTPUT)/build-build/.lh_skarnet_installed
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-host/dropbear-$(DROPBEAR_VERSION) export ARCH $(KERNEL_ARCH) export CC "$(BUILD_HOST_CC)" export LDFLAGS "-s $(DROPBEAR_MAKE_STATIC)" ./configure --host=$(TRIPLE) --prefix=/opt/dropbear-$(DROPBEAR_VERSION) --disable-syslog --disable-lastlog --disable-utmp --disable-utmpx --disable-wtmp --disable-wtmpx --disable-pututline --disable-pututxline --without-pam --enable-bundled-libtom --disable-zlib $(DROPBEAR_CONF_STATIC)
+	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-host/dropbear-$(DROPBEAR_VERSION) export ARCH $(KERNEL_ARCH) export CC "$(BUILD_HOST_CC)" export LDFLAGS "-s $(DROPBEAR_MAKE_STATIC)" ./configure --host=$(TRIPLE) --prefix=/opt/dropbear-$(DROPBEAR_VERSION) --disable-syslog --disable-lastlog --disable-utmp --disable-utmpx --disable-wtmp --disable-wtmpx --disable-pututline --disable-pututxline --without-pam --enable-bundled-libtom --disable-zlib --disable-harden $(DROPBEAR_CONF_STATIC)
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
 $(OUTPUT)/build-host/.lh_dropbear_built: $(OUTPUT)/build-host/.lh_dropbear_configured | $(OUTPUT)/build-build/.lh_skarnet_installed
