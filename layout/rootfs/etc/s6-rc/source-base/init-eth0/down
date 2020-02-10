@@ -1,2 +1,3 @@
 foreground { ip link set dev eth0 down }
+foreground { bcnm-waitif -d 2 eth0 }
 exit 0
