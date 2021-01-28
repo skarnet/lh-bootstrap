@@ -1,6 +1,6 @@
 
 NCURSES_NAME := ncurses
-NCURSES_VERSION := 6.1-20200118
+NCURSES_VERSION := 6.2-20210123
 NCURSES_URLDIR := https://invisible-mirror.net/archives/$(NCURSES_NAME)/current
 NCURSES_TAREXT := tgz
 NCURSES_TARLETTER := z

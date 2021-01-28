@@ -2,7 +2,7 @@
 # lh-bootstrap: building a disk image with Linux, musl, and skarnet.org tools from scratch
 
 Laurent Bercot
-last modified: 2017-05-22
+last modified: 2021-01-28
 
 
 ## License
@@ -17,12 +17,12 @@ last modified: 2017-05-22
 and the files can also be copied to real hardware.
 
  The image contains a Linux kernel and a collection of small user-space
-tools such as [busybox](http://busybox.net/), [dropbear](https://matt.ucc.asn.au/dropbear/dropbear.html)
-and the [skarnet.org tools](http://skarnet.org/software/), all statically
-linked against the [musl libc](http://musl-libc.org/). It includes
+tools such as [busybox](https://busybox.net/), [dropbear](https://matt.ucc.asn.au/dropbear/dropbear.html)
+and the [skarnet.org tools](https://skarnet.org/software/), all statically
+linked against the [musl libc](https://musl-libc.org/). It includes
 the minimal amount of necessary software and client configuration to get
-a machine up, running (with [s6](http://skarnet.org/software/s6) as
-process 1 and [s6-rc](http://skarnet.org/software/s6-rc) as service
+a machine up, running (with [s6](https://skarnet.org/software/s6) as
+process 1 and [s6-rc](https://skarnet.org/software/s6-rc) as service
 manager) and connected to the Internet.
 
  The image is built from scratch: every package is compiled from source.
@@ -111,7 +111,7 @@ computing power.
 a gcc toolchain running on your BUILD machine and producing code intended
 to run on your BUILD machine. You should have this on any distribution,
 and your compiler should just be called `gcc`. If you do not have this,
-you can get a native toolchain [here](http://skarnet.org/toolchains/).
+you can get a native toolchain [here](https://skarnet.org/toolchains/).
 
 - An unrestricted Internet connection on the BUILD machine.
 
@@ -135,13 +135,13 @@ binaries against the musl libc.
 Even if you are building for the same TARGET as your BUILD machine
 (example: you are building for x86_64 on an x86_64), **you cannot use
 your stock distribution's native compiler for this!** Pick one of the
-cross toolchains available [here](http://skarnet.org/toolchains/).
+cross toolchains available [here](https://skarnet.org/toolchains/).
 
 - A native musl development environment for the TARGET machine. This means a
 gcc toolchain running on your TARGET machine and producing code intended
 to run on your TARGET machine, linking the TARGET binaries against the musl
 libc. Pick one of the native toolchains available
-[here](http://skarnet.org/toolchains/).
+[here](https://skarnet.org/toolchains/).
 
 
 ## Usage

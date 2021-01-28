@@ -1,7 +1,7 @@
 
 XZ_NAME := xz
-XZ_VERSION := 5.2.4
-XZ_URLDIR := http://tukaani.org/$(XZ_NAME)
+XZ_VERSION := 5.2.5
+XZ_URLDIR := https://tukaani.org/$(XZ_NAME)
 XZ_TAREXT := tar.xz
 XZ_TARLETTER := J
 XZ_CONF_STATIC := $(if $(filter true,$(BUILD_HOST_STATIC)),--disable-shared,)

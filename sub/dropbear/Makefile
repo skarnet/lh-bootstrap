@@ -1,5 +1,5 @@
 
-DROPBEAR_VERSION ?= 2019.78
+DROPBEAR_VERSION ?= 2020.81
 DROPBEAR_CONF_STATIC := $(if $(filter true,$(BUILD_HOST_STATIC)),--enable-static,)
 DROPBEAR_MAKE_STATIC := $(if $(filter true,$(BUILD_HOST_STATIC)),-static,)
 
