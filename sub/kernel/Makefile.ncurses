@@ -35,4 +35,5 @@ $(OUTPUT)/build-build/.lh_$(NCURSES_NAME)_built: $(OUTPUT)/build-build/.lh_$(NCU
 $(OUTPUT)/build-build/.lh_$(NCURSES_NAME)_installed: $(OUTPUT)/build-build/.lh_$(NCURSES_NAME)_built | $(OUTPUT)/tmp/.lh_prepared $(OUTPUT)/build-build/.lh_skarnet_installed
 	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-build/opt/$(NCURSES_NAME)-$(NCURSES_VERSION)/src $(MAKE) install
 	exec setuidgid $(NORMALUSER) makenamelink $(OUTPUT)/build-build/opt $(NCURSES_NAME) $(NCURSES_NAME)-$(NCURSES_VERSION) $(OUTPUT)/tmp
+	exec setuidgid $(NORMALUSER) s6-ln -nsf . $(OUTPUT)/build-build/opt/$(NCURSES_NAME)/include/ncursesw/ncursesw
 	exec setuidgid $(NORMALUSER) s6-touch $@
