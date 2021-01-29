@@ -32,10 +32,10 @@ $(OUTPUT)/build-host/kernel/.lh_configured: $(OUTPUT)/build-host/kernel/.lh_unpa
 	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-host/kernel/linux-$(KERNEL_VERSION) $(MAKE) olddefconfig $(KERNEL_ENV)
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
-kernel-menuconfig: $(OUTPUT)/build-host/kernel/.lh_configured $(OUTPUT)/build-build/.lh_$(NCURSES_NAME)_installed | $(OUTPUT)/build-build/.lh_skarnet_installed
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-host/kernel/linux-$(KERNEL_VERSION) $(MAKE) menuconfig $(KERNEL_ENV) \
-	  HOSTCXXFLAGS="-I$(OUTPUT)/build-build/opt/$(NCURSES_NAME)/include -DKBUILD_NO_NLS -DCURSES_LOC=\"<ncurses/ncurses.h>\"" \
-	  HOSTLDFLAGS="-L$(OUTPUT)/build-build/opt/$(NCURSES_NAME)/ncurses/lib -static"
+kernel-menuconfig: $(OUTPUT)/build-host/kernel/.lh_configured $(OUTPUT)/build-build/.lh_$(NCURSES_NAME)_installed | $(OUTPUT)/build-build/.lh_skarnet_installed $(WD)/bin/fake-pkg-config
+	exec setuidgid $(NORMALUSER) s6-ln -nsf $(WD)/bin/fake-pkg-config $(OUTPUT)/build-build/bin/pkg-config
+	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-host/kernel/linux-$(KERNEL_VERSION) $(MAKE) menuconfig $(KERNEL_ENV)
+	exec setuidgid $(NORMALUSER) rm -f $(OUTPUT)/build-build/bin/pkg-config
 
 $(OUTPUT)/build-host/kernel/.lh_prepared: | $(OUTPUT)/tmp/.lh_prepared $(OUTPUT)/build-build/.lh_skarnet_installed
 	exec s6-mkdir -p $(OUTPUT)/rootfs/opt/linux-kernel-headers-$(KERNEL_VERSION)

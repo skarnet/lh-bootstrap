@@ -1,0 +1,19 @@
+#!/bin/sh
+
+exists () {
+  test -d "${OUTPUT}/build-build/opt/ncurses/include/$1"
+}
+
+cflags () {
+  echo "-I${OUTPUT}/build-build/opt/ncurses/include -DKBUILD_NO_NLS -DCURSES_LOC=\"<${1}/ncurses.h>\""
+}
+
+libs () {
+  echo "-static -L${OUTPUT}/build-build/opt/ncurses/lib -l$1"
+}
+
+case "$1" in
+  --exists) exists "$2" ;;
+  --cflags) cflags "$2" ;;
+  --libs) libs "$2" ;;
+esac
