@@ -5,7 +5,7 @@ exists () {
 }
 
 cflags () {
-  echo "-I${OUTPUT}/build-build/opt/ncurses/include -DKBUILD_NO_NLS -DCURSES_LOC=\\\"<${1}/ncurses.h>\\\""
+  echo "-I${OUTPUT}/build-build/opt/ncurses/include/${1} -DKBUILD_NO_NLS"
 }
 
 libs () {
