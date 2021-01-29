@@ -5,7 +5,7 @@ if test -n "$CONSOLE" ; then
 fi
 
 case "$QEMU_ARCH" in
-  arm) cpuoption="-M virt -cpu cortex-a15" ;;
+  arm) cpuoption="-machine virt,highmem=off -cpu cortex-a15" ;;
   aarch64) cpuoption="-M virt -cpu cortex-a57" ;;
   x86_64) cpuoption="-M pc -cpu qemu64"
 esac
