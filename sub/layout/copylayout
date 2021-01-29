@@ -13,7 +13,7 @@ chown -R 0:0 $output/rootfs $output/rwfs $output/userfs
 buildtime=$(s6-clock)
 
 hostarch=$(s6-echo -- $TRIPLE | cut -f1 -d-)
-sed -i -e "s/%%HOSTNAME%%/lh-$hostarch/g" $output/rootfs/etc/motd $output/rootfs/etc/issue.net $output/rootfs/root/.execline-shell $output/rootfs/etc/s6-rc/source-base/00/up
+sed -i -e "s/%%HOSTNAME%%/lh-$hostarch/g" $output/rootfs/etc/motd $output/rootfs/etc/issue.net $output/rootfs/root/.execline-shell $output/userfs/home/guest/.execline-shell $output/rootfs/etc/s6-rc/source-base/00/up
 
 while read file user group perms ; do
   if s6-test -n "$file" -a "$file" != "#" ; then
