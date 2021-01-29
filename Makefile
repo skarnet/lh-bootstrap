@@ -83,7 +83,7 @@ $(OUTPUT)/tmp/.lh_diskimages_done: $(OUTPUT)/build-host/kernel/.lh_modules_insta
 	exec chown $(NORMALUSER_UID):$(NORMALUSER_GID) $(OUTPUT)/rootfs.qcow2 $(OUTPUT)/rwfs.qcow2 $(OUTPUT)/userfs.qcow2
 	exec setuidgid $(NORMALUSER) touch $@
 
-qemu-boot: $(OUTPUT)/build-host/kernel/.lh_installed $(OUTPUT)/tmp/.lh_diskimages_done run-qemu
+qemu-boot:
 	exec setuidgid $(NORMALUSER) ./run-qemu
 
 
