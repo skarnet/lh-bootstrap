@@ -1,5 +1,5 @@
 
-STRACE_VERSION ?= 5.9
+STRACE_VERSION ?= 5.10
 STRACE_MAKE_STATIC := $(if $(filter true,$(BUILD_HOST_STATIC)),LDFLAGS=-static,)
 
 clean-strace:
