@@ -1,0 +1,6 @@
+#!/command/execlineb -P
+pipeline
+{
+  ls -la
+}
+less
