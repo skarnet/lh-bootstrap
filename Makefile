@@ -31,8 +31,9 @@ userfs: $(OUTPUT)/tmp/.lh_userfs_installed
 images: $(OUTPUT)/tmp/.lh_diskimages_done
 
 ifeq ($(LH_DEV),true)
-include sub/strace/Makefile
-LH_DEV_TARGETS := $(OUTPUT)/build-host/.lh_strace_installed
+include sub/dev/Makefile.strace
+include sub/dev/Makefile.make
+LH_DEV_TARGETS := $(OUTPUT)/build-host/.lh_strace_installed $(OUTPUT)/build-host/.lh_make_installed
 else
 LH_DEV_TARGETS :=
 endif
