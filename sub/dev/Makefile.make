@@ -6,7 +6,7 @@ clean-make:
 	rm -f $(OUTPUT)/build-host/.lh_make_*
 	
 
-$(OUTPUT)/sources/make-$(MAKE_VERSION).tar.xz: | $(OUTPUT)/tmp/.lh_prepared $(OUTPUT)/build-build/.lh_skarnet_installed
+$(OUTPUT)/sources/make-$(MAKE_VERSION).tar.gz: | $(OUTPUT)/tmp/.lh_prepared $(OUTPUT)/build-build/.lh_skarnet_installed
 	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/sources wget https://ftp.gnu.org//gnu/make/make-$(MAKE_VERSION).tar.gz
 
 $(OUTPUT)/build-host/.lh_make_dled: $(OUTPUT)/sources/make-$(MAKE_VERSION).tar.gz | $(OUTPUT)/build-build/.lh_skarnet_installed
