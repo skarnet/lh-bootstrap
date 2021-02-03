@@ -1,59 +1,93 @@
 
-CURL_VERSION ?= 7.74.0
+CURL_VERSION ?= 7.75.0
 CURL_STATIC := $(if $(filter true,$(BUILD_HOST_STATIC)),-all-static,)
 
 CURL_CONF_ARGS := \
-  --enable-optimize \
-  --enable-warnings \
-  --disable-curldebug \
-  --disable-ares \
-  --enable-http \
-  --enable-ftp \
-  --enable-file \
-  --disable-ldap \
-  --disable-ldaps \
-  --disable-rtsp \
-  --enable-proxy \
-  --disable-dict \
-  --enable-telnet \
-  --enable-tftp \
-  --disable-pop3 \
-  --disable-imap \
-  --disable-smb \
-  --disable-smtp \
-  --disable-gopher \
-  --disable-manual \
-  --enable-libcurl-option \
-  --enable-ipv6 \
-  --enable-threaded-resolver \
-  --disable-sspi \
-  --disable-crypto-auth \
-  --disable-ntlm-wb \
-  --disable-tls-srp \
-  --enable-unix-sockets \
-  --enable-cookies \
-  --disable-soname-bump \
-  --with-zlib=$(OUTPUT)/rootfs/opt/zlib \
-  --with-ssl=$(OUTPUT)/rootfs/opt/libressl \
-  --without-openssl \
-  --without-winssl \
-  --without-darwinssl \
-  --without-gnutls \
-  --without-polarssl \
-  --without-cyassl \
-  --without-nss \
-  --without-libpsl \
-  --without-axtls \
-  --without-libmetalink \
-  --with-ca-bundle=/opt/libressl/etc/ssl/cert.pem \
-  --without-ca-fallback \
-  --without-libssh2 \
-  --without-librtmp \
-  --without-winidn \
-  --without-libidn \
-  --without-nghttp2
+    --disable-silent-rules \
+    --disable-debug \
+    --enable-optimize \
+    --enable-warnings \
+    --disable-werror \
+    --disable-curldebug \
+    --enable-symbol-hiding \
+    --disable-ares \
+    --disable-ech \
+    --enable-http \
+    --enable-ftp \
+    --enable-file \
+    --disable-ldap \
+    --disable-ldaps \
+    --disable-rtsp \
+    --enable-proxy \
+    --disable-dict \
+    --enable-telnet \
+    --enable-tftp \
+    --disable-pop3 \
+    --disable-imap \
+    --disable-smb \
+    --disable-smtp \
+    --disable-gopher \
+    --disable-mqtt \
+    --disable-manual \
+    --enable-libcurl-option \
+    --enable-ipv6 \
+    --disable-openssl-auto-load-config \
+    --disable-versioned-symbols \
+    --enable-threaded-resolver \
+    --enable-pthreads \
+    --enable-verbose \
+    --disable-sspi \
+    --enable-crypto-auth \
+    --disable-ntlm-wb \
+    --disable-tls-srp \
+    --enable-unix-sockets \
+    --enable-cookies \
+    --enable-socketpair \
+    --enable-http-auth \
+    --disable-doh \
+    --disable-mime \
+    --enable-dateparse \
+    --disable-netrc \
+    --enable-progress-meter \
+    --disable-dnsshuffle \
+    --enable-get-easy-options \
+    --disable-alt-svc \
+    --enable-hsts \
+    --with-zlib=$(OUTPUT)/rootfs/opt/zlib \
+    --without-brotli \
+    --without-zstd \
+    --with-default-ssl-backend=bearssl \
+    --without-winssl \
+    --without-schannel \
+    --without-darwinssl \
+    --without-secure-transport \
+    --without-amissl \
+    --without-ssl \
+    --without-gnutls \
+    --without-mbedtls \
+    --without-wolfssl \
+    --without-mesalink \
+    --with-bearssl=$(OUTPUT)/rootfs/opt/bearssl \
+    --without-nss \
+    --without-libmetalink \
+    --without-ca-bundle \
+    --without-ca-path \
+    --without-ca-fallback \
+    --without-wolfssh \
+    --without-libssh2 \
+    --without-libssh \
+    --without-librtmp \
+    --without-winidn \
+    --without-libidn2 \
+    --without-nghttp2 \
+    --without-ngtcp2 \
+    --without-nghttp3 \
+    --without-quiche \
+    --without-hyper \
+    --without-zsh-functions-dir \
+    --without-fish-functions-dir
 
-CURL_MAKE_ARGS := CFLAGS="-O2 -I$(OUTPUT)/rootfs/opt/zlib/include -I$(OUTPUT)/rootfs/opt/libressl/include" LDFLAGS="-L$(OUTPUT)/rootfs/opt/zlib/lib -L$(OUTPUT)/rootfs/opt/libressl/lib $(CURL_STATIC)"
+CURL_MAKE_ARGS := LDFLAGS="-L$(OUTPUT)/rootfs/opt/bearssl/lib -L$(OUTPUT)/rootfs/opt/zlib/lib $(CURL_STATIC)"
 
 clean-curl:
 	rm -f $(OUTPUT)/build-host/.lh_curl_*
@@ -70,7 +104,7 @@ $(OUTPUT)/build-host/.lh_curl_copied: $(OUTPUT)/build-host/.lh_curl_dled | $(OUT
 	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-host tar -Jxpvf $(OUTPUT)/sources/curl-$(CURL_VERSION).tar.xz
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
-$(OUTPUT)/build-host/.lh_curl_configured: $(OUTPUT)/build-host/.lh_curl_copied $(OUTPUT)/build-host/.lh_libressl_installed $(OUTPUT)/build-host/.lh_zlib_installed | $(OUTPUT)/build-build/.lh_skarnet_installed
+$(OUTPUT)/build-host/.lh_curl_configured: $(OUTPUT)/build-host/.lh_curl_copied $(OUTPUT)/build-host/.lh_bearssl_installed $(OUTPUT)/build-host/.lh_zlib_installed | $(OUTPUT)/build-build/.lh_skarnet_installed
 	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-host/curl-$(CURL_VERSION) export CC "$(BUILD_HOST_CC)" ./configure --host=$(TRIPLE) --prefix=/opt/curl-$(CURL_VERSION) $(CURL_CONF_ARGS)
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
