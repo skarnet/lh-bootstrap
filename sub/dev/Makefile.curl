@@ -105,7 +105,7 @@ $(OUTPUT)/build-host/.lh_curl_copied: $(OUTPUT)/build-host/.lh_curl_dled | $(OUT
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
 $(OUTPUT)/build-host/.lh_curl_configured: $(OUTPUT)/build-host/.lh_curl_copied $(OUTPUT)/build-host/.lh_bearssl_installed $(OUTPUT)/build-host/.lh_zlib_installed | $(OUTPUT)/build-build/.lh_skarnet_installed
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-host/curl-$(CURL_VERSION) export CC "$(BUILD_HOST_CC)" ./configure --host=$(TRIPLE) --prefix=/opt/curl-$(CURL_VERSION) $(CURL_CONF_ARGS)
+	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-host/curl-$(CURL_VERSION) export CC "$(BUILD_HOST_CC)" ./configure --build=$(BUILD_QUADRUPLE) --host=$(TRIPLE) --prefix=/opt/curl-$(CURL_VERSION) $(CURL_CONF_ARGS)
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
 $(OUTPUT)/build-host/.lh_curl_built: $(OUTPUT)/build-host/.lh_curl_configured | $(OUTPUT)/build-build/.lh_skarnet_installed
