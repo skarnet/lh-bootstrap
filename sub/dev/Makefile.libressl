@@ -1,0 +1,32 @@
+
+LIBRESSL_VERSION ?= 3.2.3
+LIBRESSL_MAKE_STATIC := $(if $(filter true,$(BUILD_HOST_STATIC)),LDFLAGS="-s -static",LDFLAGS=-s)
+
+clean-libressl:
+	rm -f $(OUTPUT)/build-host/.lh_libressl_*
+	
+
+$(OUTPUT)/sources/libressl-$(LIBRESSL_VERSION).tar.gz: | $(OUTPUT)/tmp/.lh_prepared $(OUTPUT)/build-build/.lh_skarnet_installed
+	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/sources wget https://ftp.openbsd.org/pub/OpenBSD/LibreSSL/libressl-$(LIBRESSL_VERSION).tar.gz
+
+$(OUTPUT)/build-host/.lh_libressl_dled: $(OUTPUT)/sources/libressl-$(LIBRESSL_VERSION).tar.gz | $(OUTPUT)/build-build/.lh_skarnet_installed
+	exec setuidgid $(NORMALUSER) s6-touch $@
+
+$(OUTPUT)/build-host/.lh_libressl_copied: $(OUTPUT)/build-host/.lh_libressl_dled | $(OUTPUT)/build-build/.lh_skarnet_installed
+	exec setuidgid $(NORMALUSER) s6-rmrf $(OUTPUT)/build-host/libressl-$(LIBRESSL_VERSION)
+	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-host tar -zxpvf $(OUTPUT)/sources/libressl-$(LIBRESSL_VERSION).tar.gz
+	exec setuidgid $(NORMALUSER) s6-touch $@
+
+$(OUTPUT)/build-host/.lh_libressl_configured: $(OUTPUT)/build-host/.lh_libressl_copied | $(OUTPUT)/build-build/.lh_skarnet_installed
+	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-host/libressl-$(LIBRESSL_VERSION) export CC "$(BUILD_HOST_CC)" ./configure --host=$(TRIPLE) --prefix=/opt/libressl-$(LIBRESSL_VERSION) --disable-tests
+	exec setuidgid $(NORMALUSER) s6-touch $@
+
+$(OUTPUT)/build-host/.lh_libressl_built: $(OUTPUT)/build-host/.lh_libressl_configured | $(OUTPUT)/build-build/.lh_skarnet_installed
+	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-host/libressl-$(LIBRESSL_VERSION) $(MAKE) $(LIBRESSL_MAKE_STATIC)
+	exec setuidgid $(NORMALUSER) s6-touch $@
+	
+$(OUTPUT)/build-host/.lh_libressl_installed: $(OUTPUT)/build-host/.lh_libressl_built | $(OUTPUT)/tmp/.lh_prepared $(OUTPUT)/build-build/.lh_skarnet_installed
+	exec cd $(OUTPUT)/build-host/libressl-$(LIBRESSL_VERSION) $(MAKE) install DESTDIR=$(OUTPUT)/rootfs
+	exec makenamelink $(OUTPUT)/rootfs/opt libressl libressl-$(LIBRESSL_VERSION) $(OUTPUT)/tmp
+	exec makelinks $(OUTPUT)/rootfs /bin /opt/libressl/bin
+	exec setuidgid $(NORMALUSER) s6-touch $@

@@ -1,0 +1,85 @@
+
+CURL_VERSION ?= 7.74.0
+CURL_STATIC := $(if $(filter true,$(BUILD_HOST_STATIC)),-all-static,)
+
+CURL_CONF_ARGS := \
+  --enable-optimize \
+  --enable-warnings \
+  --disable-curldebug \
+  --disable-ares \
+  --enable-http \
+  --enable-ftp \
+  --enable-file \
+  --disable-ldap \
+  --disable-ldaps \
+  --disable-rtsp \
+  --enable-proxy \
+  --disable-dict \
+  --enable-telnet \
+  --enable-tftp \
+  --disable-pop3 \
+  --disable-imap \
+  --disable-smb \
+  --disable-smtp \
+  --disable-gopher \
+  --disable-manual \
+  --enable-libcurl-option \
+  --enable-ipv6 \
+  --enable-threaded-resolver \
+  --disable-sspi \
+  --disable-crypto-auth \
+  --disable-ntlm-wb \
+  --disable-tls-srp \
+  --enable-unix-sockets \
+  --enable-cookies \
+  --disable-soname-bump \
+  --with-zlib=$(OUTPUT)/rootfs/opt/zlib \
+  --with-ssl=$(OUTPUT)/rootfs/opt/libressl \
+  --without-openssl \
+  --without-winssl \
+  --without-darwinssl \
+  --without-gnutls \
+  --without-polarssl \
+  --without-cyassl \
+  --without-nss \
+  --without-libpsl \
+  --without-axtls \
+  --without-libmetalink \
+  --with-ca-bundle=/opt/libressl/etc/ssl/cert.pem \
+  --without-ca-fallback \
+  --without-libssh2 \
+  --without-librtmp \
+  --without-winidn \
+  --without-libidn \
+  --without-nghttp2
+
+CURL_MAKE_ARGS := CFLAGS="-O2 -I$(OUTPUT)/rootfs/opt/zlib/include -I$(OUTPUT)/rootfs/opt/libressl/include" LDFLAGS="-L$(OUTPUT)/rootfs/opt/zlib/lib -L$(OUTPUT)/rootfs/opt/libressl/lib $(CURL_STATIC)"
+
+clean-curl:
+	rm -f $(OUTPUT)/build-host/.lh_curl_*
+	
+
+$(OUTPUT)/sources/curl-$(MAKE_VERSION).tar.xz: | $(OUTPUT)/tmp/.lh_prepared $(OUTPUT)/build-build/.lh_skarnet_installed
+	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/sources wget https://curl.se/download/curl-7.74.0.tar.xz
+
+$(OUTPUT)/build-host/.lh_curl_dled: $(OUTPUT)/sources/curl-$(CURL_VERSION).tar.xz | $(OUTPUT)/build-build/.lh_skarnet_installed
+	exec setuidgid $(NORMALUSER) s6-touch $@
+
+$(OUTPUT)/build-host/.lh_curl_copied: $(OUTPUT)/build-host/.lh_curl_dled | $(OUTPUT)/build-build/.lh_skarnet_installed
+	exec setuidgid $(NORMALUSER) s6-rmrf $(OUTPUT)/build-host/curl-$(CURL_VERSION)
+	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-host tar -Jxpvf $(OUTPUT)/sources/curl-$(CURL_VERSION).tar.xz
+	exec setuidgid $(NORMALUSER) s6-touch $@
+
+$(OUTPUT)/build-host/.lh_curl_configured: $(OUTPUT)/build-host/.lh_curl_copied $(OUTPUT)/build-host/.lh_libressl_installed $(OUTPUT)/build-host/.lh_zlib_installed | $(OUTPUT)/build-build/.lh_skarnet_installed
+	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-host/curl-$(CURL_VERSION) export CC "$(BUILD_HOST_CC)" ./configure --host=$(TRIPLE) --prefix=/opt/curl-$(CURL_VERSION) $(CURL_CONF_ARGS)
+	exec setuidgid $(NORMALUSER) s6-touch $@
+
+$(OUTPUT)/build-host/.lh_curl_built: $(OUTPUT)/build-host/.lh_curl_configured | $(OUTPUT)/build-build/.lh_skarnet_installed
+	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-host/curl-$(CURL_VERSION) $(MAKE) $(CURL_MAKE_ARGS)
+	exec setuidgid $(NORMALUSER) s6-touch $@
+	
+$(OUTPUT)/build-host/.lh_curl_installed: $(OUTPUT)/build-host/.lh_curl_built | $(OUTPUT)/tmp/.lh_prepared $(OUTPUT)/build-build/.lh_skarnet_installed
+	exec cd $(OUTPUT)/build-host/curl-$(CURL_VERSION) $(MAKE) install DESTDIR=$(OUTPUT)/rootfs
+	exec makenamelink $(OUTPUT)/rootfs/opt curl curl-$(CURL_VERSION) $(OUTPUT)/tmp
+	exec makelinks $(OUTPUT)/rootfs /bin /opt/curl/bin
+	exec setuidgid $(NORMALUSER) s6-touch $@

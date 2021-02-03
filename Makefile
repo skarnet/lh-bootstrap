@@ -33,7 +33,11 @@ images: $(OUTPUT)/tmp/.lh_diskimages_done
 ifeq ($(LH_DEV),true)
 include sub/dev/Makefile.strace
 include sub/dev/Makefile.make
-LH_DEV_TARGETS := $(OUTPUT)/build-host/.lh_strace_installed $(OUTPUT)/build-host/.lh_make_installed
+include sub/dev/Makefile.zlib
+include sub/dev/Makefile.libressl
+include sub/dev/Makefile.curl
+include sub/dev/Makefile.git
+LH_DEV_TARGETS := $(OUTPUT)/build-host/.lh_strace_installed $(OUTPUT)/build-host/.lh_make_installed $(OUTPUT)/build-host/.lh_zlib_installed $(OUTPUT)/build-host/.lh_libressl_installed $(OUTPUT)/build-host/.lh_curl_installed $(OUTPUT)/build-host/.lh_git_installed
 else
 LH_DEV_TARGETS :=
 endif

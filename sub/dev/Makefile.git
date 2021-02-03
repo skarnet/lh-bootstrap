@@ -1,0 +1,62 @@
+
+GIT_VERSION ?= 2.30.0
+GIT_STATIC := $(if $(filter true,$(BUILD_HOST_STATIC)),-static,)
+
+GIT_MAKE_ARGS := \
+  prefix=/opt/git \
+  V=1 \
+  CC="$(BUILD_HOST_CC)" \
+  CFLAGS="-O2 -Wall -Wextra -I$(OUTPUT)/rootfs/opt/zlib/include -I$(OUTPUT)/rootfs/opt/libressl/include" \
+  LDFLAGS="-L$(OUTPUT)/rootfs/opt/zlib/lib -L$(OUTPUT)/rootfs/opt/libressl/lib $(GIT_STATIC)" \
+  NO_PERL=YesPlease \
+  CURLDIR=$(OUTPUT)/rootfs/opt/curl \
+  CURL_LDFLAGS="-L$(OUTPUT)/rootfs/opt/curl/lib -lcurl -lssl -lcrypto -lz" \
+  NO_R_TO_GCC_LINKER=YesPlease \
+  NO_REGEX=NeedsStartEnd \
+  NO_EXPAT=YesPlease \
+  NO_TCLTK=YesPlease \
+  NO_GETTEXT=YesPlease \
+  NO_SVN_TESTS=YesPlease \
+  BLK_SHA1=YesPlease \
+  NO_ICONV=YesPlease \
+  NO_PYTHON=YesPlease \
+  NO_INSTALL_HARDLINKS=YesPlease \
+  NO_SYS_POLL_H=YesPlease \
+  HAVE_DEV_TTY=YesPlease \
+  USE_NSEC=1 \
+  LIBC_CONTAINS_LIBINTL=1 \
+  HAVE_ALLOCA_H=1 \
+  HAVE_CLOCK_GETTIME=1 \
+  HAVE_CLOCK_MONOTONIC=1 \
+  NEEDS_SSL_WITH_CURL=YesPlease \
+  NEEDS_CRYPTO_WITH_SSL=YesPlease
+
+
+clean-git:
+	rm -f $(OUTPUT)/build-host/.lh_git_*
+	
+
+$(OUTPUT)/sources/git-$(GIT_VERSION).tar.gz: | $(OUTPUT)/tmp/.lh_prepared $(OUTPUT)/build-build/.lh_skarnet_installed
+	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/sources wget https://www.kernel.org/pub/software/scm/git/git-$(GIT_VERSION).tar.gz
+
+$(OUTPUT)/build-host/.lh_git_dled: $(OUTPUT)/sources/git-$(GIT_VERSION).tar.gz | $(OUTPUT)/build-build/.lh_skarnet_installed
+	exec setuidgid $(NORMALUSER) s6-touch $@
+
+$(OUTPUT)/build-host/.lh_git_copied: $(OUTPUT)/build-host/.lh_git_dled | $(OUTPUT)/build-build/.lh_skarnet_installed
+	exec setuidgid $(NORMALUSER) s6-rmrf $(OUTPUT)/build-host/git-$(GIT_VERSION)
+	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-host tar -zxpvf $(OUTPUT)/sources/git-$(GIT_VERSION).tar.gz
+	exec setuidgid $(NORMALUSER) s6-touch $@
+
+$(OUTPUT)/build-host/.lh_make_configured: $(OUTPUT)/build-host/.lh_make_copied | $(OUTPUT)/build-build/.lh_skarnet_installed
+	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-host/make-$(MAKE_VERSION) export CC "$(BUILD_HOST_CC)" ./configure --host=$(TRIPLE) --prefix=/opt/make-$(MAKE_VERSION) --disable-nls --disable-rpath
+	exec setuidgid $(NORMALUSER) s6-touch $@
+
+$(OUTPUT)/build-host/.lh_git_built: $(OUTPUT)/build-host/.lh_git_copied $(OUTPUT)/build-host/.lh_libressl_installed $(OUTPUT)/build-host/.lh_curl_installed $(OUTPUT)/build-host/.lh_zlib_installed | $(OUTPUT)/build-build/.lh_skarnet_installed
+	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-host/git-$(GIT_VERSION) $(MAKE) $(GIT_MAKE_ARGS)
+	exec setuidgid $(NORMALUSER) s6-touch $@
+	
+$(OUTPUT)/build-host/.lh_git_installed: $(OUTPUT)/build-host/.lh_git_built | $(OUTPUT)/tmp/.lh_prepared $(OUTPUT)/build-build/.lh_skarnet_installed
+	exec cd $(OUTPUT)/build-host/git-$(GIT_VERSION) $(MAKE) install DESTDIR=$(OUTPUT)/rootfs prefix=/opt/git-$(GIT_VERSION)
+	exec makenamelink $(OUTPUT)/rootfs/opt git git-$(GIT_VERSION) $(OUTPUT)/tmp
+	exec makelinks $(OUTPUT)/rootfs /bin /opt/git/bin
+	exec setuidgid $(NORMALUSER) s6-touch $@
