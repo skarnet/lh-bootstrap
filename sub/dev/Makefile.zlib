@@ -5,7 +5,7 @@ clean-zlib:
 	rm -f $(OUTPUT)/build-host/.lh_zlib_*
 	
 
-$(OUTPUT)/sources/zlib-$(MAKE_VERSION).tar.xz: | $(OUTPUT)/tmp/.lh_prepared $(OUTPUT)/build-build/.lh_skarnet_installed
+$(OUTPUT)/sources/zlib-$(ZLIB_VERSION).tar.xz: | $(OUTPUT)/tmp/.lh_prepared $(OUTPUT)/build-build/.lh_skarnet_installed
 	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/sources wget https://zlib.net/zlib-$(ZLIB_VERSION).tar.xz
 
 $(OUTPUT)/build-host/.lh_zlib_dled: $(OUTPUT)/sources/zlib-$(ZLIB_VERSION).tar.xz | $(OUTPUT)/build-build/.lh_skarnet_installed
