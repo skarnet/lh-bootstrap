@@ -5,7 +5,7 @@ clean-zlib:
 	rm -f $(OUTPUT)/build-host/.lh_zlib_*
 	
 
-$(OUTPUT)/sources/zlib-$(MAKE_VERSION).tar.gz: | $(OUTPUT)/tmp/.lh_prepared $(OUTPUT)/build-build/.lh_skarnet_installed
+$(OUTPUT)/sources/zlib-$(MAKE_VERSION).tar.xz: | $(OUTPUT)/tmp/.lh_prepared $(OUTPUT)/build-build/.lh_skarnet_installed
 	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/sources wget https://zlib.net/zlib-$(ZLIB_VERSION).tar.xz
 
 $(OUTPUT)/build-host/.lh_zlib_dled: $(OUTPUT)/sources/zlib-$(ZLIB_VERSION).tar.xz | $(OUTPUT)/build-build/.lh_skarnet_installed
@@ -13,7 +13,7 @@ $(OUTPUT)/build-host/.lh_zlib_dled: $(OUTPUT)/sources/zlib-$(ZLIB_VERSION).tar.x
 
 $(OUTPUT)/build-host/.lh_zlib_copied: $(OUTPUT)/build-host/.lh_zlib_dled | $(OUTPUT)/build-build/.lh_skarnet_installed
 	exec setuidgid $(NORMALUSER) s6-rmrf $(OUTPUT)/build-host/zlib-$(ZLIB_VERSION)
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-host tar -Jxpvf $(OUTPUT)/sources/zlib-$(ZLIB_VERSION).tar.gz
+	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-host tar -Jxpvf $(OUTPUT)/sources/zlib-$(ZLIB_VERSION).tar.xz
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
 $(OUTPUT)/build-host/.lh_zlib_configured: $(OUTPUT)/build-host/.lh_zlib_copied | $(OUTPUT)/build-build/.lh_skarnet_installed
