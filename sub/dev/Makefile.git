@@ -47,10 +47,6 @@ $(OUTPUT)/build-host/.lh_git_copied: $(OUTPUT)/build-host/.lh_git_dled | $(OUTPU
 	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-host tar -zxpvf $(OUTPUT)/sources/git-$(GIT_VERSION).tar.gz
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
-$(OUTPUT)/build-host/.lh_make_configured: $(OUTPUT)/build-host/.lh_make_copied | $(OUTPUT)/build-build/.lh_skarnet_installed
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-host/make-$(MAKE_VERSION) export CC "$(BUILD_HOST_CC)" ./configure --host=$(TRIPLE) --prefix=/opt/make-$(MAKE_VERSION) --disable-nls --disable-rpath
-	exec setuidgid $(NORMALUSER) s6-touch $@
-
 $(OUTPUT)/build-host/.lh_git_built: $(OUTPUT)/build-host/.lh_git_copied $(OUTPUT)/build-host/.lh_libressl_installed $(OUTPUT)/build-host/.lh_curl_installed $(OUTPUT)/build-host/.lh_zlib_installed | $(OUTPUT)/build-build/.lh_skarnet_installed
 	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-host/git-$(GIT_VERSION) $(MAKE) $(GIT_MAKE_ARGS)
 	exec setuidgid $(NORMALUSER) s6-touch $@
