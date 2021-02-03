@@ -1,6 +1,6 @@
 
 LIBRESSL_VERSION ?= 3.2.3
-LIBRESSL_MAKE_STATIC := $(if $(filter true,$(BUILD_HOST_STATIC)),LDFLAGS="-s -static",LDFLAGS=-s)
+LIBRESSL_MAKE_STATIC := $(if $(filter true,$(BUILD_HOST_STATIC)),LDFLAGS="-s -all-static",LDFLAGS=-s)
 
 clean-libressl:
 	rm -f $(OUTPUT)/build-host/.lh_libressl_*
