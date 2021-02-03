@@ -2,7 +2,7 @@
 GIT_VERSION ?= 2.30.0
 GIT_STATIC := $(if $(filter true,$(BUILD_HOST_STATIC)),-static,)
 
-GIT_CONF_ARGS := --enable-pthreads --without-expat --with-shell=/bin/sh --with-perl=/bin/perl --without-python --with-zlib=$(OUTPUT)/rootfs/opt/zlib --without-tcltk --with-openssl=$(OUTPUT)/rootfs/opt/libressl
+GIT_CONF_ARGS := --enable-pthreads --without-expat --without-iconv --with-shell=/bin/sh --with-perl=/bin/perl --without-python --with-zlib=$(OUTPUT)/rootfs/opt/zlib --without-tcltk --with-openssl=$(OUTPUT)/rootfs/opt/libressl ac_cv_fread_reads_directories=true ac_cv_snprintf_returns_bogus=false
 GIT_MAKE_ARGS := LDFLAGS="-s $(GIT_STATIC)" NO_GETTEXT=YesPlease NO_PERL=YesPlease DEFAULT_HELP_FORMAT=html INSTALL_SYMLINKS=YesPlease
 
 
