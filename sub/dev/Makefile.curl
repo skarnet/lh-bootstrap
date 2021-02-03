@@ -59,8 +59,8 @@ clean-curl:
 	rm -f $(OUTPUT)/build-host/.lh_curl_*
 	
 
-$(OUTPUT)/sources/curl-$(MAKE_VERSION).tar.xz: | $(OUTPUT)/tmp/.lh_prepared $(OUTPUT)/build-build/.lh_skarnet_installed
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/sources wget https://curl.se/download/curl-7.74.0.tar.xz
+$(OUTPUT)/sources/curl-$(CURL_VERSION).tar.xz: | $(OUTPUT)/tmp/.lh_prepared $(OUTPUT)/build-build/.lh_skarnet_installed
+	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/sources wget https://curl.se/download/curl-$(CURL_VERSION).tar.xz
 
 $(OUTPUT)/build-host/.lh_curl_dled: $(OUTPUT)/sources/curl-$(CURL_VERSION).tar.xz | $(OUTPUT)/build-build/.lh_skarnet_installed
 	exec setuidgid $(NORMALUSER) s6-touch $@
