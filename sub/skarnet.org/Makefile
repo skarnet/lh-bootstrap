@@ -115,6 +115,24 @@ $(OUTPUT)/build-build/.lh_skalibs_installed: $(OUTPUT)/build-build/.lh_skalibs_b
 	exec setuidgid $(NORMALUSER) touch $@
 
 
+$(OUTPUT)/build-build/.lh_utmps_copied: $(OUTPUT)/sources/.lh_utmps_cloned
+	exec setuidgid $(NORMALUSER) rm -rf -- $(OUTPUT)/build-build/tmp/utmps
+	exec setuidgid $(NORMALUSER) cp -RP -- $(OUTPUT)/sources/utmps $(OUTPUT)/build-build/tmp/utmps
+	exec setuidgid $(NORMALUSER) touch $@
+
+$(OUTPUT)/build-build/.lh_utmps_configured: $(OUTPUT)/build-build/.lh_utmps_copied $(OUTPUT)/build-build/.lh_skalibs_installed
+	cd $(OUTPUT)/build-build/tmp/utmps && setuidgid $(NORMALUSER) env CC="$(BUILD_BUILD_CC)" ./configure --enable-slashpackage --disable-shared --enable-libc-includes --with-sysdeps=$(OUTPUT)/build-build/package/prog/skalibs/sysdeps --with-include=$(OUTPUT)/build-build/package/prog/skalibs/include --with-lib=$(OUTPUT)/build-build/package/prog/skalibs/library
+	exec setuidgid $(NORMALUSER) touch $@
+
+$(OUTPUT)/build-build/.lh_utmps_built: $(OUTPUT)/build-build/.lh_utmps_configured $(OUTPUT)/build-build/.lh_skalibs_installed
+	cd $(OUTPUT)/build-build/tmp/utmps && setuidgid $(NORMALUSER) $(MAKE) all strip
+	exec setuidgid $(NORMALUSER) touch $@
+
+$(OUTPUT)/build-build/.lh_utmps_installed: $(OUTPUT)/build-build/.lh_utmps_built
+	cd $(OUTPUT)/build-build/tmp/utmps && setuidgid $(NORMALUSER) $(MAKE) install update global-links DESTDIR=$(OUTPUT)/build-build
+	exec setuidgid $(NORMALUSER) touch $@
+
+
 $(OUTPUT)/build-build/.lh_execline_copied: $(OUTPUT)/sources/.lh_execline_cloned
 	exec setuidgid $(NORMALUSER) rm -rf -- $(OUTPUT)/build-build/tmp/execline
 	exec setuidgid $(NORMALUSER) cp -RP -- $(OUTPUT)/sources/execline $(OUTPUT)/build-build/tmp/execline
@@ -174,8 +192,8 @@ $(OUTPUT)/build-build/.lh_s6li_copied: $(OUTPUT)/sources/.lh_s6li_cloned
 	exec setuidgid $(NORMALUSER) cp -a $(OUTPUT)/sources/s6-linux-init $(OUTPUT)/build-build/tmp/s6-linux-init
 	exec setuidgid $(NORMALUSER) touch $@
 
-$(OUTPUT)/build-build/.lh_s6li_configured: $(OUTPUT)/build-build/.lh_s6li_copied $(OUTPUT)/build-build/.lh_skalibs_installed $(OUTPUT)/build-build/.lh_execline_installed $(OUTPUT)/build-build/.lh_s6_installed
-	cd $(OUTPUT)/build-build/tmp/s6-linux-init && setuidgid $(NORMALUSER) export CC "$(BUILD_BUILD_CC)" ./configure --enable-slashpackage --disable-shared --with-sysdeps=$(OUTPUT)/build-build/package/prog/skalibs/sysdeps --with-include=$(OUTPUT)/build-build/package/prog/skalibs/include --with-lib=$(OUTPUT)/build-build/package/prog/skalibs/library --with-include=$(OUTPUT)/build-build/package/admin/execline/include --with-lib=$(OUTPUT)/build-build/package/admin/execline/library --with-include=$(OUTPUT)/build-build/package/admin/s6/include --with-lib=$(OUTPUT)/build-build/package/admin/s6/library
+$(OUTPUT)/build-build/.lh_s6li_configured: $(OUTPUT)/build-build/.lh_s6li_copied $(OUTPUT)/build-build/.lh_skalibs_installed $(OUTPUT)/build-build/.lh_utmps_installed $(OUTPUT)/build-build/.lh_execline_installed $(OUTPUT)/build-build/.lh_s6_installed
+	cd $(OUTPUT)/build-build/tmp/s6-linux-init && setuidgid $(NORMALUSER) export CC "$(BUILD_BUILD_CC)" ./configure --enable-slashpackage --disable-shared --enable-utmps --with-sysdeps=$(OUTPUT)/build-build/package/prog/skalibs/sysdeps --with-include=$(OUTPUT)/build-build/package/prog/skalibs/include --with-lib=$(OUTPUT)/build-build/package/prog/skalibs/library --with-include=$(OUTPUT)/build-build/package/admin/utmps/include --with-lib=$(OUTPUT)/build-build/package/admin/utmps/library --with-include=$(OUTPUT)/build-build/package/admin/execline/include --with-lib=$(OUTPUT)/build-build/package/admin/execline/library --with-include=$(OUTPUT)/build-build/package/admin/s6/include --with-lib=$(OUTPUT)/build-build/package/admin/s6/library
 	exec setuidgid $(NORMALUSER) touch $@
 
 $(OUTPUT)/build-build/.lh_s6li_built: $(OUTPUT)/build-build/.lh_s6li_configured $(OUTPUT)/build-build/.lh_skalibs_installed $(OUTPUT)/build-build/.lh_execline_installed $(OUTPUT)/build-build/.lh_s6_installed
@@ -259,7 +277,7 @@ $(OUTPUT)/build-host/.lh_utmps_copied: $(OUTPUT)/sources/.lh_utmps_cloned | $(OU
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
 $(OUTPUT)/build-host/.lh_utmps_configured: $(OUTPUT)/build-host/.lh_utmps_copied $(OUTPUT)/build-host/.lh_skalibs_installed | $(OUTPUT)/build-build/.lh_skarnet_installed
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-host/utmps $(SKARNET_ENV) ./configure --host=$(TRIPLE) --enable-slashpackage $(SKARNET_CONF_STATIC) $(SKALIBS_FIND_OPTIONS)
+	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-host/utmps $(SKARNET_ENV) ./configure --host=$(TRIPLE) --enable-slashpackage --enable-libc-includes $(SKARNET_CONF_STATIC) $(SKALIBS_FIND_OPTIONS)
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
 $(OUTPUT)/build-host/.lh_utmps_built: $(OUTPUT)/build-host/.lh_utmps_configured $(OUTPUT)/build-host/.lh_skalibs_installed | $(OUTPUT)/build-build/.lh_skarnet_installed
