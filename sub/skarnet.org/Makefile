@@ -407,8 +407,6 @@ $(OUTPUT)/build-host/.lh_s6li_laidout: $(OUTPUT)/build-host/.lh_s6li_installed |
 	exec $(OUTPUT)/build-build/command/s6-chown -u 98 -g 98 -- $(OUTPUT)/rootfs/etc/s6-linux-init/current/run-image/service/s6-svscan-log/fifo
 	exec $(OUTPUT)/build-build/command/s6-chmod 02750 $(OUTPUT)/rootfs/etc/s6-linux-init/current/run-image/uncaught-logs
 	exec $(OUTPUT)/build-build/command/s6-chown -u 99 -g 99 -- $(OUTPUT)/rootfs/etc/s6-linux-init/current/run-image/utmps
-	exec $(OUTPUT)/build-build/command/s6-chown -u 99 -g 99 -- $(OUTPUT)/rootfs/etc/s6-linux-init/current/run-image/utmps/.utmpd-socket
-	exec $(OUTPUT)/build-build/command/s6-chown -u 99 -g 99 -- $(OUTPUT)/rootfs/etc/s6-linux-init/current/run-image/utmps/.wtmpd-socket
 	for i in `ls -1 $(OUTPUT)/rootfs/etc/s6-linux-init/current/bin` ; do ln -sf ../etc/s6-linux-init/current/bin/$$i $(OUTPUT)/rootfs/bin/$$i ; done
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
