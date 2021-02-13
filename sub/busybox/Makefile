@@ -31,8 +31,8 @@ else
 	exec setuidgid $(NORMALUSER) cp -f $(WD)/sub/busybox/host-full-config $@
 endif
 
-$(OUTPUT)/build-host/.lh_bb_built: $(OUTPUT)/build-host/busybox-$(BUSYBOX_VERSION)/.config | $(OUTPUT)/build-build/.lh_skarnet_installed
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-host/busybox-$(BUSYBOX_VERSION) $(MAKE) -j1 busybox install CROSS_COMPILE=$(TRIPLE)- CC="$(BUILD_HOST_CC)" HOSTCC="$(BUILD_BUILD_CC)"
+$(OUTPUT)/build-host/.lh_bb_built: $(OUTPUT)/build-host/busybox-$(BUSYBOX_VERSION)/.config $(OUTPUT)/build-host/.lh_utmps_installed $(OUTPUT)/build-host/.lh_skalibs_installed | $(OUTPUT)/build-build/.lh_skarnet_installed
+	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-host/busybox-$(BUSYBOX_VERSION) $(MAKE) -j1 busybox install CROSS_COMPILE=$(TRIPLE)- CC="$(BUILD_HOST_CC)" HOSTCC="$(BUILD_BUILD_CC)" CFLAGS="-O2 -I$(OUTPUT)/rootfs/package/admin/utmps/include" LDFLAGS="-L$(OUTPUT)/rootfs/package/admin/utmps/library -L$(OUTPUT)/rootfs/package/prog/skalibs/library" LDLIBS="-lutmps -lskarnet"
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
 $(OUTPUT)/build-host/.lh_bb_installed: $(OUTPUT)/build-host/.lh_bb_built $(OUTPUT)/tmp/.lh_layout_installed | $(OUTPUT)/build-build/.lh_skarnet_installed
