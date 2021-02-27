@@ -1,6 +1,6 @@
 include sub/kernel/Makefile.ncurses
 
-KERNEL_VERSION ?= 5.10.15
+KERNEL_VERSION ?= 5.10.19
 KERNEL_MAJOR := $(firstword $(subst ., ,$(KERNEL_VERSION)))
 KERNEL_FULLVERSION := $(if $(word 2,$(subst ., ,$(KERNEL_VERSION))),$(KERNEL_VERSION),$(KERNEL_VERSION).0)
 
