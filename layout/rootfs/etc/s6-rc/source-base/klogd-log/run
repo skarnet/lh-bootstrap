@@ -1,4 +1,4 @@
-#!/command/execlineb -P
+#!/command/execlineb -S1
 s6-setuidgid kllog
 exec -c
 s6-log t s1000000 n20 /var/log/klogd

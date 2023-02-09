@@ -1,3 +1,2 @@
 foreground { ip link set dev lo down }
 foreground { bcnm-waitif -d 2 lo }
-exit 0

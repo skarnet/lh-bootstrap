@@ -1,2 +1,2 @@
-if { mkdir -p -m 0755 -- /dev/pts }
-mount -wt devpts -o noexec,nosuid,gid=0,mode=0600 devpts /dev/pts
+if { s6-mkdir -p -m 0755 -- /dev/pts }
+s6-mount -wt devpts -o noexec,nosuid,gid=0,mode=0600 devpts /dev/pts

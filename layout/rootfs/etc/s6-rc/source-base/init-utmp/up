@@ -1,0 +1,3 @@
+backtick -E kversion { uname -r }
+if { utmps-write -t 2000 -uw -l reboot -p 0 -h ${kversion} -- "~~" BOOT_TIME "~" }
+     utmps-write -t 2000 -uw -l runlevel -p 20018 -h ${kversion} -- "~~" RUN_LVL "~"

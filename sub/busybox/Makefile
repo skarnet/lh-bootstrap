@@ -1,12 +1,12 @@
-# Version from 2021-02-27
-BUSYBOX_VERSION := 9b6bcfda0e11c0e73a966a77110f6c68425cff34
+# Version from 2023-01-05
+BUSYBOX_VERSION := f15dfd86c4fba78881071dd0f5c63466fa9737a2
 
 clean-busybox:
 	rm -f $(OUTPUT)/sources/.lh_bb_cloned
 	rm -rf $(OUTPUT)/sources/busybox
 	rm -f $(OUTPUT)/sources/.lh_bb_dled
-	rm -rf $(OUTPUT)/build-host/.lh_bb_*
-	rm -rf $(OUTPUT)/build-host/busybox-$(BUSYBOX_VERSION)
+	rm -rf $(OUTPUT)/build-$(TRIPLE)/.lh_bb_*
+	rm -rf $(OUTPUT)/build-$(TRIPLE)/busybox-$(BUSYBOX_VERSION)
 
 
 $(OUTPUT)/sources/.lh_bb_cloned: | $(OUTPUT)/tmp/.lh_prepared $(OUTPUT)/build-build/.lh_skarnet_installed
@@ -19,25 +19,25 @@ $(OUTPUT)/sources/.lh_bb_dled: $(OUTPUT)/sources/.lh_bb_cloned | $(OUTPUT)/build
 	exec setuidgid $(NORMALUSER) touch $@
 
 
-$(OUTPUT)/build-host/.lh_bb_copied: $(OUTPUT)/sources/.lh_bb_dled | $(OUTPUT)/build-build/.lh_skarnet_installed $(OUTPUT)/tmp/.lh_prepared
-	exec setuidgid $(NORMALUSER) s6-rmrf $(OUTPUT)/build-host/busybox-$(BUSYBOX_VERSION)
-	exec setuidgid $(NORMALUSER) s6-hiercopy $(OUTPUT)/sources/busybox $(OUTPUT)/build-host/busybox-$(BUSYBOX_VERSION)
+$(OUTPUT)/build-$(TRIPLE)/.lh_bb_copied: $(OUTPUT)/sources/.lh_bb_dled | $(OUTPUT)/build-build/.lh_skarnet_installed $(OUTPUT)/tmp/.lh_prepared
+	exec setuidgid $(NORMALUSER) s6-rmrf $(OUTPUT)/build-$(TRIPLE)/busybox-$(BUSYBOX_VERSION)
+	exec setuidgid $(NORMALUSER) s6-hiercopy $(OUTPUT)/sources/busybox $(OUTPUT)/build-$(TRIPLE)/busybox-$(BUSYBOX_VERSION)
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
-$(OUTPUT)/build-host/busybox-$(BUSYBOX_VERSION)/.config: $(OUTPUT)/build-host/.lh_bb_copied sub/busybox/host-full-config | $(OUTPUT)/build-build/.lh_skarnet_installed $(OUTPUT)/tmp/.lh_prepared
-ifeq ($(BUILD_HOST_STATIC),true)
+$(OUTPUT)/build-$(TRIPLE)/busybox-$(BUSYBOX_VERSION)/.config: $(OUTPUT)/build-$(TRIPLE)/.lh_bb_copied sub/busybox/host-full-config | $(OUTPUT)/build-build/.lh_skarnet_installed $(OUTPUT)/tmp/.lh_prepared
+ifeq ($(TARGET_STATIC),true)
 	exec setuidgid $(NORMALUSER) redirfd -w 1 $@ sed -e 's/# CONFIG_STATIC is not set/CONFIG_STATIC=y/' $(WD)/sub/busybox/host-full-config
 else
 	exec setuidgid $(NORMALUSER) cp -f $(WD)/sub/busybox/host-full-config $@
 endif
 
-$(OUTPUT)/build-host/.lh_bb_built: $(OUTPUT)/build-host/busybox-$(BUSYBOX_VERSION)/.config $(OUTPUT)/build-host/.lh_utmps_installed $(OUTPUT)/build-host/.lh_skalibs_installed | $(OUTPUT)/build-build/.lh_skarnet_installed
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-host/busybox-$(BUSYBOX_VERSION) $(MAKE) -j1 busybox install CROSS_COMPILE=$(TRIPLE)- CC="$(BUILD_HOST_CC)" HOSTCC="$(BUILD_BUILD_CC)"
+$(OUTPUT)/build-$(TRIPLE)/.lh_bb_built: $(OUTPUT)/build-$(TRIPLE)/busybox-$(BUSYBOX_VERSION)/.config $(OUTPUT)/build-$(TRIPLE)/.lh_utmps_installed $(OUTPUT)/build-$(TRIPLE)/.lh_skalibs_installed | $(OUTPUT)/build-build/.lh_skarnet_installed
+	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-$(TRIPLE)/busybox-$(BUSYBOX_VERSION) $(MAKE) -j1 busybox install CROSS_COMPILE=$(TRIPLE)- CC="$(TARGET_CC)" HOSTCC="$(BUILD_CC)"
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
-$(OUTPUT)/build-host/.lh_bb_installed: $(OUTPUT)/build-host/.lh_bb_built $(OUTPUT)/tmp/.lh_layout_installed | $(OUTPUT)/build-build/.lh_skarnet_installed
+$(OUTPUT)/build-$(TRIPLE)/.lh_bb_installed: $(OUTPUT)/build-$(TRIPLE)/.lh_bb_built $(OUTPUT)/tmp/.lh_layout_installed | $(OUTPUT)/build-build/.lh_skarnet_installed
 	exec s6-rmrf $(OUTPUT)/rootfs/opt/busybox-$(BUSYBOX_VERSION)
-	exec cp -RP $(OUTPUT)/build-host/busybox-$(BUSYBOX_VERSION)/_install $(OUTPUT)/rootfs/opt/busybox-$(BUSYBOX_VERSION)
+	exec cp -RP $(OUTPUT)/build-$(TRIPLE)/busybox-$(BUSYBOX_VERSION)/_install $(OUTPUT)/rootfs/opt/busybox-$(BUSYBOX_VERSION)
 	exec makenamelink $(OUTPUT)/rootfs/opt busybox busybox-$(BUSYBOX_VERSION) $(OUTPUT)/tmp
 	exec makelinks $(OUTPUT)/rootfs /bin /opt/busybox/bin
 	exec makelinks $(OUTPUT)/rootfs /bin /opt/busybox/sbin

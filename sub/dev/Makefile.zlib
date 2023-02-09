@@ -1,30 +1,30 @@
 
-ZLIB_VERSION ?= 1.2.11
+ZLIB_VERSION ?= 1.2.13
 
 clean-zlib:
-	rm -f $(OUTPUT)/build-host/.lh_zlib_*
+	rm -f $(OUTPUT)/build-$(TRIPLE)/.lh_zlib_*
 	
 
 $(OUTPUT)/sources/zlib-$(ZLIB_VERSION).tar.xz: | $(OUTPUT)/tmp/.lh_prepared $(OUTPUT)/build-build/.lh_skarnet_installed
 	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/sources wget https://zlib.net/zlib-$(ZLIB_VERSION).tar.xz
 
-$(OUTPUT)/build-host/.lh_zlib_dled: $(OUTPUT)/sources/zlib-$(ZLIB_VERSION).tar.xz | $(OUTPUT)/build-build/.lh_skarnet_installed
+$(OUTPUT)/build-$(TRIPLE)/.lh_zlib_dled: $(OUTPUT)/sources/zlib-$(ZLIB_VERSION).tar.xz | $(OUTPUT)/build-build/.lh_skarnet_installed
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
-$(OUTPUT)/build-host/.lh_zlib_copied: $(OUTPUT)/build-host/.lh_zlib_dled | $(OUTPUT)/build-build/.lh_skarnet_installed
-	exec setuidgid $(NORMALUSER) s6-rmrf $(OUTPUT)/build-host/zlib-$(ZLIB_VERSION)
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-host tar -Jxpvf $(OUTPUT)/sources/zlib-$(ZLIB_VERSION).tar.xz
+$(OUTPUT)/build-$(TRIPLE)/.lh_zlib_copied: $(OUTPUT)/build-$(TRIPLE)/.lh_zlib_dled | $(OUTPUT)/build-build/.lh_skarnet_installed
+	exec setuidgid $(NORMALUSER) s6-rmrf $(OUTPUT)/build-$(TRIPLE)/zlib-$(ZLIB_VERSION)
+	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-$(TRIPLE) tar -Jxpvf $(OUTPUT)/sources/zlib-$(ZLIB_VERSION).tar.xz
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
-$(OUTPUT)/build-host/.lh_zlib_configured: $(OUTPUT)/build-host/.lh_zlib_copied | $(OUTPUT)/build-build/.lh_skarnet_installed
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-host/zlib-$(ZLIB_VERSION) export CC "$(BUILD_HOST_CC)" export CHOST "$(TRIPLE)" ./configure --prefix=/opt/zlib-$(ZLIB_VERSION)
+$(OUTPUT)/build-$(TRIPLE)/.lh_zlib_configured: $(OUTPUT)/build-$(TRIPLE)/.lh_zlib_copied | $(OUTPUT)/build-build/.lh_skarnet_installed
+	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-$(TRIPLE)/zlib-$(ZLIB_VERSION) export CC "$(TARGET_CC)" export CHOST "$(TRIPLE)" ./configure --prefix=/opt/zlib-$(ZLIB_VERSION)
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
-$(OUTPUT)/build-host/.lh_zlib_built: $(OUTPUT)/build-host/.lh_zlib_configured | $(OUTPUT)/build-build/.lh_skarnet_installed
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-host/zlib-$(ZLIB_VERSION) $(MAKE)
+$(OUTPUT)/build-$(TRIPLE)/.lh_zlib_built: $(OUTPUT)/build-$(TRIPLE)/.lh_zlib_configured | $(OUTPUT)/build-build/.lh_skarnet_installed
+	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-$(TRIPLE)/zlib-$(ZLIB_VERSION) $(MAKE)
 	exec setuidgid $(NORMALUSER) s6-touch $@
 	
-$(OUTPUT)/build-host/.lh_zlib_installed: $(OUTPUT)/build-host/.lh_zlib_built | $(OUTPUT)/tmp/.lh_prepared $(OUTPUT)/build-build/.lh_skarnet_installed
-	exec cd $(OUTPUT)/build-host/zlib-$(ZLIB_VERSION) $(MAKE) install DESTDIR=$(OUTPUT)/rootfs
+$(OUTPUT)/build-$(TRIPLE)/.lh_zlib_installed: $(OUTPUT)/build-$(TRIPLE)/.lh_zlib_built | $(OUTPUT)/tmp/.lh_prepared $(OUTPUT)/build-build/.lh_skarnet_installed
+	exec cd $(OUTPUT)/build-$(TRIPLE)/zlib-$(ZLIB_VERSION) $(MAKE) install DESTDIR=$(OUTPUT)/rootfs
 	exec makenamelink $(OUTPUT)/rootfs/opt zlib zlib-$(ZLIB_VERSION) $(OUTPUT)/tmp
 	exec setuidgid $(NORMALUSER) s6-touch $@

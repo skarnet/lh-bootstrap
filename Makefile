@@ -24,7 +24,7 @@ it: all
 
 
 all: kernel rootfs rwfs userfs images
-kernel: $(OUTPUT)/build-host/kernel/.lh_installed $(OUTPUT)/build-host/kernel/.lh_modules_installed
+kernel: $(OUTPUT)/build-$(TRIPLE)/kernel/.lh_installed $(OUTPUT)/build-$(TRIPLE)/kernel/.lh_modules_installed
 rootfs: $(OUTPUT)/tmp/.lh_rootfs_installed
 rwfs: $(OUTPUT)/tmp/.lh_rwfs_installed
 userfs: $(OUTPUT)/tmp/.lh_userfs_installed
@@ -37,7 +37,7 @@ include sub/dev/Makefile.zlib
 include sub/dev/Makefile.libressl
 include sub/dev/Makefile.curl
 include sub/dev/Makefile.git
-LH_DEV_TARGETS := $(OUTPUT)/build-host/.lh_strace_installed $(OUTPUT)/build-host/.lh_make_installed $(OUTPUT)/build-host/.lh_zlib_installed $(OUTPUT)/build-host/.lh_libressl_installed $(OUTPUT)/build-host/.lh_curl_installed $(OUTPUT)/build-host/.lh_git_installed
+LH_DEV_TARGETS := $(OUTPUT)/build-$(TRIPLE)/.lh_strace_installed $(OUTPUT)/build-$(TRIPLE)/.lh_make_installed $(OUTPUT)/build-$(TRIPLE)/.lh_zlib_installed $(OUTPUT)/build-$(TRIPLE)/.lh_libressl_installed $(OUTPUT)/build-$(TRIPLE)/.lh_curl_installed $(OUTPUT)/build-$(TRIPLE)/.lh_git_installed
 else
 LH_DEV_TARGETS :=
 endif
@@ -54,8 +54,8 @@ clean:
 # Prepare the output directory. This is at the bottom of the dependency tree.
 
 $(OUTPUT)/tmp/.lh_prepared: lh-config
-	exec mkdir -p -m 0755 -- $(OUTPUT)/tmp $(OUTPUT)/rootfs $(OUTPUT)/rwfs $(OUTPUT)/userfs $(OUTPUT)/build-build/bin $(OUTPUT)/build-build/opt $(OUTPUT)/build-build/tmp $(OUTPUT)/build-host/bin $(OUTPUT)/build-host/opt $(OUTPUT)/build-host/tmp $(OUTPUT)/host-host $(OUTPUT)/sources
-	exec chown -R -- $(NORMALUSER_UID):$(NORMALUSER_GID) $(OUTPUT)/tmp $(OUTPUT)/build-build $(OUTPUT)/build-host $(OUTPUT)/host-host
+	exec mkdir -p -m 0755 -- $(OUTPUT)/tmp $(OUTPUT)/rootfs $(OUTPUT)/rwfs $(OUTPUT)/userfs $(OUTPUT)/build-build/bin $(OUTPUT)/build-build/opt $(OUTPUT)/build-build/tmp $(OUTPUT)/build-$(TRIPLE)/bin $(OUTPUT)/build-$(TRIPLE)/opt $(OUTPUT)/build-$(TRIPLE)/tmp $(OUTPUT)/sources
+	exec chown -R -- $(NORMALUSER_UID):$(NORMALUSER_GID) $(OUTPUT)/tmp $(OUTPUT)/build-build $(OUTPUT)/build-$(TRIPLE)
 	exec chown -- $(NORMALUSER_UID):$(NORMALUSER_GID) $(OUTPUT)/sources $(OUTPUT)
 	exec setuidgid $(NORMALUSER) touch $@
 
@@ -68,7 +68,7 @@ $(OUTPUT)/build-build/.lh_done: $(OUTPUT)/build-build/.lh_skarnet_installed $(OU
 
 # The filesystems
 
-$(OUTPUT)/tmp/.lh_rootfs_installed: $(OUTPUT)/tmp/.lh_layout_installed $(OUTPUT)/build-host/.lh_skarnet_installed $(OUTPUT)/build-host/.lh_socklog_installed $(OUTPUT)/build-host/.lh_bb_installed $(OUTPUT)/build-host/.lh_dropbear_installed $(LH_DEV_TARGETS)
+$(OUTPUT)/tmp/.lh_rootfs_installed: $(OUTPUT)/tmp/.lh_layout_installed $(OUTPUT)/build-$(TRIPLE)/.lh_skarnet_installed $(OUTPUT)/build-$(TRIPLE)/.lh_bb_installed $(OUTPUT)/build-$(TRIPLE)/.lh_dropbear_installed $(LH_DEV_TARGETS)
 
 	exec setuidgid $(NORMALUSER) touch $@
 
@@ -81,7 +81,7 @@ $(OUTPUT)/tmp/.lh_userfs_installed: $(OUTPUT)/tmp/.lh_layout_installed
 
 # The qemu disk images (requires qemu and libguestfs-tools)
 
-$(OUTPUT)/tmp/.lh_diskimages_done: $(OUTPUT)/build-host/kernel/.lh_modules_installed $(OUTPUT)/tmp/.lh_rootfs_installed $(OUTPUT)/tmp/.lh_rwfs_installed $(OUTPUT)/tmp/.lh_userfs_installed
+$(OUTPUT)/tmp/.lh_diskimages_done: $(OUTPUT)/build-$(TRIPLE)/kernel/.lh_modules_installed $(OUTPUT)/tmp/.lh_rootfs_installed $(OUTPUT)/tmp/.lh_rwfs_installed $(OUTPUT)/tmp/.lh_userfs_installed
 	virt-make-fs --format=qcow2 --type=ext4 --size=$(ROOTFS_SIZE) $(OUTPUT)/rootfs $(OUTPUT)/rootfs.qcow2 & \
 	virt-make-fs --format=qcow2 --type=ext4 --size=$(RWFS_SIZE) $(OUTPUT)/rwfs $(OUTPUT)/rwfs.qcow2 & \
 	virt-make-fs --format=qcow2 --type=ext4 --size=$(USERFS_SIZE) $(OUTPUT)/userfs $(OUTPUT)/userfs.qcow2 & wait
@@ -106,6 +106,5 @@ include sub/kmod/Makefile
 include sub/layout/Makefile
 include sub/bearssl/Makefile
 include sub/skarnet.org/Makefile
-include sub/socklog/Makefile
 include sub/busybox/Makefile
 include sub/dropbear/Makefile

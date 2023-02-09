@@ -1,0 +1,8 @@
+#!/package/admin/execline/command/execlineb -S1
+
+fdmove -c 2 1
+s6-setuidgid utmp
+cd /var/log/wtmpd
+fdmove 1 3
+s6-ipcserver -1 -c 1000 -- /run/utmps/.btmpd-socket
+utmps-wtmpd btmp

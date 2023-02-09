@@ -8,7 +8,7 @@ NORMALUSER=nobody
 
 # The C compiler for your BUILD system.
 # Leave empty if you're using your distro's native compiler.
-# BUILD_BUILD_CC=
+# BUILD_CC=
 
 
 # The toolchain for your TARGET system
@@ -18,7 +18,7 @@ NORMALUSER=nobody
 
 # Set this to true if you want your created rootfs to be statically linked.
 # By default, it will be true for musl toolchains, false for glibc toolchains.
-# BUILD_HOST_STATIC=false
+# TARGET_STATIC=false
 
 # Whether or not you want to copy the shared libc from the toolchain.
 # By default, the shared libs are copied if the build isn't static.

@@ -1,5 +1,5 @@
-#!/command/execlineb -P
+#!/command/execlineb -S1
 s6-envuidgid syslog
 fdclose 0
 exec -c
-socklog
+s6-socklog -d3

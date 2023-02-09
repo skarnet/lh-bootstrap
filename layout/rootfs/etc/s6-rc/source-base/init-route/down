@@ -1,2 +1,1 @@
 foreground { ip route del default }
-exit 0

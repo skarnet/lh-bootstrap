@@ -1,1 +1,1 @@
-umount /mnt/rwfs
+s6-umount /mnt/rwfs

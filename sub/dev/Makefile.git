@@ -1,36 +1,36 @@
 
-GIT_VERSION ?= 2.30.0
-GIT_STATIC := $(if $(filter true,$(BUILD_HOST_STATIC)),-static,)
+GIT_VERSION ?= 2.39.1
+GIT_STATIC := $(if $(filter true,$(TARGET_STATIC)),-static,)
 
 GIT_CONF_ARGS := --enable-pthreads --without-expat --without-iconv --with-shell=/bin/sh --with-perl=/bin/perl --without-python --with-zlib=$(OUTPUT)/rootfs/opt/zlib --without-tcltk --with-openssl=$(OUTPUT)/rootfs/opt/libressl ac_cv_fread_reads_directories=true ac_cv_snprintf_returns_bogus=false
 GIT_MAKE_ARGS := LDFLAGS="-s $(GIT_STATIC)" NO_GETTEXT=YesPlease NO_PERL=YesPlease DEFAULT_HELP_FORMAT=html INSTALL_SYMLINKS=YesPlease
 
 
 clean-git:
-	rm -f $(OUTPUT)/build-host/.lh_git_*
+	rm -f $(OUTPUT)/build-$(TRIPLE)/.lh_git_*
 	
 
 $(OUTPUT)/sources/git-$(GIT_VERSION).tar.gz: | $(OUTPUT)/tmp/.lh_prepared $(OUTPUT)/build-build/.lh_skarnet_installed
 	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/sources wget https://www.kernel.org/pub/software/scm/git/git-$(GIT_VERSION).tar.gz
 
-$(OUTPUT)/build-host/.lh_git_dled: $(OUTPUT)/sources/git-$(GIT_VERSION).tar.gz | $(OUTPUT)/build-build/.lh_skarnet_installed
+$(OUTPUT)/build-$(TRIPLE)/.lh_git_dled: $(OUTPUT)/sources/git-$(GIT_VERSION).tar.gz | $(OUTPUT)/build-build/.lh_skarnet_installed
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
-$(OUTPUT)/build-host/.lh_git_copied: $(OUTPUT)/build-host/.lh_git_dled | $(OUTPUT)/build-build/.lh_skarnet_installed
-	exec setuidgid $(NORMALUSER) s6-rmrf $(OUTPUT)/build-host/git-$(GIT_VERSION)
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-host tar -zxpvf $(OUTPUT)/sources/git-$(GIT_VERSION).tar.gz
+$(OUTPUT)/build-$(TRIPLE)/.lh_git_copied: $(OUTPUT)/build-$(TRIPLE)/.lh_git_dled | $(OUTPUT)/build-build/.lh_skarnet_installed
+	exec setuidgid $(NORMALUSER) s6-rmrf $(OUTPUT)/build-$(TRIPLE)/git-$(GIT_VERSION)
+	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-$(TRIPLE) tar -zxpvf $(OUTPUT)/sources/git-$(GIT_VERSION).tar.gz
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
-$(OUTPUT)/build-host/.lh_git_configured: $(OUTPUT)/build-host/.lh_git_copied $(OUTPUT)/build-host/.lh_libressl_installed $(OUTPUT)/build-host/.lh_curl_installed $(OUTPUT)/build-host/.lh_zlib_installed | $(OUTPUT)/build-build/.lh_skarnet_installed
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-host/git-$(GIT_VERSION) export CC "$(BUILD_HOST_CC)" ./configure --host=$(TRIPLE) --prefix=/opt/git-$(GIT_VERSION) $(GIT_CONF_ARGS)
+$(OUTPUT)/build-$(TRIPLE)/.lh_git_configured: $(OUTPUT)/build-$(TRIPLE)/.lh_git_copied $(OUTPUT)/build-$(TRIPLE)/.lh_libressl_installed $(OUTPUT)/build-$(TRIPLE)/.lh_curl_installed $(OUTPUT)/build-$(TRIPLE)/.lh_zlib_installed | $(OUTPUT)/build-build/.lh_skarnet_installed
+	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-$(TRIPLE)/git-$(GIT_VERSION) export CC "$(TARGET_CC)" ./configure --host=$(TRIPLE) --prefix=/opt/git-$(GIT_VERSION) $(GIT_CONF_ARGS)
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
-$(OUTPUT)/build-host/.lh_git_built: $(OUTPUT)/build-host/.lh_git_configured $(OUTPUT)/build-host/.lh_libressl_installed $(OUTPUT)/build-host/.lh_curl_installed $(OUTPUT)/build-host/.lh_zlib_installed | $(OUTPUT)/build-build/.lh_skarnet_installed
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-host/git-$(GIT_VERSION) $(MAKE) $(GIT_MAKE_ARGS)
+$(OUTPUT)/build-$(TRIPLE)/.lh_git_built: $(OUTPUT)/build-$(TRIPLE)/.lh_git_configured $(OUTPUT)/build-$(TRIPLE)/.lh_libressl_installed $(OUTPUT)/build-$(TRIPLE)/.lh_curl_installed $(OUTPUT)/build-$(TRIPLE)/.lh_zlib_installed | $(OUTPUT)/build-build/.lh_skarnet_installed
+	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-$(TRIPLE)/git-$(GIT_VERSION) $(MAKE) $(GIT_MAKE_ARGS)
 	exec setuidgid $(NORMALUSER) s6-touch $@
 	
-$(OUTPUT)/build-host/.lh_git_installed: $(OUTPUT)/build-host/.lh_git_built | $(OUTPUT)/tmp/.lh_prepared $(OUTPUT)/build-build/.lh_skarnet_installed
-	exec cd $(OUTPUT)/build-host/git-$(GIT_VERSION) $(MAKE) install DESTDIR=$(OUTPUT)/rootfs $(GIT_MAKE_ARGS)
+$(OUTPUT)/build-$(TRIPLE)/.lh_git_installed: $(OUTPUT)/build-$(TRIPLE)/.lh_git_built | $(OUTPUT)/tmp/.lh_prepared $(OUTPUT)/build-build/.lh_skarnet_installed
+	exec cd $(OUTPUT)/build-$(TRIPLE)/git-$(GIT_VERSION) $(MAKE) install DESTDIR=$(OUTPUT)/rootfs $(GIT_MAKE_ARGS)
 	exec makenamelink $(OUTPUT)/rootfs/opt git git-$(GIT_VERSION) $(OUTPUT)/tmp
 	exec makelinks $(OUTPUT)/rootfs /bin /opt/git/bin
 	exec setuidgid $(NORMALUSER) s6-touch $@

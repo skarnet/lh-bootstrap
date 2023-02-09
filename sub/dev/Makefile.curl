@@ -1,6 +1,6 @@
 
-CURL_VERSION ?= 7.75.0
-CURL_STATIC := $(if $(filter true,$(BUILD_HOST_STATIC)),-all-static,)
+CURL_VERSION ?= 7.87.0
+CURL_STATIC := $(if $(filter true,$(TARGET_STATIC)),-all-static,)
 
 CURL_CONF_ARGS := \
     --disable-silent-rules \
@@ -90,30 +90,30 @@ CURL_CONF_ARGS := \
 CURL_MAKE_ARGS := LDFLAGS="-L$(OUTPUT)/rootfs/opt/bearssl/lib -L$(OUTPUT)/rootfs/opt/zlib/lib $(CURL_STATIC)"
 
 clean-curl:
-	rm -f $(OUTPUT)/build-host/.lh_curl_*
+	rm -f $(OUTPUT)/build-$(TRIPLE)/.lh_curl_*
 	
 
 $(OUTPUT)/sources/curl-$(CURL_VERSION).tar.xz: | $(OUTPUT)/tmp/.lh_prepared $(OUTPUT)/build-build/.lh_skarnet_installed
 	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/sources wget https://curl.se/download/curl-$(CURL_VERSION).tar.xz
 
-$(OUTPUT)/build-host/.lh_curl_dled: $(OUTPUT)/sources/curl-$(CURL_VERSION).tar.xz | $(OUTPUT)/build-build/.lh_skarnet_installed
+$(OUTPUT)/build-$(TRIPLE)/.lh_curl_dled: $(OUTPUT)/sources/curl-$(CURL_VERSION).tar.xz | $(OUTPUT)/build-build/.lh_skarnet_installed
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
-$(OUTPUT)/build-host/.lh_curl_copied: $(OUTPUT)/build-host/.lh_curl_dled | $(OUTPUT)/build-build/.lh_skarnet_installed
-	exec setuidgid $(NORMALUSER) s6-rmrf $(OUTPUT)/build-host/curl-$(CURL_VERSION)
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-host tar -Jxpvf $(OUTPUT)/sources/curl-$(CURL_VERSION).tar.xz
+$(OUTPUT)/build-$(TRIPLE)/.lh_curl_copied: $(OUTPUT)/build-$(TRIPLE)/.lh_curl_dled | $(OUTPUT)/build-build/.lh_skarnet_installed
+	exec setuidgid $(NORMALUSER) s6-rmrf $(OUTPUT)/build-$(TRIPLE)/curl-$(CURL_VERSION)
+	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-$(TRIPLE) tar -Jxpvf $(OUTPUT)/sources/curl-$(CURL_VERSION).tar.xz
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
-$(OUTPUT)/build-host/.lh_curl_configured: $(OUTPUT)/build-host/.lh_curl_copied $(OUTPUT)/build-host/.lh_bearssl_installed $(OUTPUT)/build-host/.lh_zlib_installed | $(OUTPUT)/build-build/.lh_skarnet_installed
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-host/curl-$(CURL_VERSION) export CC "$(BUILD_HOST_CC)" ./configure --build=$(BUILD_QUADRUPLE) --host=$(TRIPLE) --prefix=/opt/curl-$(CURL_VERSION) $(CURL_CONF_ARGS)
+$(OUTPUT)/build-$(TRIPLE)/.lh_curl_configured: $(OUTPUT)/build-$(TRIPLE)/.lh_curl_copied $(OUTPUT)/build-$(TRIPLE)/.lh_bearssl_installed $(OUTPUT)/build-$(TRIPLE)/.lh_zlib_installed | $(OUTPUT)/build-build/.lh_skarnet_installed
+	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-$(TRIPLE)/curl-$(CURL_VERSION) export CC "$(TARGET_CC)" ./configure --build=$(BUILD_QUADRUPLE) --host=$(TRIPLE) --prefix=/opt/curl-$(CURL_VERSION) $(CURL_CONF_ARGS)
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
-$(OUTPUT)/build-host/.lh_curl_built: $(OUTPUT)/build-host/.lh_curl_configured | $(OUTPUT)/build-build/.lh_skarnet_installed
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-host/curl-$(CURL_VERSION) $(MAKE) $(CURL_MAKE_ARGS)
+$(OUTPUT)/build-$(TRIPLE)/.lh_curl_built: $(OUTPUT)/build-$(TRIPLE)/.lh_curl_configured | $(OUTPUT)/build-build/.lh_skarnet_installed
+	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-$(TRIPLE)/curl-$(CURL_VERSION) $(MAKE) $(CURL_MAKE_ARGS)
 	exec setuidgid $(NORMALUSER) s6-touch $@
 	
-$(OUTPUT)/build-host/.lh_curl_installed: $(OUTPUT)/build-host/.lh_curl_built | $(OUTPUT)/tmp/.lh_prepared $(OUTPUT)/build-build/.lh_skarnet_installed
-	exec cd $(OUTPUT)/build-host/curl-$(CURL_VERSION) $(MAKE) install DESTDIR=$(OUTPUT)/rootfs
+$(OUTPUT)/build-$(TRIPLE)/.lh_curl_installed: $(OUTPUT)/build-$(TRIPLE)/.lh_curl_built | $(OUTPUT)/tmp/.lh_prepared $(OUTPUT)/build-build/.lh_skarnet_installed
+	exec cd $(OUTPUT)/build-$(TRIPLE)/curl-$(CURL_VERSION) $(MAKE) install DESTDIR=$(OUTPUT)/rootfs
 	exec makenamelink $(OUTPUT)/rootfs/opt curl curl-$(CURL_VERSION) $(OUTPUT)/tmp
 	exec makelinks $(OUTPUT)/rootfs /bin /opt/curl/bin
 	exec setuidgid $(NORMALUSER) s6-touch $@

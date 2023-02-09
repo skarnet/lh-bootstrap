@@ -1,1 +1,1 @@
-umount /mnt/userfs
+s6-umount /mnt/userfs

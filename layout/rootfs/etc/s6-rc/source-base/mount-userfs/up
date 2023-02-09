@@ -1,1 +1,1 @@
-mount -wt ext4 /dev/vdc /mnt/userfs
+s6-mount -wt ext4 /dev/vdc /mnt/userfs

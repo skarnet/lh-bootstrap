@@ -1,1 +1,1 @@
-mount -wt proc proc /proc
+s6-mount -wt proc proc /proc

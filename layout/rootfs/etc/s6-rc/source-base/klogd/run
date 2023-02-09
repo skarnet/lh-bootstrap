@@ -1,6 +1,5 @@
-#!/command/execlineb -P
+#!/command/execlineb -S1
 fdmove -c 2 1
 redirfd -r 0 /proc/kmsg
-# s6-setuidgid klog
 exec -c
 ucspilogd

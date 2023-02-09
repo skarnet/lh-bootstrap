@@ -1,1 +1,1 @@
-mount -wt ext4 /dev/vdb /mnt/rwfs
+s6-mount -wt ext4 /dev/vdb /mnt/rwfs

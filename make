@@ -21,29 +21,29 @@ if test $OUTPUT = ${OUTPUT#/} ; then
   OUTPUT="$WD/$OUTPUT"
 fi
 
-BUILD_BUILD_CC=${BUILD_BUILD_CC:-gcc}
-BUILD_HOST_CC="$TRIPLE-${CROSS_CC:-gcc}"
+BUILD_CC=${BUILD_CC:-gcc}
+TARGET_CC="$TRIPLE-${CROSS_CC:-gcc}"
 ROOTFS_SIZE=${ROOTFS_SIZE:-1024M}
 RWFS_SIZE=${RWFS_SIZE:-512M}
 USERFS_SIZE=${USERFS_SIZE:-512M}
 LH_DEV=${DEVELOPMENT:-false}
 
-build=`${BUILD_BUILD_CC} -dumpmachine`
+build=`${BUILD_CC} -dumpmachine`
 if echo "$build" | grep -q -- '-.*-.*-' ; then
   BUILD_QUADRUPLE="$build"
 else
   BUILD_QUADRUPLE="${build%%-*}-none-${build#*-}"
 fi
 
-if test -z "$BUILD_HOST_STATIC" ; then
+if test -z "$TARGET_STATIC" ; then
   case "$TRIPLE" in
-    *-*-musl*) BUILD_HOST_STATIC=true ;;
-    *) BUILD_HOST_STATIC=false ;;
+    *-*-musl*) TARGET_STATIC=true ;;
+    *) TARGET_STATIC=false ;;
   esac
 fi
 
 if test -z "$LIBC_COPY" ; then
-  case "$BUILD_HOST_STATIC" in
+  case "$TARGET_STATIC" in
     true) LIBC_COPY=false ;;
     *) LIBC_COPY=true ;;
   esac
@@ -53,13 +53,13 @@ if test -n "$CROSS_BASE" ; then
   crossenv=""
 else
   crossenv="LH_MAKE_CROSS=1"
-  CROSS_BASE="$OUTPUT/build-host/$TRIPLE"
+  CROSS_BASE="$OUTPUT/build-$TRIPLE/$TRIPLE"
 fi
 
-BUILD_HOST_CC_FULL="$CROSS_BASE/bin/$BUILD_HOST_CC"
-BUILD_HOST_SYSROOT="$CROSS_BASE/$TRIPLE"
-BUILD_HOST_PREFIX="$CROSS_BASE/bin/$TRIPLE"
-LIBC_SYSROOT=${LIBC_SYSROOT:-$(${BUILD_HOST_CC_FULL} -print-sysroot)}
+TARGET_CC_FULL="$CROSS_BASE/bin/$TARGET_CC"
+TARGET_SYSROOT="$CROSS_BASE/$TRIPLE"
+TARGET_PREFIX="$CROSS_BASE/bin/$TRIPLE"
+LIBC_SYSROOT=${LIBC_SYSROOT:-$(${TARGET_CC_FULL} -print-sysroot)}
 
 hostarch=$(echo $TRIPLE | cut -f1 -d-)
 # This is used extensively throughout the whole build: different subsystems have different names for the architecture
@@ -72,13 +72,13 @@ case $hostarch in
 esac
 
 KERNEL_CONFIG=${KERNEL_CONFIG:-sub/kernel/qemu-system-${hostarch}-config}
-PATH="$WD/bin:$OUTPUT/build-build/command:$OUTPUT/build-build/bin:$OUTPUT/build-host/bin:$CROSS_BASE/bin:$PATH"
+PATH="$WD/bin:$OUTPUT/build-build/command:$OUTPUT/build-build/bin:$OUTPUT/build-$TRIPLE/bin:$CROSS_BASE/bin:$PATH"
 
 umask 022
 exec env -i $crossenv LH_MAKE_MARKER=1 "WD=$WD" "NORMALUSER=$NORMALUSER" "TRIPLE=$TRIPLE" "OUTPUT=$OUTPUT" "PATH=$PATH" \
   "ROOTFS_SIZE=$ROOTFS_SIZE" "RWFS_SIZE=$RWFS_SIZE" "USERFS_SIZE=$USERFS_SIZE" \
-  "BUILD_HOST_STATIC=$BUILD_HOST_STATIC" "LIBC_SYSROOT=$LIBC_SYSROOT" "LIBC_COPY=$LIBC_COPY" "LH_DEV=$LH_DEV" \
-  "BUILD_HOST_CC=$BUILD_HOST_CC" "BUILD_HOST_CC_FULL=$BUILD_HOST_CC_FULL" "BUILD_HOST_SYSROOT=$BUILD_HOST_SYSROOT" "BUILD_HOST_PREFIX=$BUILD_HOST_PREFIX" \
+  "TARGET_STATIC=$TARGET_STATIC" "LIBC_SYSROOT=$LIBC_SYSROOT" "LIBC_COPY=$LIBC_COPY" "LH_DEV=$LH_DEV" \
+  "TARGET_CC=$TARGET_CC" "TARGET_CC_FULL=$TARGET_CC_FULL" "TARGET_SYSROOT=$TARGET_SYSROOT" "TARGET_PREFIX=$TARGET_PREFIX" \
   "KERNEL_ARCH=$KERNEL_ARCH" "KERNEL_GENERIC_ARCH=$KERNEL_GENERIC_ARCH" "QEMU_ARCH=$QEMU_ARCH" "KERNEL_CONFIG=$KERNEL_CONFIG" \
-  "BUILD_QUADRUPLE=$BUILD_QUADRUPLE" "BUILD_BUILD_CC=$BUILD_BUILD_CC" SHELL=/bin/sh "CONSOLE=$CONSOLE" "TERM=$TERM" \
+  "BUILD_QUADRUPLE=$BUILD_QUADRUPLE" "BUILD_CC=$BUILD_CC" SHELL=/bin/sh "CONSOLE=$CONSOLE" "TERM=$TERM" \
   make "$@"
