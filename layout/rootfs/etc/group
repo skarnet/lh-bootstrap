@@ -5,3 +5,4 @@ nogroup:x:65534:
 log:x:61:
 fdh:x:76:
 utmp:x:99:
+nsss:x:97:

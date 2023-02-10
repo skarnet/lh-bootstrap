@@ -1,8 +1,9 @@
-SKAWARE := SKALIBS UTMPS EXECLINE S6 S6_RC S6_LINUX_INIT S6_PORTABLE_UTILS S6_LINUX_UTILS S6_DNS S6_NETWORKING MDEVD BCNM
-SKAWARE_BUILD := SKALIBS UTMPS EXECLINE S6 S6_RC S6_LINUX_INIT S6_PORTABLE_UTILS S6_LINUX_UTILS
+SKAWARE := SKALIBS NSSS UTMPS EXECLINE S6 S6_RC S6_LINUX_INIT S6_PORTABLE_UTILS S6_LINUX_UTILS S6_DNS S6_NETWORKING MDEVD BCNM
+SKAWARE_BUILD := SKALIBS NSSS UTMPS EXECLINE S6 S6_RC S6_LINUX_INIT S6_PORTABLE_UTILS S6_LINUX_UTILS
 
 # SKALIBS_VERSION := v2.13.1.0
 SKALIBS_VERSION := a10514072f27ff9f4a6ab308b3bccfd4628ef2aa
+NSSS_VERSION := v0.2.0.2
 UTMPS_VERSION := v0.1.2.1
 # EXECLINE_VERSION := v2.9.2.0
 EXECLINE_VERSION := bb748f0e002c8a4f9865ae0a592fcb4fac0aabc7
@@ -23,19 +24,21 @@ BCNM_VERSION := v0.0.1.6
 
 
 SKALIBS_DEPENDENCIES :=
-UTMPS_DEPENDENCIES := SKALIBS
-EXECLINE_DEPENDENCIES := SKALIBS
-S6_DEPENDENCIES := SKALIBS EXECLINE
+NSSS_DEPENDENCIES := SKALIBS
+UTMPS_DEPENDENCIES := SKALIBS NSSS
+EXECLINE_DEPENDENCIES := SKALIBS NSSS
+S6_DEPENDENCIES := SKALIBS EXECLINE NSSS
 S6_RC_DEPENDENCIES := SKALIBS EXECLINE S6
-S6_LINUX_INIT_DEPENDENCIES := SKALIBS UTMPS EXECLINE S6
+S6_LINUX_INIT_DEPENDENCIES := SKALIBS NSSS UTMPS EXECLINE S6
 S6_PORTABLE_UTILS_DEPENDENCIES := SKALIBS
-S6_LINUX_UTILS_DEPENDENCIES := SKALIBS
+S6_LINUX_UTILS_DEPENDENCIES := SKALIBS NSSS
 S6_DNS_DEPENDENCIES := SKALIBS
-S6_NETWORKING_DEPENDENCIES := SKALIBS EXECLINE S6 S6_DNS
-MDEVD_DEPENDENCIES := SKALIBS
+S6_NETWORKING_DEPENDENCIES := SKALIBS NSSS EXECLINE S6 S6_DNS
+MDEVD_DEPENDENCIES := SKALIBS NSSS
 BCNM_DEPENDENCIES := SKALIBS
 
 SKALIBS_CATEGORY := prog
+NSSS_CATEGORY := admin
 UTMPS_CATEGORY := admin
 EXECLINE_CATEGORY := admin
 S6_CATEGORY := admin
@@ -49,6 +52,7 @@ MDEVD_CATEGORY := admin
 BCNM_CATEGORY := admin
 
 SKALIBS_TOKEN := libskarnet.a.xyzzy
+NSSS_TOKEN := nsssd-unix
 UTMPS_TOKEN := utmps-utmpd
 EXECLINE_TOKEN := execline
 S6_TOKEN := s6-supervise
@@ -62,7 +66,7 @@ MDEVD_TOKEN := mdevd
 BCNM_TOKEN := bcnm-waitif
 
 SKAWARE_ENV := $(if $(filter true,$(TARGET_STATIC)),,env LDFLAGS=-Wl,-rpath-link,$(OUTPUT)/rootfs/library.so)
-SKAWARE_OPTIONS := --enable-slashpackage $(if $(filter true,$(TARGET_STATIC)),--enable-static-libc --disable-shared,--enable-shared --disable-allstatic)
+SKAWARE_OPTIONS := --enable-slashpackage --enable-nsss $(if $(filter true,$(TARGET_STATIC)),--enable-static-libc --disable-shared,--enable-shared --disable-allstatic)
 SKAWARE_BUILD_OPTIONS := --enable-slashpackage --disable-shared --enable-allstatic 
 SKALIBS_OPTIONS := --with-default-path=/command:/usr/bin:/bin --with-sysdep-devurandom=yes --with-sysdep-grndinsecure=no
 UTMPS_OPTIONS := --enable-libc-includes
@@ -132,7 +136,6 @@ $(OUTPUT)/build-$(TRIPLE)/.lh_s6li_laidout: $(OUTPUT)/rootfs/package/admin/s6-li
 	exec $(OUTPUT)/build-build/command/s6-chown -u 98 -g 98 -- $(OUTPUT)/rootfs/etc/s6-linux-init/current/run-image/uncaught-logs
 	exec $(OUTPUT)/build-build/command/s6-chown -u 98 -g 98 -- $(OUTPUT)/rootfs/etc/s6-linux-init/current/run-image/service/s6-svscan-log/fifo
 	exec $(OUTPUT)/build-build/command/s6-chmod 02750 $(OUTPUT)/rootfs/etc/s6-linux-init/current/run-image/uncaught-logs
-	exec $(OUTPUT)/build-build/command/s6-chown -u 99 -g 99 -- $(OUTPUT)/rootfs/etc/s6-linux-init/current/run-image/utmps
 	for i in `ls -1 $(OUTPUT)/rootfs/etc/s6-linux-init/current/bin` ; do ln -sf ../etc/s6-linux-init/current/bin/$$i $(OUTPUT)/rootfs/bin/$$i ; done
 	exec setuidgid $(NORMALUSER) touch $@
 
