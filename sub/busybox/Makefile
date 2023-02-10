@@ -31,7 +31,7 @@ else
 	exec setuidgid $(NORMALUSER) cp -f $(WD)/sub/busybox/host-full-config $@
 endif
 
-$(OUTPUT)/build-$(TRIPLE)/.lh_bb_built: $(OUTPUT)/build-$(TRIPLE)/busybox-$(BUSYBOX_VERSION)/.config $(OUTPUT)/build-$(TRIPLE)/.lh_utmps_installed $(OUTPUT)/build-$(TRIPLE)/.lh_skalibs_installed | $(OUTPUT)/build-build/.lh_skarnet_installed
+$(OUTPUT)/build-$(TRIPLE)/.lh_bb_built: $(OUTPUT)/build-$(TRIPLE)/busybox-$(BUSYBOX_VERSION)/.config $(OUTPUT)/build-$(TRIPLE)/.lh_skarnet_installed | $(OUTPUT)/build-build/.lh_skarnet_installed
 	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-$(TRIPLE)/busybox-$(BUSYBOX_VERSION) $(MAKE) -j1 busybox install CROSS_COMPILE=$(TRIPLE)- CC="$(TARGET_CC)" HOSTCC="$(BUILD_CC)"
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
