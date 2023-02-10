@@ -26,7 +26,7 @@ $(OUTPUT)/build-build/.lh_kernel_headers_installed: $(OUTPUT)/build-build/.lh_ke
 $(OUTPUT)/build-$(TRIPLE)/kernel/.lh_unpacked: $(OUTPUT)/sources/linux-$(KERNEL_VERSION).tar.xz | $(OUTPUT)/build-build/.lh_skarnet_installed
 	exec setuidgid $(NORMALUSER) s6-mkdir -p $(OUTPUT)/build-$(TRIPLE)/kernel
 	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-$(TRIPLE)/kernel tar Jxpvf $(OUTPUT)/sources/linux-$(KERNEL_VERSION).tar.xz
-	exec setuidgid $(NORMALUSER) sh -c 'for i in `ls -1 sub/kernel | grep "\.patch$"` ; do patch -d $(OUTPUT)/build-$(TRIPLE)/kernel/linux-$(KERNEL_VERSION)/src -p1 < sub/kernel/$$i ; done'
+	exec setuidgid $(NORMALUSER) sh -c 'for i in `ls -1 sub/kernel | grep "\.patch$$"` ; do patch -d $(OUTPUT)/build-$(TRIPLE)/kernel/linux-$(KERNEL_VERSION)/src -p1 < sub/kernel/$$i ; done'
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
 $(OUTPUT)/build-$(TRIPLE)/kernel/.lh_configured: $(OUTPUT)/build-$(TRIPLE)/kernel/.lh_unpacked $(KERNEL_CONFIG) | $(OUTPUT)/build-build/.lh_skarnet_installed
