@@ -22,7 +22,7 @@ $(OUTPUT)/build-$(TRIPLE)/.lh_dropbear_patched: $(OUTPUT)/build-$(TRIPLE)/.lh_dr
 	exec setuidgid $(NORMALUSER) cp -f sub/dropbear/localoptions.h $(OUTPUT)/build-$(TRIPLE)/dropbear-$(DROPBEAR_VERSION)/localoptions.h
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
-$(OUTPUT)/build-$(TRIPLE)/.lh_dropbear_configured: $(OUTPUT)/build-$(TRIPLE)/.lh_dropbear_patched $(OUTPUT)/build-$(TRIPLE)/.lh_utmps_installed $(OUTPUT)/build-$(TRIPLE)/.lh_skalibs_installed | $(OUTPUT)/build-build/.lh_skarnet_installed
+$(OUTPUT)/build-$(TRIPLE)/.lh_dropbear_configured: $(OUTPUT)/build-$(TRIPLE)/.lh_dropbear_patched $(OUTPUT)/build-$(TRIPLE)/.lh_skarnet_installed | $(OUTPUT)/build-build/.lh_skarnet_installed
 	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-$(TRIPLE)/dropbear-$(DROPBEAR_VERSION) export ARCH $(KERNEL_ARCH) export CC "$(TARGET_CC)" export CFLAGS "-O2 -I$(OUTPUT)/rootfs/package/admin/utmps/include" export LDFLAGS "-s $(DROPBEAR_MAKE_STATIC) -L$(OUTPUT)/rootfs/package/admin/utmps/library -L$(OUTPUT)/rootfs/package/prog/skalibs/library" export LIBS "-lutmps -lskarnet" ./configure --host=$(TRIPLE) --prefix=/opt/dropbear-$(DROPBEAR_VERSION) --disable-syslog --disable-utmp --disable-wtmp --disable-pututline --without-pam --enable-bundled-libtom --disable-zlib --disable-harden $(DROPBEAR_CONF_STATIC)
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
