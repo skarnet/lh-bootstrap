@@ -37,3 +37,6 @@ USERFS_SIZE=128M
 # The device on which to spawn an early getty.
 # Leave empty for no early getty.
 CONSOLE=
+
+# Where to find your supermin for libguestfs. (Don't ask.)
+# LIBGUESTFS_PATH=

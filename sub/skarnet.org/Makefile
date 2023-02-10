@@ -49,7 +49,7 @@ BCNM_CATEGORY := admin
 
 SKALIBS_TOKEN := libskarnet.a.xyzzy
 UTMPS_TOKEN := utmps-utmpd
-EXECLINE_TOKEN := execlineb
+EXECLINE_TOKEN := execline
 S6_TOKEN := s6-supervise
 S6_RC_TOKEN := s6-rc
 S6_LINUX_INIT_TOKEN := s6-linux-init-maker
