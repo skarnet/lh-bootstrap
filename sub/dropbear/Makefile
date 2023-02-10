@@ -1,5 +1,6 @@
 
-DROPBEAR_VERSION ?= 2022.83
+# DROPBEAR_VERSION ?= 2022.83  # buggy with inetd_mode + disable_syslog
+DROPBEAR_VERSION ?= 2020.81
 DROPBEAR_CONF_STATIC := $(if $(filter true,$(TARGET_STATIC)),--enable-static,)
 DROPBEAR_MAKE_STATIC := $(if $(filter true,$(TARGET_STATIC)),-static,)
 
