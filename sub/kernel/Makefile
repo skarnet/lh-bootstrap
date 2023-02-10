@@ -54,7 +54,7 @@ $(OUTPUT)/build-$(TRIPLE)/kernel/.lh_built: $(OUTPUT)/build-$(TRIPLE)/kernel/.lh
 	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-$(TRIPLE)/kernel/linux-$(KERNEL_VERSION) $(MAKE) all $(KERNEL_ENV)
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
-$(OUTPUT)/build-$(TRIPLE)/kernel/.lh_installed: $(OUTPUT)/build-$(TRIPLE)/kernel/.lh_built | $(OUTPUT)/build-build/.lh_skarnet_installed
+$(OUTPUT)/build-$(TRIPLE)/kernel/.lh_installed: $(OUTPUT)/build-$(TRIPLE)/kernel/.lh_built | $(OUTPUT)/tmp/.lh_layout_installed $(OUTPUT)/build-build/.lh_skarnet_installed
 	exec cp -f $(OUTPUT)/build-$(TRIPLE)/kernel/linux-$(KERNEL_VERSION)/System.map $(OUTPUT)/rootfs/boot/System.map-$(KERNEL_VERSION)
 	exec s6-ln -sf System.map-$(KERNEL_VERSION) $(OUTPUT)/rootfs/boot/System.map
 	cp -f $(OUTPUT)/build-$(TRIPLE)/kernel/linux-$(KERNEL_VERSION)/arch/$(KERNEL_GENERIC_ARCH)/boot/bzImage $(OUTPUT)/kernel || cp -f $(OUTPUT)/build-$(TRIPLE)/kernel/linux-$(KERNEL_VERSION)/arch/$(KERNEL_GENERIC_ARCH)/boot/zImage $(OUTPUT)/kernel || cp -f $(OUTPUT)/build-$(TRIPLE)/kernel/linux-$(KERNEL_VERSION)/arch/$(KERNEL_GENERIC_ARCH)/boot/Image $(OUTPUT)/kernel

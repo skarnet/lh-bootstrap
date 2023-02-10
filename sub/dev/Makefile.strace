@@ -25,7 +25,7 @@ $(OUTPUT)/build-$(TRIPLE)/.lh_strace_built: $(OUTPUT)/build-$(TRIPLE)/.lh_strace
 	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-$(TRIPLE)/strace-$(STRACE_VERSION) $(MAKE) $(STRACE_MAKE_STATIC)
 	exec setuidgid $(NORMALUSER) s6-touch $@
 	
-$(OUTPUT)/build-$(TRIPLE)/.lh_strace_installed: $(OUTPUT)/build-$(TRIPLE)/.lh_strace_built | $(OUTPUT)/tmp/.lh_prepared $(OUTPUT)/build-build/.lh_skarnet_installed
+$(OUTPUT)/build-$(TRIPLE)/.lh_strace_installed: $(OUTPUT)/build-$(TRIPLE)/.lh_strace_built | $(OUTPUT)/tmp/.lh_prepared $(OUTPUT)/build-build/.lh_skarnet_installed $(OUTPUT)/tmp/.lh_layout_installed
 	exec cd $(OUTPUT)/build-$(TRIPLE)/strace-$(STRACE_VERSION) $(MAKE) install DESTDIR=$(OUTPUT)/rootfs
 	exec makenamelink $(OUTPUT)/rootfs/opt strace strace-$(STRACE_VERSION) $(OUTPUT)/tmp
 	exec makelinks $(OUTPUT)/rootfs /bin /opt/strace/bin
