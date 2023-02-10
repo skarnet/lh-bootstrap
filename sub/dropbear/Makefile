@@ -9,7 +9,7 @@ clean-dropbear:
 	
 
 $(OUTPUT)/sources/dropbear-$(DROPBEAR_VERSION).tar.bz2: | $(OUTPUT)/tmp/.lh_prepared $(OUTPUT)/build-build/.lh_skarnet_installed
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/sources wget https://dropbear.nl/mirror/dropbear-$(DROPBEAR_VERSION).tar.bz2
+	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/sources wget https://matt.ucc.asn.au/dropbear/releases/dropbear-$(DROPBEAR_VERSION).tar.bz2
 
 $(OUTPUT)/build-$(TRIPLE)/.lh_dropbear_dled: $(OUTPUT)/sources/dropbear-$(DROPBEAR_VERSION).tar.bz2 | $(OUTPUT)/build-build/.lh_skarnet_installed
 	exec setuidgid $(NORMALUSER) s6-touch $@
