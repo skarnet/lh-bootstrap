@@ -127,7 +127,7 @@ endef
 $(foreach pkg,$(SKAWARE),$(eval $(call skaware_rules_definition,$(pkg))))
 
 
-$(OUTPUT)/build-$(TRIPLE)/.lh_s6li_laidout: $(OUTPUT)/build-$(TRIPLE)/.lh_s6li_installed | $(OUTPUT)/tmp/.lh_prepared $(OUTPUT)/build-build/.lh_skarnet_installed
+$(OUTPUT)/build-$(TRIPLE)/.lh_s6li_laidout: $(OUTPUT)/rootfs/package/admin/s6-linux-init/include/s6-linux-init/config.h | $(OUTPUT)/tmp/.lh_prepared $(OUTPUT)/build-build/.lh_skarnet_installed
 	exec mkdir -p $(OUTPUT)/rootfs/etc/s6-linux-init
 	exec rm -rf $(OUTPUT)/rootfs/etc/s6-linux-init/s6lidir
 	exec s6-linux-init-maker -u $(NORMALUSER) $(EARLY_GETTY) -1 -p /command:/bin -s /run/kernel_env -U utmp -f $(OUTPUT)/build-build/etc/s6-linux-init/skel -- $(OUTPUT)/rootfs/etc/s6-linux-init/s6lidir
