@@ -1,4 +1,4 @@
-#!/package/admin/execline/command/execlineb -S1
+#!/command/execlineb -S1
 
 fdmove -c 2 1
 s6-setuidgid utmp

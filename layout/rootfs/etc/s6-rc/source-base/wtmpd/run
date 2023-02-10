@@ -4,4 +4,4 @@ s6-setuidgid utmp
 cd /var/log/wtmpd
 fdmove 1 3
 s6-ipcserver -1 -c 1000 -- /run/utmps/.wtmpd-socket
-utmps-wtmpd
+utmps-wtmpd wtmp

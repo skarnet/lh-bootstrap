@@ -10,7 +10,8 @@ EXECLINE_VERSION := bb748f0e002c8a4f9865ae0a592fcb4fac0aabc7
 S6_VERSION := 47e886410b0e1e9e2f40a3447d6a9a9c1c07928f
 # S6_RC_VERSION := v0.5.3.4
 S6_RC_VERSION := bbf31e578acd6b6e860fc2b58c1fc910e81c00dd
-S6_LINUX_INIT_VERSION := v1.0.8.1
+# S6_LINUX_INIT_VERSION := v1.1.0.0
+S6_LINUX_INIT_VERSION := ebd7a0c2fea984d377f11062bc8f56f777a9a572
 S6_PORTABLE_UTILS_VERSION := v2.2.5.1
 # S6_LINUX_UTILS_VERSION := v2.6.1.0
 S6_LINUX_UTILS_VERSION := 3caba3fd8f3825544c065ec62e4298c6edc76b28
@@ -124,7 +125,7 @@ $(foreach pkg,$(SKAWARE),$(eval $(call skaware_rules_definition,$(pkg))))
 $(OUTPUT)/build-$(TRIPLE)/.lh_s6li_laidout: $(OUTPUT)/rootfs/package/admin/s6-linux-init/include/s6-linux-init/config.h | $(OUTPUT)/tmp/.lh_prepared $(OUTPUT)/build-build/.lh_skarnet_installed $(OUTPUT)/tmp/.lh_layout_installed
 	exec mkdir -p $(OUTPUT)/rootfs/etc/s6-linux-init
 	exec rm -rf $(OUTPUT)/rootfs/etc/s6-linux-init/s6lidir
-	exec s6-linux-init-maker -u $(NORMALUSER) $(EARLY_GETTY) -1 -p /command:/bin -s /run/kernel_env -U utmp -f $(OUTPUT)/build-build/etc/s6-linux-init/skel -- $(OUTPUT)/rootfs/etc/s6-linux-init/s6lidir
+	exec s6-linux-init-maker -u $(NORMALUSER) $(EARLY_GETTY) -1 -p /command:/bin -s /run/kernel_env -f $(OUTPUT)/build-build/etc/s6-linux-init/skel -- $(OUTPUT)/rootfs/etc/s6-linux-init/s6lidir
 	exec sed -i 's/s6-setuidgid "$(NORMALUSER)"/s6-setuidgid catchlog/' $(OUTPUT)/rootfs/etc/s6-linux-init/s6lidir/run-image/service/s6-svscan-log/run
 	exec rm -rf $(OUTPUT)/rootfs/etc/s6-linux-init/current
 	exec mv -f $(OUTPUT)/rootfs/etc/s6-linux-init/s6lidir $(OUTPUT)/rootfs/etc/s6-linux-init/current
@@ -174,7 +175,6 @@ $(OUTPUT)/build-build/etc/s6-linux-init/skel/rc.init: $(OUTPUT)/build-build/pack
 	exec setuidgid $(NORMALUSER) cp -f sub/skarnet.org/rc.shutdown.final $(OUTPUT)/build-build/etc/s6-linux-init/skel/rc.shutdown.final
 	exec setuidgid $(NORMALUSER) cp -f sub/skarnet.org/runlevel $(OUTPUT)/build-build/etc/s6-linux-init/skel/runlevel
 	exec setuidgid $(NORMALUSER) cp -f sub/skarnet.org/rc.init $@
-	exec setuidgid $(NORMALUSER) touch $@
 
 $(OUTPUT)/build-build/.lh_skarnet_installed: $(OUTPUT)/build-build/etc/s6-linux-init/skel/rc.init
 

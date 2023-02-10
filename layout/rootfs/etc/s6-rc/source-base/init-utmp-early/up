@@ -1,0 +1,5 @@
+if { s6-mkdir -p -m 0755 /run/utmps }
+if { s6-envuidgid utmp s6-chown -U -- /run/utmps }
+s6-setuidgid utmp
+redirfd -w 1 /run/utmps/utmp
+exit 0
