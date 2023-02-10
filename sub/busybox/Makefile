@@ -1,5 +1,5 @@
-# Version from 2023-01-05
-BUSYBOX_VERSION := f15dfd86c4fba78881071dd0f5c63466fa9737a2
+# Version from 2023-02-10
+BUSYBOX_VERSION := 93ae7464e6e460f25b73e4ffefd2d9a6499eae30
 
 clean-busybox:
 	rm -f $(OUTPUT)/sources/.lh_bb_cloned

@@ -1,20 +1,21 @@
 include sub/kernel/Makefile.ncurses
 
-KERNEL_VERSION ?= 5.10.19
+KERNEL_VERSION ?= 6.1.11
 KERNEL_MAJOR := $(firstword $(subst ., ,$(KERNEL_VERSION)))
 KERNEL_FULLVERSION := $(if $(word 2,$(subst ., ,$(KERNEL_VERSION))),$(KERNEL_VERSION),$(KERNEL_VERSION).0)
 
-KERNEL_ENV := HOSTCC=$(BUILD_CC) DEPMOD=$(OUTPUT)/build-build/opt/kmod/bin/depmod INSTALL_MOD_PATH=$(OUTPUT)/rootfs CROSS_COMPILE=$(TARGET_PREFIX)- ARCH=$(KERNEL_GENERIC_ARCH) INSTALL_MOD_STRIP="-R .note -R .comment -R .note.GNU-stack --strip-debug" HOST_LFS_CFLAGS= HOST_LFS_LDFLAGS= HOST_LFS_LIBS=
+KERNEL_ENV := HOSTCC=$(BUILD_CC) DEPMOD=$(OUTPUT)/build-build/opt/kmod/bin/depmod INSTALL_MOD_PATH=$(OUTPUT)/rootfs CROSS_COMPILE=$(TARGET_PREFIX)- ARCH=$(KERNEL_GENERIC_ARCH) INSTALL_MOD_STRIP="-R .note -R .comment --strip-debug" HOST_LFS_CFLAGS= HOST_LFS_LDFLAGS= HOST_LFS_LIBS=
 
 $(OUTPUT)/sources/linux-$(KERNEL_VERSION).tar.xz: | $(OUTPUT)/tmp/.lh_prepared
 	cd $(OUTPUT)/sources && setuidgid $(NORMALUSER) wget https://cdn.kernel.org/pub/linux/kernel/v$(KERNEL_MAJOR).x/linux-$(KERNEL_VERSION).tar.xz
 
-$(OUTPUT)/build-build/.lh_kernel_unpacked: $(OUTPUT)/sources/linux-$(KERNEL_VERSION).tar.xz
+$(OUTPUT)/build-build/.lh_kernel_unpacked: $(OUTPUT)/sources/linux-$(KERNEL_VERSION).tar.xz sub/kernel
 	exec setuidgid $(NORMALUSER) mkdir -p $(OUTPUT)/build-build/opt/linux-$(KERNEL_VERSION)
 	exec setuidgid $(NORMALUSER) makenamelink $(OUTPUT)/build-build/opt linux linux-$(KERNEL_VERSION) $(OUTPUT)/tmp
 	exec setuidgid $(NORMALUSER) rm -rf $(OUTPUT)/build-build/opt/linux-$(KERNEL_VERSION)/src $(OUTPUT)/build-build/opt/linux-$(KERNEL_VERSION)/linux-$(KERNEL_VERSION)
 	cd $(OUTPUT)/build-build/opt/linux-$(KERNEL_VERSION) && setuidgid $(NORMALUSER) tar Jxpvf $(OUTPUT)/sources/linux-$(KERNEL_VERSION).tar.xz
 	exec setuidgid $(NORMALUSER) mv -f $(OUTPUT)/build-build/opt/linux-$(KERNEL_VERSION)/linux-$(KERNEL_VERSION) $(OUTPUT)/build-build/opt/linux-$(KERNEL_VERSION)/src
+	exec setuidgid $(NORMALUSER) sh -c 'for i in `ls -1 sub/kernel | grep "\.patch$"` ; do patch -d $(OUTPUT)/build-build/opt/linux-$(KERNEL_VERSION)/src -p1 < sub/kernel/$$i ; done'
 	exec setuidgid $(NORMALUSER) touch $@
 
 $(OUTPUT)/build-build/.lh_kernel_headers_installed: $(OUTPUT)/build-build/.lh_kernel_unpacked
@@ -25,6 +26,7 @@ $(OUTPUT)/build-build/.lh_kernel_headers_installed: $(OUTPUT)/build-build/.lh_ke
 $(OUTPUT)/build-$(TRIPLE)/kernel/.lh_unpacked: $(OUTPUT)/sources/linux-$(KERNEL_VERSION).tar.xz | $(OUTPUT)/build-build/.lh_skarnet_installed
 	exec setuidgid $(NORMALUSER) s6-mkdir -p $(OUTPUT)/build-$(TRIPLE)/kernel
 	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-$(TRIPLE)/kernel tar Jxpvf $(OUTPUT)/sources/linux-$(KERNEL_VERSION).tar.xz
+	exec setuidgid $(NORMALUSER) sh -c 'for i in `ls -1 sub/kernel | grep "\.patch$"` ; do patch -d $(OUTPUT)/build-$(TRIPLE)/kernel/linux-$(KERNEL_VERSION)/src -p1 < sub/kernel/$$i ; done'
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
 $(OUTPUT)/build-$(TRIPLE)/kernel/.lh_configured: $(OUTPUT)/build-$(TRIPLE)/kernel/.lh_unpacked $(KERNEL_CONFIG) | $(OUTPUT)/build-build/.lh_skarnet_installed

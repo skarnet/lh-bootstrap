@@ -1,0 +1,12 @@
+diff -rNU3 linux-6.0.3.old/arch/x86/Kconfig linux-6.0.3/arch/x86/Kconfig
+--- linux-6.0.3.old/arch/x86/Kconfig    2022-10-21 10:39:29.000000000 +0000
++++ linux-6.0.3/arch/x86/Kconfig        2022-10-25 10:22:33.003260831 +0000
+@@ -234,7 +234,7 @@
+	select HAVE_NOINSTR_HACK                if HAVE_OBJTOOL
+	select HAVE_NMI
+	select HAVE_NOINSTR_VALIDATION          if HAVE_OBJTOOL
+-	select HAVE_OBJTOOL                     if X86_64
++#	select HAVE_OBJTOOL                     if X86_64
+	select HAVE_OPTPROBES
+	select HAVE_PCSPKR_PLATFORM
+	select HAVE_PERF_EVENTS
