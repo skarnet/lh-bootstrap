@@ -27,11 +27,11 @@ $(OUTPUT)/build-$(TRIPLE)/.lh_dropbear_configured: $(OUTPUT)/build-$(TRIPLE)/.lh
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
 $(OUTPUT)/build-$(TRIPLE)/.lh_dropbear_built: $(OUTPUT)/build-$(TRIPLE)/.lh_dropbear_configured | $(OUTPUT)/build-build/.lh_skarnet_installed
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-$(TRIPLE)/dropbear-$(DROPBEAR_VERSION) $(MAKE) ARCH=$(KERNEL_ARCH) PROGRAMS="dropbear dbclient dropbearkey dropbearconvert scp"
+	+exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-$(TRIPLE)/dropbear-$(DROPBEAR_VERSION) $(MAKE) ARCH=$(KERNEL_ARCH) PROGRAMS="dropbear dbclient dropbearkey dropbearconvert scp"
 	exec setuidgid $(NORMALUSER) s6-touch $@
 	
 $(OUTPUT)/build-$(TRIPLE)/.lh_dropbear_installed: $(OUTPUT)/build-$(TRIPLE)/.lh_dropbear_built | $(OUTPUT)/tmp/.lh_prepared $(OUTPUT)/build-build/.lh_skarnet_installed
-	exec cd $(OUTPUT)/build-$(TRIPLE)/dropbear-$(DROPBEAR_VERSION) $(MAKE) install DESTDIR=$(OUTPUT)/rootfs
+	+exec cd $(OUTPUT)/build-$(TRIPLE)/dropbear-$(DROPBEAR_VERSION) $(MAKE) install DESTDIR=$(OUTPUT)/rootfs
 	exec makenamelink $(OUTPUT)/rootfs/opt dropbear dropbear-$(DROPBEAR_VERSION) $(OUTPUT)/tmp
 	exec cp -f $(OUTPUT)/build-$(TRIPLE)/dropbear-$(DROPBEAR_VERSION)/scp $(OUTPUT)/rootfs/opt/dropbear-$(DROPBEAR_VERSION)/bin/scp
 	exec mv -f $(OUTPUT)/rootfs/opt/dropbear-$(DROPBEAR_VERSION)/sbin/dropbear $(OUTPUT)/rootfs/opt/dropbear-$(DROPBEAR_VERSION)/bin/dropbear

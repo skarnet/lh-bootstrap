@@ -21,10 +21,10 @@ $(OUTPUT)/build-$(TRIPLE)/.lh_zlib_configured: $(OUTPUT)/build-$(TRIPLE)/.lh_zli
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
 $(OUTPUT)/build-$(TRIPLE)/.lh_zlib_built: $(OUTPUT)/build-$(TRIPLE)/.lh_zlib_configured | $(OUTPUT)/build-build/.lh_skarnet_installed
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-$(TRIPLE)/zlib-$(ZLIB_VERSION) $(MAKE)
+	+exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-$(TRIPLE)/zlib-$(ZLIB_VERSION) $(MAKE)
 	exec setuidgid $(NORMALUSER) s6-touch $@
 	
 $(OUTPUT)/build-$(TRIPLE)/.lh_zlib_installed: $(OUTPUT)/build-$(TRIPLE)/.lh_zlib_built | $(OUTPUT)/tmp/.lh_prepared $(OUTPUT)/build-build/.lh_skarnet_installed $(OUTPUT)/tmp/.lh_layout_installed
-	exec cd $(OUTPUT)/build-$(TRIPLE)/zlib-$(ZLIB_VERSION) $(MAKE) install DESTDIR=$(OUTPUT)/rootfs
+	+exec cd $(OUTPUT)/build-$(TRIPLE)/zlib-$(ZLIB_VERSION) $(MAKE) install DESTDIR=$(OUTPUT)/rootfs
 	exec makenamelink $(OUTPUT)/rootfs/opt zlib zlib-$(ZLIB_VERSION) $(OUTPUT)/tmp
 	exec setuidgid $(NORMALUSER) s6-touch $@

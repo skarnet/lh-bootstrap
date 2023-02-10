@@ -32,11 +32,11 @@ $(OUTPUT)/build-build/.lh_$(KMOD_NAME)_configured: $(OUTPUT)/build-build/.lh_$(K
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
 $(OUTPUT)/build-build/.lh_$(KMOD_NAME)_built: $(OUTPUT)/build-build/.lh_$(KMOD_NAME)_configured | $(OUTPUT)/build-build/.lh_skarnet_installed
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-build/opt/$(KMOD_NAME)-$(KMOD_VERSION)/src $(MAKE)
+	+exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-build/opt/$(KMOD_NAME)-$(KMOD_VERSION)/src $(MAKE)
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
 $(OUTPUT)/build-build/.lh_$(KMOD_NAME)_installed: $(OUTPUT)/build-build/.lh_$(KMOD_NAME)_built | $(OUTPUT)/tmp/.lh_prepared $(OUTPUT)/build-build/.lh_skarnet_installed
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-build/opt/$(KMOD_NAME)-$(KMOD_VERSION)/src $(MAKE) install CC="$(BUILD_CC)"
+	+exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-build/opt/$(KMOD_NAME)-$(KMOD_VERSION)/src $(MAKE) install CC="$(BUILD_CC)"
 	exec setuidgid $(NORMALUSER) makenamelink $(OUTPUT)/build-build/opt $(KMOD_NAME) $(KMOD_NAME)-$(KMOD_VERSION) $(OUTPUT)/tmp
 	exec setuidgid $(NORMALUSER) rm -f $(OUTPUT)/build-build/opt/$(KMOD_NAME)-$(KMOD_VERSION)/bin/depmod
 	exec setuidgid $(NORMALUSER) s6-ln -s kmod $(OUTPUT)/build-build/opt/$(KMOD_NAME)-$(KMOD_VERSION)/bin/depmod

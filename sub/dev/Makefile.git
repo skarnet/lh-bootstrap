@@ -26,11 +26,11 @@ $(OUTPUT)/build-$(TRIPLE)/.lh_git_configured: $(OUTPUT)/build-$(TRIPLE)/.lh_git_
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
 $(OUTPUT)/build-$(TRIPLE)/.lh_git_built: $(OUTPUT)/build-$(TRIPLE)/.lh_git_configured $(OUTPUT)/build-$(TRIPLE)/.lh_libressl_installed $(OUTPUT)/build-$(TRIPLE)/.lh_curl_installed $(OUTPUT)/build-$(TRIPLE)/.lh_zlib_installed | $(OUTPUT)/build-build/.lh_skarnet_installed
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-$(TRIPLE)/git-$(GIT_VERSION) $(MAKE) $(GIT_MAKE_ARGS)
+	+exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-$(TRIPLE)/git-$(GIT_VERSION) $(MAKE) $(GIT_MAKE_ARGS)
 	exec setuidgid $(NORMALUSER) s6-touch $@
 	
 $(OUTPUT)/build-$(TRIPLE)/.lh_git_installed: $(OUTPUT)/build-$(TRIPLE)/.lh_git_built | $(OUTPUT)/tmp/.lh_prepared $(OUTPUT)/build-build/.lh_skarnet_installed $(OUTPUT)/tmp/.lh_layout_installed
-	exec cd $(OUTPUT)/build-$(TRIPLE)/git-$(GIT_VERSION) $(MAKE) install DESTDIR=$(OUTPUT)/rootfs $(GIT_MAKE_ARGS)
+	+exec cd $(OUTPUT)/build-$(TRIPLE)/git-$(GIT_VERSION) $(MAKE) install DESTDIR=$(OUTPUT)/rootfs $(GIT_MAKE_ARGS)
 	exec makenamelink $(OUTPUT)/rootfs/opt git git-$(GIT_VERSION) $(OUTPUT)/tmp
 	exec makelinks $(OUTPUT)/rootfs /bin /opt/git/bin
 	exec setuidgid $(NORMALUSER) s6-touch $@

@@ -19,7 +19,7 @@ $(OUTPUT)/build-build/.lh_kernel_unpacked: $(OUTPUT)/sources/linux-$(KERNEL_VERS
 	exec setuidgid $(NORMALUSER) touch $@
 
 $(OUTPUT)/build-build/.lh_kernel_headers_installed: $(OUTPUT)/build-build/.lh_kernel_unpacked
-	cd $(OUTPUT)/build-build/opt/linux-$(KERNEL_VERSION)/src && setuidgid $(NORMALUSER) $(MAKE) headers_install INSTALL_HDR_PATH=$(OUTPUT)/build-build/opt/linux-$(KERNEL_VERSION)
+	++cd $(OUTPUT)/build-build/opt/linux-$(KERNEL_VERSION)/src && setuidgid $(NORMALUSER) $(MAKE) headers_install INSTALL_HDR_PATH=$(OUTPUT)/build-build/opt/linux-$(KERNEL_VERSION)
 	exec setuidgid $(NORMALUSER) touch $@
 	
 	
@@ -31,12 +31,12 @@ $(OUTPUT)/build-$(TRIPLE)/kernel/.lh_unpacked: $(OUTPUT)/sources/linux-$(KERNEL_
 
 $(OUTPUT)/build-$(TRIPLE)/kernel/.lh_configured: $(OUTPUT)/build-$(TRIPLE)/kernel/.lh_unpacked $(KERNEL_CONFIG) | $(OUTPUT)/build-build/.lh_skarnet_installed
 	exec setuidgid $(NORMALUSER) cp -f $(KERNEL_CONFIG) $(OUTPUT)/build-$(TRIPLE)/kernel/linux-$(KERNEL_VERSION)/.config
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-$(TRIPLE)/kernel/linux-$(KERNEL_VERSION) $(MAKE) olddefconfig $(KERNEL_ENV)
+	++exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-$(TRIPLE)/kernel/linux-$(KERNEL_VERSION) $(MAKE) olddefconfig $(KERNEL_ENV)
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
 kernel-menuconfig: $(OUTPUT)/build-$(TRIPLE)/kernel/.lh_configured $(OUTPUT)/build-build/.lh_$(NCURSES_NAME)_installed | $(OUTPUT)/build-build/.lh_skarnet_installed $(WD)/bin/fake-pkg-config
 	exec setuidgid $(NORMALUSER) s6-ln -nsf $(WD)/bin/fake-pkg-config $(OUTPUT)/build-build/bin/pkg-config
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-$(TRIPLE)/kernel/linux-$(KERNEL_VERSION) $(MAKE) menuconfig $(KERNEL_ENV)
+	++exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-$(TRIPLE)/kernel/linux-$(KERNEL_VERSION) $(MAKE) menuconfig $(KERNEL_ENV)
 	exec setuidgid $(NORMALUSER) rm -f $(OUTPUT)/build-build/bin/pkg-config
 
 $(OUTPUT)/build-$(TRIPLE)/kernel/.lh_prepared: | $(OUTPUT)/tmp/.lh_prepared $(OUTPUT)/build-build/.lh_skarnet_installed
@@ -46,12 +46,12 @@ $(OUTPUT)/build-$(TRIPLE)/kernel/.lh_prepared: | $(OUTPUT)/tmp/.lh_prepared $(OU
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
 $(OUTPUT)/build-$(TRIPLE)/kernel/.lh_headers_installed: $(OUTPUT)/build-$(TRIPLE)/kernel/.lh_prepared $(OUTPUT)/build-$(TRIPLE)/kernel/.lh_built | $(OUTPUT)/build-build/.lh_skarnet_installed
-	exec cd $(OUTPUT)/build-$(TRIPLE)/kernel/linux-$(KERNEL_VERSION) $(MAKE) headers_install $(KERNEL_ENV) INSTALL_HDR_PATH=$(OUTPUT)/rootfs/opt/linux-kernel-headers-$(KERNEL_VERSION)
+	++exec cd $(OUTPUT)/build-$(TRIPLE)/kernel/linux-$(KERNEL_VERSION) $(MAKE) headers_install $(KERNEL_ENV) INSTALL_HDR_PATH=$(OUTPUT)/rootfs/opt/linux-kernel-headers-$(KERNEL_VERSION)
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
 $(OUTPUT)/build-$(TRIPLE)/kernel/.lh_built: $(OUTPUT)/build-$(TRIPLE)/kernel/.lh_configured | $(OUTPUT)/build-build/.lh_kmod_installed $(OUTPUT)/build-build/.lh_skarnet_installed
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-$(TRIPLE)/kernel/linux-$(KERNEL_VERSION) $(MAKE) modules_prepare $(KERNEL_ENV)
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-$(TRIPLE)/kernel/linux-$(KERNEL_VERSION) $(MAKE) all $(KERNEL_ENV)
+	++exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-$(TRIPLE)/kernel/linux-$(KERNEL_VERSION) $(MAKE) modules_prepare $(KERNEL_ENV)
+	++exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-$(TRIPLE)/kernel/linux-$(KERNEL_VERSION) $(MAKE) all $(KERNEL_ENV)
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
 $(OUTPUT)/build-$(TRIPLE)/kernel/.lh_installed: $(OUTPUT)/build-$(TRIPLE)/kernel/.lh_built | $(OUTPUT)/tmp/.lh_layout_installed $(OUTPUT)/build-build/.lh_skarnet_installed
@@ -65,6 +65,6 @@ endif
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
 $(OUTPUT)/build-$(TRIPLE)/kernel/.lh_modules_installed: $(OUTPUT)/build-$(TRIPLE)/kernel/.lh_built | $(OUTPUT)/build-build/.lh_kmod_installed $(OUTPUT)/build-build/.lh_skarnet_installed
-	exec cd $(OUTPUT)/build-$(TRIPLE)/kernel/linux-$(KERNEL_VERSION) $(MAKE) modules_install $(KERNEL_ENV)
+	++exec cd $(OUTPUT)/build-$(TRIPLE)/kernel/linux-$(KERNEL_VERSION) $(MAKE) modules_install $(KERNEL_ENV)
 	exec s6-rmrf $(OUTPUT)/rootfs/lib/modules/$(KERNEL_FULLVERSION)/build $(OUTPUT)/rootfs/lib/modules/$(KERNEL_FULLVERSION)/source
 	exec setuidgid $(NORMALUSER) s6-touch $@
