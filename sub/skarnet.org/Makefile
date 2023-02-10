@@ -59,7 +59,7 @@ S6_NETWORKING_TOKEN := s6-tlsd-io
 MDEVD_TOKEN := mdevd
 BCNM_TOKEN := bcnm-waitif
 
-SKAWARE_ENV := (if $(filter true,$(TARGET_STATIC)),,env LDFLAGS=-Wl,-rpath-link,$(OUTPUT)/rootfs/library.so)
+SKAWARE_ENV := $(if $(filter true,$(TARGET_STATIC)),,env LDFLAGS=-Wl,-rpath-link,$(OUTPUT)/rootfs/library.so)
 SKAWARE_OPTIONS := --enable-slashpackage $(if $(filter true,$(TARGET_STATIC)),--enable-static-libc --disable-shared,--enable-shared --disable-allstatic)
 SKAWARE_BUILD_OPTIONS := --enable-slashpackage --disable-shared --enable-allstatic
 SKALIBS_OPTIONS := --with-default-path=/command:/usr/bin:/bin --with-sysdep-devurandom=yes --with-sysdep-grndinsecure=no
