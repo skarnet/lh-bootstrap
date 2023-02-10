@@ -3,7 +3,8 @@ SKAWARE_BUILD := SKALIBS NSSS UTMPS EXECLINE S6 S6_RC S6_LINUX_INIT S6_PORTABLE_
 
 # SKALIBS_VERSION := v2.13.1.0
 SKALIBS_VERSION := a10514072f27ff9f4a6ab308b3bccfd4628ef2aa
-NSSS_VERSION := v0.2.0.2
+# NSSS_VERSION := v0.2.0.3
+NSSS_VERSION := c6e2fdabd1d27099f70d6b793bfe9078872deb56
 UTMPS_VERSION := v0.1.2.1
 # EXECLINE_VERSION := v2.9.2.0
 EXECLINE_VERSION := bb748f0e002c8a4f9865ae0a592fcb4fac0aabc7
@@ -69,6 +70,7 @@ SKAWARE_ENV := $(if $(filter true,$(TARGET_STATIC)),,env LDFLAGS=-Wl,-rpath-link
 SKAWARE_OPTIONS := --enable-slashpackage --enable-nsss $(if $(filter true,$(TARGET_STATIC)),--enable-static-libc --disable-shared,--enable-shared --disable-allstatic)
 SKAWARE_BUILD_OPTIONS := --enable-slashpackage --disable-shared --enable-allstatic 
 SKALIBS_OPTIONS := --with-default-path=/command:/usr/bin:/bin --with-sysdep-devurandom=yes --with-sysdep-grndinsecure=no
+NSSS_OPTIONS := --enable-libc-includes
 UTMPS_OPTIONS := --enable-libc-includes
 EXECLINE_OPTIONS := --disable-pedantic-posix --enable-multicall
 S6_OPTIONS :=
