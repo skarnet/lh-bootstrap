@@ -72,7 +72,7 @@ S6_LINUX_INIT_OPTIONS := --enable-utmps
 S6_PORTABLE_UTILS_OPTIONS :=
 S6_LINUX_UTILS_OPTIONS :=
 S6_DNS_OPTIONS :=
-S6_NETWORKING_OPTIONS := --enable-ssl=bearssl --with-ssl-path=$(OUTPUT)/rootfs
+S6_NETWORKING_OPTIONS := --enable-ssl=bearssl --with-ssl-path=$(OUTPUT)/rootfs/opt/bearssl
 MDEVD_OPTIONS :=
 BCNM_OPTIONS :=
 
