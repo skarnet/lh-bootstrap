@@ -25,7 +25,7 @@ UTMPS_DEPENDENCIES := SKALIBS
 EXECLINE_DEPENDENCIES := SKALIBS
 S6_DEPENDENCIES := SKALIBS EXECLINE
 S6_RC_DEPENDENCIES := SKALIBS EXECLINE S6
-S6_LINUX_INIT_DEPENDENCIES := SKALIBS EXECLINE S6
+S6_LINUX_INIT_DEPENDENCIES := SKALIBS UTMPS EXECLINE S6
 S6_PORTABLE_UTILS_DEPENDENCIES := SKALIBS
 S6_LINUX_UTILS_DEPENDENCIES := SKALIBS
 S6_DNS_DEPENDENCIES := SKALIBS
@@ -61,13 +61,13 @@ BCNM_TOKEN := bcnm-waitif
 
 SKAWARE_ENV := $(if $(filter true,$(TARGET_STATIC)),,env LDFLAGS=-Wl,-rpath-link,$(OUTPUT)/rootfs/library.so)
 SKAWARE_OPTIONS := --enable-slashpackage $(if $(filter true,$(TARGET_STATIC)),--enable-static-libc --disable-shared,--enable-shared --disable-allstatic)
-SKAWARE_BUILD_OPTIONS := --enable-slashpackage --disable-shared --enable-allstatic
+SKAWARE_BUILD_OPTIONS := --enable-slashpackage --disable-shared --enable-allstatic 
 SKALIBS_OPTIONS := --with-default-path=/command:/usr/bin:/bin --with-sysdep-devurandom=yes --with-sysdep-grndinsecure=no
 UTMPS_OPTIONS := --enable-libc-includes
 EXECLINE_OPTIONS := --disable-pedantic-posix --enable-multicall
 S6_OPTIONS :=
 S6_RC_OPTIONS :=
-S6_LINUX_INIT_OPTIONS :=
+S6_LINUX_INIT_OPTIONS := --enable-utmps
 S6_PORTABLE_UTILS_OPTIONS :=
 S6_LINUX_UTILS_OPTIONS :=
 S6_DNS_OPTIONS :=
@@ -92,14 +92,6 @@ $(1)_INCLUDE_LOCATION := $(OUTPUT)/rootfs/package/$$($(1)_CATEGORY)/$$($(1)_NAME
 $(1)_LIBRARY_LOCATION := $(OUTPUT)/rootfs/package/$$($(1)_CATEGORY)/$$($(1)_NAME)/library
 $(1)_DYNLIB_LOCATION := $(OUTPUT)/rootfs/package/$$($(1)_CATEGORY)/$$($(1)_NAME)/library.so
 
-.PHONY: $$($(1)_NAME)-download $$($(1)_NAME)-prepare $$($(1)_NAME)-configure $$($(1)_NAME)-build $$($(1)_NAME)-install
-
-$$($(1)_NAME)-download: $(OUTPUT)/sources/$$($(1)_NAME)/Makefile
-$$($(1)_NAME)-prepare: $(OUTPUT)/build-$(TRIPLE)/$$($(1)_NAME)-$$($(1)_VERSION)/Makefile
-$$($(1)_NAME)-configure: $(OUTPUT)/build-$(TRIPLE)/$$($(1)_NAME)-$$($(1)_VERSION)/config.mak
-$$($(1)_NAME)-build: $(OUTPUT)/build-$(TRIPLE)/$$($(1)_NAME)-$$($(1)_VERSION)/$$($(1)_TOKEN)
-$$($(1)_NAME)-install: $(OUTPUT)/staging-$(TRIPLE)/package/$$($(1)_CATEGORY)/$$($(1)_NAME)/include/$$($(1)_NAME)/config.h
-
 $(OUTPUT)/sources/$$($(1)_NAME)/Makefile: | $(OUTPUT)/tmp/.lh_prepared
 	exec setuidgid $(NORMALUSER) rm -rf $(OUTPUT)/sources/$$($(1)_NAME)
 	cd $(OUTPUT)/sources && setuidgid $(NORMALUSER) git clone git://git.skarnet.org/$$($(1)_NAME)
@@ -112,7 +104,7 @@ $(OUTPUT)/build-$(TRIPLE)/$$($(1)_NAME)-$$($(1)_VERSION)/Makefile: $(OUTPUT)/sou
 	exec touch $$@
 
 $(OUTPUT)/build-$(TRIPLE)/$$($(1)_NAME)-$$($(1)_VERSION)/config.mak: $(OUTPUT)/build-$(TRIPLE)/$$($(1)_NAME)-$$($(1)_VERSION)/Makefile $$(foreach dep,$$($(1)_DEPENDENCIES),$(OUTPUT)/rootfs/package/$$($$(dep)_CATEGORY)/$$($$(dep)_NAME)/include/$$($$(dep)_NAME)/config.h)
-	cd $(OUTPUT)/build-$(TRIPLE)/$$($(1)_NAME)-$$($(1)_VERSION) && setuidgid $(NORMALUSER) $(SKAWARE_ENV) ./configure --host=$(TRIPLE) $(SKAWARE_OPTIONS) $$($(1)_OPTIONS)
+	cd $(OUTPUT)/build-$(TRIPLE)/$$($(1)_NAME)-$$($(1)_VERSION) && setuidgid $(NORMALUSER) $(SKAWARE_ENV) env DESTDIR=$(OUTPUT)/rootfs ./configure --host=$(TRIPLE) $(SKAWARE_OPTIONS) $$($(1)_OPTIONS)
 
 $(OUTPUT)/build-$(TRIPLE)/$$($(1)_NAME)-$$($(1)_VERSION)/$$($(1)_TOKEN): $(OUTPUT)/build-$(TRIPLE)/$$($(1)_NAME)-$$($(1)_VERSION)/config.mak
 	cd $(OUTPUT)/build-$(TRIPLE)/$$($(1)_NAME)-$$($(1)_VERSION) && setuidgid $(NORMALUSER) $(MAKE) all strip
@@ -152,6 +144,10 @@ SKAWARE_BUILD := SKALIBS EXECLINE S6 S6_RC S6_LINUX_INIT S6_PORTABLE_UTILS S6_LI
 
 define skaware_build_rules_definition
 
+$(1)_BUILD_INCLUDE_LOCATION := $(OUTPUT)/build-build/package/$$($(1)_CATEGORY)/$$($(1)_NAME)/include
+$(1)_BUILD_LIBRARY_LOCATION := $(OUTPUT)/build-build/package/$$($(1)_CATEGORY)/$$($(1)_NAME)/library
+$(1)_BUILD_DYNLIB_LOCATION := $(OUTPUT)/build-build/package/$$($(1)_CATEGORY)/$$($(1)_NAME)/library.so
+
 $(OUTPUT)/build-build/$$($(1)_NAME)-$$($(1)_VERSION)/Makefile: $(OUTPUT)/sources/$$($(1)_NAME)/Makefile | $(OUTPUT)/tmp/.lh_prepared
 	exec setuidgid $(NORMALUSER) rm -rf $(OUTPUT)/build-build/$$($(1)_NAME)-$$($(1)_VERSION)
 	exec setuidgid $(NORMALUSER) cp -a $(OUTPUT)/sources/$$($(1)_NAME) $(OUTPUT)/build-build/$$($(1)_NAME)-$$($(1)_VERSION)
@@ -159,7 +155,7 @@ $(OUTPUT)/build-build/$$($(1)_NAME)-$$($(1)_VERSION)/Makefile: $(OUTPUT)/sources
 	exec touch $$@
 
 $(OUTPUT)/build-build/$$($(1)_NAME)-$$($(1)_VERSION)/config.mak: $(OUTPUT)/build-build/$$($(1)_NAME)-$$($(1)_VERSION)/Makefile $$(foreach dep,$$($(1)_DEPENDENCIES),$(OUTPUT)/build-build/package/$$($$(dep)_CATEGORY)/$$($$(dep)_NAME)/include/$$($$(dep)_NAME)/config.h)
-	cd $(OUTPUT)/build-build/$$($(1)_NAME)-$$($(1)_VERSION) && setuidgid $(NORMALUSER) env CC="$(BUILD_CC)" ./configure $(SKAWARE_BUILD_OPTIONS) $$($(1)_OPTIONS)
+	cd $(OUTPUT)/build-build/$$($(1)_NAME)-$$($(1)_VERSION) && setuidgid $(NORMALUSER) env "CC=$(BUILD_CC)" DESTDIR=$(OUTPUT)/build-build ./configure $(SKAWARE_BUILD_OPTIONS) $$($(1)_OPTIONS)
 
 $(OUTPUT)/build-build/$$($(1)_NAME)-$$($(1)_VERSION)/$$($(1)_TOKEN): $(OUTPUT)/build-build/$$($(1)_NAME)-$$($(1)_VERSION)/config.mak
 	cd $(OUTPUT)/build-build/$$($(1)_NAME)-$$($(1)_VERSION) && setuidgid $(NORMALUSER) $(MAKE) all strip
