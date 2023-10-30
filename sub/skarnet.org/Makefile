@@ -92,7 +92,7 @@ TIPIDEE_TOKEN := tipideed
 SKAWARE_ENV := $(if $(filter true,$(TARGET_STATIC)),,env LDFLAGS=-Wl,-rpath-link,$(OUTPUT)/rootfs/library.so)
 SKAWARE_OPTIONS := --enable-slashpackage --enable-nsss $(if $(filter true,$(TARGET_STATIC)),--enable-static-libc --disable-shared,--enable-shared --disable-allstatic)
 SKAWARE_BUILD_OPTIONS := --enable-slashpackage --disable-shared --enable-allstatic 
-SKALIBS_OPTIONS := --with-default-path=/command:/usr/bin:/bin --with-sysdep-devurandom=yes --with-sysdep-grndinsecure=no
+SKALIBS_OPTIONS := --with-default-path=/command:/usr/bin:/bin --with-sysdep-devurandom=yes --with-sysdep-grndinsecure=no --with-sysdep-posixspawnearlyreturn=no
 NSSS_OPTIONS := --enable-libc-includes
 UTMPS_OPTIONS := --enable-libc-includes
 EXECLINE_OPTIONS := --disable-pedantic-posix --enable-multicall
