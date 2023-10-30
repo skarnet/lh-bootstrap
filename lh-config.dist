@@ -1,6 +1,6 @@
 # Set to the output directory.
 # By default, it's a subdirectory named "output" in lh-bootstrap's base directory.
-OUTPUT=
+# OUTPUT=
 
 # Set to a non-privileged user on your system.
 # Most of the build will be performed as that user.
