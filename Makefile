@@ -62,7 +62,7 @@ $(OUTPUT)/tmp/.lh_prepared: lh-config
 
 # This target builds all the build-time native tools, the real part of the build depends on this target
 
-$(OUTPUT)/build-build/.lh_done: $(OUTPUT)/build-build/.lh_skarnet_installed $(OUTPUT)/build-build/.lh_util-linux_installed $(OUTPUT)/build-build/.lh_kmod_installed $(OUTPUT)/build-build/.lh_e2fsprogs_installed
+$(OUTPUT)/build-build/.lh_done: $(OUTPUT)/build-build/.lh_skarnet_installed $(OUTPUT)/build-build/.lh_kmod_installed $(OUTPUT)/build-build/.lh_e2fsprogs_installed
 	exec setuidgid $(NORMALUSER) touch $@
 
 
