@@ -62,7 +62,7 @@ $(OUTPUT)/tmp/.lh_prepared: lh-config
 
 # This target builds all the build-time native tools, the real part of the build depends on this target
 
-$(OUTPUT)/build-build/.lh_done: $(OUTPUT)/build-build/.lh_skarnet_installed $(OUTPUT)/build-build/.lh_util-linux_installed $(OUTPUT)/build-build/.lh_kmod_installed
+$(OUTPUT)/build-build/.lh_done: $(OUTPUT)/build-build/.lh_skarnet_installed $(OUTPUT)/build-build/.lh_util-linux_installed $(OUTPUT)/build-build/.lh_kmod_installed $(OUTPUT)/build-build/.lh_e2fsprogs_installed
 	exec setuidgid $(NORMALUSER) touch $@
 
 
@@ -79,13 +79,12 @@ $(OUTPUT)/tmp/.lh_userfs_installed: $(OUTPUT)/tmp/.lh_layout_installed
 	exec setuidgid $(NORMALUSER) touch $@
 
 
-# The qemu disk images (requires qemu and libguestfs-tools)
+# The qemu disk images (requires qemu)
 
-$(OUTPUT)/tmp/.lh_diskimages_done: $(OUTPUT)/build-$(TRIPLE)/kernel/.lh_modules_installed $(OUTPUT)/tmp/.lh_rootfs_installed $(OUTPUT)/tmp/.lh_rwfs_installed $(OUTPUT)/tmp/.lh_userfs_installed
-	virt-make-fs --format=qcow2 --type=ext4 --size=$(ROOTFS_SIZE) $(OUTPUT)/rootfs $(OUTPUT)/rootfs.qcow2 & \
-	virt-make-fs --format=qcow2 --type=ext4 --size=$(RWFS_SIZE) $(OUTPUT)/rwfs $(OUTPUT)/rwfs.qcow2 & \
-	virt-make-fs --format=qcow2 --type=ext4 --size=$(USERFS_SIZE) $(OUTPUT)/userfs $(OUTPUT)/userfs.qcow2 & wait
-	exec chown $(NORMALUSER_UID):$(NORMALUSER_GID) $(OUTPUT)/rootfs.qcow2 $(OUTPUT)/rwfs.qcow2 $(OUTPUT)/userfs.qcow2
+$(OUTPUT)/tmp/.lh_diskimages_done: $(OUTPUT)/build-$(TRIPLE)/kernel/.lh_modules_installed $(OUTPUT)/tmp/.lh_rootfs_installed $(OUTPUT)/tmp/.lh_rwfs_installed $(OUTPUT)/tmp/.lh_userfs_installed | $(OUTPUT)/build-build/.lh_done
+	setuidgid $(NORMALUSER) makeqcow2 $(OUTPUT)/rootfs $(ROOTFS_SIZE) & \
+	setuidgid $(NORMALUSER) makeqcow2 $(OUTPUT)/rwfs $(RWFS_SIZE) & \
+	setuidgid $(NORMALUSER) makeqcow2 $(OUTPUT)/userfs $(USERFS_SIZE) & wait
 	exec setuidgid $(NORMALUSER) touch $@
 
 qemu-boot:
@@ -99,6 +98,7 @@ qemu-boot:
 include sub/kernel/Makefile
 include sub/xz/Makefile
 include sub/kmod/Makefile
+include sub/e2fsprogs/Makefile
 
 
 ## rootfs contents, what's necessary to get an image to boot and connect to it via ssh

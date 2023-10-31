@@ -124,8 +124,7 @@ you can get a native toolchain [here](https://skarnet.org/toolchains/).
   + `git`
   + a `tar` that supports .gz, .bz2 and .xz archives
   + a `wget` that supports HTTPS
-  + `dd`, `chown`, `cpio`
-  + `mkfs.ext4`, from e2fsprogs
+  + `dd`, `chown`, `cpio`, `truncate`
   + `qemu-system-$TARGET` to boot your target machine
 
 - A musl cross-development environment from the BUILD machine to the TARGET
