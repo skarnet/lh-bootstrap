@@ -22,11 +22,11 @@ $(OUTPUT)/build-$(TRIPLE)/.lh_make_configured: $(OUTPUT)/build-$(TRIPLE)/.lh_mak
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
 $(OUTPUT)/build-$(TRIPLE)/.lh_make_built: $(OUTPUT)/build-$(TRIPLE)/.lh_make_configured | $(OUTPUT)/build-build/.lh_skarnet_installed
-	+exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-$(TRIPLE)/make-$(MAKE_VERSION) $(MAKE) $(MAKE_MAKE_STATIC)
+	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-$(TRIPLE)/make-$(MAKE_VERSION) $(MAKE) $(MAKE_MAKE_STATIC)
 	exec setuidgid $(NORMALUSER) s6-touch $@
 	
 $(OUTPUT)/build-$(TRIPLE)/.lh_make_installed: $(OUTPUT)/build-$(TRIPLE)/.lh_make_built | $(OUTPUT)/tmp/.lh_prepared $(OUTPUT)/build-build/.lh_skarnet_installed $(OUTPUT)/tmp/.lh_layout_installed
-	+exec cd $(OUTPUT)/build-$(TRIPLE)/make-$(MAKE_VERSION) $(MAKE) install DESTDIR=$(OUTPUT)/rootfs
+	exec cd $(OUTPUT)/build-$(TRIPLE)/make-$(MAKE_VERSION) $(MAKE) install DESTDIR=$(OUTPUT)/rootfs
 	exec makenamelink $(OUTPUT)/rootfs/opt make make-$(MAKE_VERSION) $(OUTPUT)/tmp
 	exec makelinks $(OUTPUT)/rootfs /bin /opt/make/bin
 	exec setuidgid $(NORMALUSER) s6-touch $@

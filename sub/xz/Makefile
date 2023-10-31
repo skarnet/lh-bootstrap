@@ -31,11 +31,11 @@ $(OUTPUT)/build-build/.lh_$(XZ_NAME)_configured: $(OUTPUT)/build-build/.lh_$(XZ_
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
 $(OUTPUT)/build-build/.lh_$(XZ_NAME)_built: $(OUTPUT)/build-build/.lh_$(XZ_NAME)_configured | $(OUTPUT)/build-build/.lh_skarnet_installed
-	+exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-build/opt/$(XZ_NAME)-$(XZ_VERSION)/src $(MAKE) CC="$(BUILD_CC)" LDFLAGS=-s
+	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-build/opt/$(XZ_NAME)-$(XZ_VERSION)/src $(MAKE) CC="$(BUILD_CC)" LDFLAGS=-s
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
 $(OUTPUT)/build-build/.lh_$(XZ_NAME)_installed: $(OUTPUT)/build-build/.lh_$(XZ_NAME)_built | $(OUTPUT)/tmp/.lh_prepared $(OUTPUT)/build-build/.lh_skarnet_installed
-	+exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-build/opt/$(XZ_NAME)-$(XZ_VERSION)/src $(MAKE) install CC="$(BUILD_CC)"
+	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-build/opt/$(XZ_NAME)-$(XZ_VERSION)/src $(MAKE) install CC="$(BUILD_CC)"
 	exec setuidgid $(NORMALUSER) makenamelink $(OUTPUT)/build-build/opt $(XZ_NAME) $(XZ_NAME)-$(XZ_VERSION) $(OUTPUT)/tmp
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
@@ -50,11 +50,11 @@ $(OUTPUT)/build-$(TRIPLE)/.lh_$(XZ_NAME)_configured: $(OUTPUT)/build-$(TRIPLE)/.
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
 $(OUTPUT)/build-$(TRIPLE)/.lh_$(XZ_NAME)_built: $(OUTPUT)/build-$(TRIPLE)/.lh_$(XZ_NAME)_configured | $(OUTPUT)/build-build/.lh_skarnet_installed
-	+exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-$(TRIPLE)/$(XZ_NAME)-$(XZ_VERSION) $(MAKE) LDFLAGS=$(XZ_MAKELDFLAGS) CC="$(TARGET_CC)"
+	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-$(TRIPLE)/$(XZ_NAME)-$(XZ_VERSION) $(MAKE) LDFLAGS=$(XZ_MAKELDFLAGS) CC="$(TARGET_CC)"
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
 $(OUTPUT)/build-$(TRIPLE)/.lh_$(XZ_NAME)_installed: $(OUTPUT)/build-$(TRIPLE)/.lh_$(XZ_NAME)_built | $(OUTPUT)/tmp/.lh_prepared $(OUTPUT)/build-build/.lh_skarnet_installed $(OUTPUT)/tmp/.lh_layout_installed
-	+exec cd $(OUTPUT)/build-$(TRIPLE)/$(XZ_NAME)-$(XZ_VERSION) $(MAKE) install CC="$(TARGET_CC)" DESTDIR=$(OUTPUT)/rootfs
+	exec cd $(OUTPUT)/build-$(TRIPLE)/$(XZ_NAME)-$(XZ_VERSION) $(MAKE) install CC="$(TARGET_CC)" DESTDIR=$(OUTPUT)/rootfs
 	exec makenamelink $(OUTPUT)/rootfs/opt $(XZ_NAME) $(XZ_NAME)-$(XZ_VERSION) $(OUTPUT)/tmp
 	exec makelinks $(OUTPUT)/rootfs /bin /opt/$(XZ_NAME)/bin
 	exec setuidgid $(NORMALUSER) s6-touch $@

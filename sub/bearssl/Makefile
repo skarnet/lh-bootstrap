@@ -17,7 +17,7 @@ $(OUTPUT)/build-$(TRIPLE)/.lh_$(BEARSSL_NAME)_copied: $(OUTPUT)/sources/.lh_$(BE
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
 $(OUTPUT)/build-$(TRIPLE)/.lh_$(BEARSSL_NAME)_built: $(OUTPUT)/build-$(TRIPLE)/.lh_$(BEARSSL_NAME)_copied | $(OUTPUT)/build-build/.lh_skarnet_installed
-	+exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-$(TRIPLE)/$(BEARSSL_NAME)-$(BEARSSL_VERSION) $(MAKE) lib CC="$(TARGET_CC)" LD="$(TARGET_CC)" LDDLL="$(TARGET_CC)"
+	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-$(TRIPLE)/$(BEARSSL_NAME)-$(BEARSSL_VERSION) $(MAKE) lib CC="$(TARGET_CC)" LD="$(TARGET_CC)" LDDLL="$(TARGET_CC)"
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
 $(OUTPUT)/build-$(TRIPLE)/.lh_$(BEARSSL_NAME)_installed: $(OUTPUT)/build-$(TRIPLE)/.lh_$(BEARSSL_NAME)_built | $(OUTPUT)/tmp/.lh_prepared $(OUTPUT)/build-build/.lh_skarnet_installed
