@@ -1,5 +1,5 @@
 
-E2FSPROGS_NAME := e2fsprgs
+E2FSPROGS_NAME := e2fsprogs
 E2FSPROGS_VERSION := 1.47.0
 E2FSPROGS_URLDIR := https://git.kernel.org/pub/scm/fs/ext2/e2fsprogs.git/snapshot
 E2FSPROGS_TAREXT := tar.gz
