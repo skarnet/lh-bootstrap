@@ -5,4 +5,5 @@ size="$2"
 
 truncate -s "$size" "$name".raw
 mkfs.ext4 -b 4096 -d "$name" -F -L `basename "$name"` -O ^huge_file -q -U random "$name".raw
-exec qemu-img convert -f raw -O qcow2 -c -o compression_type=zstd "$name".raw "$name".qcow2
+qemu-img convert -f raw -O qcow2 -c -o compression_type=zstd "$name".raw "$name".qcow2
+exec rm -f "$name".raw
