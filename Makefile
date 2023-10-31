@@ -24,7 +24,6 @@ it: all
 
 
 all: kernel rootfs rwfs userfs images
-all-but-kernel: rootfs rwfs userfs images
 kernel: $(OUTPUT)/build-$(TRIPLE)/kernel/.lh_installed $(OUTPUT)/build-$(TRIPLE)/kernel/.lh_modules_installed
 rootfs: $(OUTPUT)/tmp/.lh_rootfs_installed
 rwfs: $(OUTPUT)/tmp/.lh_rwfs_installed
