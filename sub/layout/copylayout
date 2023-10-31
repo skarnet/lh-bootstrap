@@ -16,9 +16,9 @@ hostarch=$(s6-echo -- $TRIPLE | cut -f1 -d-)
 sed -i -e "s/%%HOSTNAME%%/lh-$hostarch/g" $output/rootfs/etc/motd $output/rootfs/etc/issue.net $output/rootfs/root/.execline-shell $output/userfs/home/guest/.execline-shell $output/rootfs/etc/s6-rc/source-base/00/up
 
 while read file user group perms ; do
-  if s6-test -n "$file" -a "$file" != "#" ; then
-    $output/build-build/command/s6-chown -u $user -g $group -- $output/$file
-    $output/build-build/command/s6-chmod $perms $output/$file
+  if eltest -n "$file" -a "$file" != "#" ; then
+    s6-chown -u $user -g $group -- $output/$file
+    s6-chmod $perms $output/$file
   fi
 done < sub/layout/permissions
 
@@ -26,7 +26,7 @@ done < sub/layout/permissions
 
 if ${LIBC_COPY} ; then
   for lib in lib lib32 lib64 ; do
-    if s6-test -d "$LIBC_SYSROOT/$lib" ; then
+    if eltest -d "$LIBC_SYSROOT/$lib" ; then
       s6-mkdir -p "$output/rootfs/$lib"
       for i in `ls -1 "$LIBC_SYSROOT/$lib" | grep -e '\.so$' -e '\.so\.'` ; do
         s6-hiercopy "$LIBC_SYSROOT/$lib/$i" "$output/rootfs/$lib/$i"

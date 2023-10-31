@@ -83,9 +83,12 @@ $(OUTPUT)/tmp/.lh_userfs_installed: $(OUTPUT)/tmp/.lh_layout_installed
 # The qemu disk images (requires qemu)
 
 $(OUTPUT)/tmp/.lh_diskimages_done: $(OUTPUT)/build-$(TRIPLE)/kernel/.lh_modules_installed $(OUTPUT)/tmp/.lh_rootfs_installed $(OUTPUT)/tmp/.lh_rwfs_installed $(OUTPUT)/tmp/.lh_userfs_installed | $(OUTPUT)/build-build/.lh_done
-	setuidgid $(NORMALUSER) makeqcow2 $(OUTPUT)/rootfs $(ROOTFS_SIZE) & \
-	setuidgid $(NORMALUSER) makeqcow2 $(OUTPUT)/rwfs $(RWFS_SIZE) & \
-	setuidgid $(NORMALUSER) makeqcow2 $(OUTPUT)/userfs $(USERFS_SIZE) & wait
+	makeqcow2 $(OUTPUT)/rootfs $(ROOTFS_SIZE) & \
+	makeqcow2 $(OUTPUT)/rwfs $(RWFS_SIZE) & \
+	makeqcow2 $(OUTPUT)/userfs $(USERFS_SIZE) & wait
+	exec s6-envuidgid $(NORMALUSER) s6-chown -U $(OUTPUT)/rootfs.qcow2
+	exec s6-envuidgid $(NORMALUSER) s6-chown -U $(OUTPUT)/rwfs.qcow2
+	exec s6-envuidgid $(NORMALUSER) s6-chown -U $(OUTPUT)/userfs.qcow2
 	exec setuidgid $(NORMALUSER) touch $@
 
 qemu-boot:
