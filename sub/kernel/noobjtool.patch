@@ -1,7 +1,7 @@
-diff -rNU3 linux-6.1.11.old/arch/x86/Kconfig linux-6.1.11/arch/x86/Kconfig
---- linux-6.1.11.old/arch/x86/Kconfig	2023-02-09 11:28:28.000000000 +0100
-+++ linux-6.1.11/arch/x86/Kconfig	2023-02-10 02:23:18.520145732 +0100
-@@ -240,7 +240,7 @@
+diff -rNU3 linux-6.6.old/arch/x86/Kconfig linux-6.6/arch/x86/Kconfig
+--- linux-6.6.old/arch/x86/Kconfig	2023-10-30 03:31:08.000000000 +0100
++++ linux-6.6/arch/x86/Kconfig	2023-11-01 17:12:13.679989615 +0100
+@@ -249,7 +249,7 @@
  	select HAVE_NOINSTR_HACK		if HAVE_OBJTOOL
  	select HAVE_NMI
  	select HAVE_NOINSTR_VALIDATION		if HAVE_OBJTOOL
@@ -10,3 +10,23 @@ diff -rNU3 linux-6.1.11.old/arch/x86/Kconfig linux-6.1.11/arch/x86/Kconfig
  	select HAVE_OPTPROBES
  	select HAVE_PCSPKR_PLATFORM
  	select HAVE_PERF_EVENTS
+diff -rNU3 linux-6.6.old/include/linux/objtool.h linux-6.6/include/linux/objtool.h
+--- linux-6.6.old/include/linux/objtool.h	2023-10-30 03:31:08.000000000 +0100
++++ linux-6.6/include/linux/objtool.h	2023-11-01 17:11:49.759989695 +0100
+@@ -156,6 +156,7 @@
+ #define STACK_FRAME_NON_STANDARD_FP(func)
+ #define ANNOTATE_NOENDBR
+ #define ASM_REACHABLE
++#define VALIDATE_UNRET_BEGIN
+ #else
+ #define ANNOTATE_INTRA_FUNCTION_CALL
+ .macro UNWIND_HINT type:req sp_reg=0 sp_offset=0 signal=0
+@@ -166,6 +167,8 @@
+ .endm
+ .macro REACHABLE
+ .endm
++.macro VALIDATE_UNRET_BEGIN
++.endm
+ #endif
+ 
+ #endif /* CONFIG_OBJTOOL */
