@@ -110,28 +110,6 @@ slightly deviating from the standard (looking at you, Ubuntu); using
 our own tools is insurance against that.
 
 
-### util-linux
-
-Makefile directory: sub/util-linux
-
- To make the qemu image, we need losetup -P, to set up a loopback
-mount that supports partitions. But the -P option to losetup only
-appear in latest versions of util-linux, and not all distributions
-ship a recent enough version. (Looking at you, Ubuntu and Debian
-stable.)
- So we download and build util-linux. Except the util-linux
-build system is a bloated plate of noodles, that can have a lot
-of dependencies - in particular a dependency to ncurses, and we
-DO NOT want to build ncurses if it can be avoided. Fortunately,
-none of the tools we need require ncurses. So we end up building
-those individual binaries from util-linux and avoid pulling in
-the kitchen sink.
- Currently, the binaries we build are: losetup, fdisk, mkswap,
-mount, umount. This list can change as the package evolves; the
-current list is described in the UTLX_PROGLIST variable definition
-in the sub/util-linux/Makefile file.
-
-
 ### xz-utils
 
 Makefile directory: sub/xz
@@ -152,8 +130,8 @@ Makefile directory: sub/kmod
 practicality. Modules are compressed, to save storage space.
 Traditionally, there are compressed with gzip (and have extension
 `.ko.gz`), but xz is generally a better compressor than gzip:
-it decompresses faster and the compressed data is smaller. So
-we use xz to compress the modules (extension `.ko.xz`). On the
+the compressed data is smaller.
+So we use xz to compress the modules (extension `.ko.xz`). On the
 HOST, we load the modules with busybox modprobe, which supports
 both extensions. So far, so good.
 

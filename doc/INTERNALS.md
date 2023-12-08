@@ -81,7 +81,6 @@ Then `./make` builds the software for the HOST, installing it into the
 - Linux kernel headers
 - musl
 - skarnet.org packages
-- some binaries from util-linux
 - xz-utils
 - kmod
 
