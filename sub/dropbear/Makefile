@@ -1,6 +1,8 @@
 
-# DROPBEAR_VERSION ?= 2022.83  # buggy with inetd_mode + disable_syslog
-DROPBEAR_VERSION ?= 2020.81
+# DROPBEAR_VERSION ?= 2024.84
+# DROPBEAR_VERSION ?= 2020.81  # previous working version
+DROPBEAR_SITE := https://mirror.dropbear.nl/mirror/releases
+# DROPBEAR_SITE := https://matt.ucc.asn.au/dropbear/releases
 DROPBEAR_CONF_STATIC := $(if $(filter true,$(TARGET_STATIC)),--enable-static,)
 DROPBEAR_MAKE_STATIC := $(if $(filter true,$(TARGET_STATIC)),-static,)
 
@@ -9,7 +11,7 @@ clean-dropbear:
 	
 
 $(OUTPUT)/sources/dropbear-$(DROPBEAR_VERSION).tar.bz2: | $(OUTPUT)/tmp/.lh_prepared $(OUTPUT)/build-build/.lh_skarnet_installed
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/sources wget https://matt.ucc.asn.au/dropbear/releases/dropbear-$(DROPBEAR_VERSION).tar.bz2
+	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/sources wget $(DROPBEAR_SITE)/dropbear-$(DROPBEAR_VERSION).tar.bz2
 
 $(OUTPUT)/build-$(TRIPLE)/.lh_dropbear_dled: $(OUTPUT)/sources/dropbear-$(DROPBEAR_VERSION).tar.bz2 | $(OUTPUT)/build-build/.lh_skarnet_installed
 	exec setuidgid $(NORMALUSER) s6-touch $@
