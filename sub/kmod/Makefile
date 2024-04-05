@@ -8,7 +8,7 @@ KMOD_TARLETTER := J
 # Do not use --enable-static or --disable-shared: the kmod configure script is voluntarily broken.
 # Use make variables instead to link kmod statically.
 
-KMOD_CONFIGURE_OPTIONS := --with-gnu-ld --disable-gtk-doc-html --with-xz --disable-manpages --with-bashcompletiondir=$(OUTPUT)/build-build/opt/$(KMOD_NAME)-$(KMOD_VERSION)/bash-completions
+KMOD_CONFIGURE_OPTIONS := --disable-option-checking --disable-maintainer-mode --with-rootlibdir=$(OUTPUT)/rootfs --with-module-directory=$(OUTPUT)/rootfs/lib/modules --with-gnu-ld --disable-gtk-doc-html --with-xz --disable-manpages --disable-test-modules --disable-logging --with-bashcompletiondir=$(OUTPUT)/build-build/opt/$(KMOD_NAME)-$(KMOD_VERSION)/bash-completions
 KMOD_CFLAGS := -I$(OUTPUT)/build-build/opt/xz/include
 KMOD_LDFLAGS := -L$(OUTPUT)/build-build/opt/xz/lib
 KMOD_LIBS := -llzma
@@ -38,6 +38,4 @@ $(OUTPUT)/build-build/.lh_$(KMOD_NAME)_built: $(OUTPUT)/build-build/.lh_$(KMOD_N
 $(OUTPUT)/build-build/.lh_$(KMOD_NAME)_installed: $(OUTPUT)/build-build/.lh_$(KMOD_NAME)_built | $(OUTPUT)/tmp/.lh_prepared $(OUTPUT)/build-build/.lh_skarnet_installed
 	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-build/opt/$(KMOD_NAME)-$(KMOD_VERSION)/src $(MAKE) install CC="$(BUILD_CC)"
 	exec setuidgid $(NORMALUSER) makenamelink $(OUTPUT)/build-build/opt $(KMOD_NAME) $(KMOD_NAME)-$(KMOD_VERSION) $(OUTPUT)/tmp
-	exec setuidgid $(NORMALUSER) rm -f $(OUTPUT)/build-build/opt/$(KMOD_NAME)-$(KMOD_VERSION)/bin/depmod
-	exec setuidgid $(NORMALUSER) s6-ln -s kmod $(OUTPUT)/build-build/opt/$(KMOD_NAME)-$(KMOD_VERSION)/bin/depmod
 	exec setuidgid $(NORMALUSER) s6-touch $@
