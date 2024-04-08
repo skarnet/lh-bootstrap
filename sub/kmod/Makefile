@@ -9,7 +9,7 @@ KMOD_TARLETTER := J
 # Use make variables instead to link kmod statically.
 
 KMOD_CONFIGURE_OPTIONS := --disable-option-checking --disable-maintainer-mode --with-module-directory=$(OUTPUT)/rootfs/lib/modules --with-gnu-ld --disable-gtk-doc-html --with-xz --disable-manpages --disable-test-modules --disable-logging --with-bashcompletiondir=$(OUTPUT)/build-build/opt/$(KMOD_NAME)-$(KMOD_VERSION)/bash-completions
-KMOD_CFLAGS := -I$(OUTPUT)/build-build/opt/xz/include
+KMOD_CFLAGS := -I$(OUTPUT)/build-build/opt/xz/include -include libgen.h
 KMOD_LDFLAGS := -L$(OUTPUT)/build-build/opt/xz/lib
 KMOD_LIBS := -llzma
 
