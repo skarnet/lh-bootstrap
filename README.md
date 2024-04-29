@@ -118,7 +118,11 @@ you can get a native toolchain [here](https://skarnet.org/toolchains/).
 - The ability to loop-mount filesystems on the BUILD machine.
 
 - A few necessary tools for the BUILD machine:
-  + GNU `make`, version 3.81 or later
+  + GNU `make`, version 4.4 or later. It will work with versions older than 4.4
+if you don't use the `-j` option, but that means slow
+builds. (Explanation: when asked for parallel builds, lh-bootstrap uses the
+`--jobserver-style` option to `make` in order to work around some bugs. But this
+option only appears in GNU make 4.4.)
   + `bc`, Perl 5 (necessary for the Linux kernel compilation as well as syslinux)
   + `su`, `patch`, `sed`
   + `git`
