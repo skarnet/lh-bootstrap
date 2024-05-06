@@ -1,9 +1,9 @@
 
 E2FSPROGS_NAME := e2fsprogs
 E2FSPROGS_VERSION := 1.47.0
-E2FSPROGS_URLDIR := https://git.kernel.org/pub/scm/fs/ext2/e2fsprogs.git/snapshot
-E2FSPROGS_TAREXT := tar.gz
-E2FSPROGS_TARLETTER := z
+E2FSPROGS_URLDIR := https://kernel.org/pub/linux/kernel/people/tytso/e2fsprogs/v$(E2FSPROGS_VERSION)
+E2FSPROGS_TAREXT := tar.xz
+E2FSPROGS_TARLETTER := J
 
 E2FSPROGS_CONFIGURE_OPTIONS := --with-gnu-ld --disable-gtk-doc-html --with-xz --disable-manpages --with-bashcompletiondir=$(OUTPUT)/build-build/opt/$(E2FSPROGS_NAME)-$(E2FSPROGS_VERSION)/bash-completions
 E2FSPROGS_CFLAGS :=
