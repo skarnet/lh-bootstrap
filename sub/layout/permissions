@@ -5,6 +5,8 @@ rwfs/var/log/klogd		102	61	2700
 rwfs/var/log/syslogd		104	61	2700
 rwfs/var/log/sshd-4		138	61	2700
 rwfs/var/log/wtmpd		99	99	2755
+rwfs/var/log/wtmpd/wtmp		99	99	0644
+rwfs/var/log/wtmpd/btmp		99	99	0644
 
 userfs/home/guest			1000	100	2755
 userfs/home/guest/.execline-shell	1000	100	0755
