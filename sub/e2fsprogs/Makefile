@@ -5,8 +5,8 @@ E2FSPROGS_URLDIR := https://kernel.org/pub/linux/kernel/people/tytso/e2fsprogs/v
 E2FSPROGS_TAREXT := tar.xz
 E2FSPROGS_TARLETTER := J
 
-E2FSPROGS_CONFIGURE_OPTIONS := --with-gnu-ld --disable-gtk-doc-html --with-xz --disable-manpages --with-bashcompletiondir=$(OUTPUT)/build-build/opt/$(E2FSPROGS_NAME)-$(E2FSPROGS_VERSION)/bash-completions
-E2FSPROGS_CFLAGS :=
+E2FSPROGS_CONFIGURE_OPTIONS := --with-gnu-ld --disable-gtk-doc-html --with-xz --disable-manpages --enable-largefile --with-bashcompletiondir=$(OUTPUT)/build-build/opt/$(E2FSPROGS_NAME)-$(E2FSPROGS_VERSION)/bash-completions
+E2FSPROGS_CFLAGS := -D_LARGEFILE64_SOURCE
 E2FSPROGS_LDFLAGS := -s -static
 E2FSPROGS_LIBS := -llzma
 
@@ -25,7 +25,7 @@ $(OUTPUT)/build-build/.lh_$(E2FSPROGS_NAME)_copied: $(OUTPUT)/sources/.lh_$(E2FS
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
 $(OUTPUT)/build-build/.lh_$(E2FSPROGS_NAME)_configured: $(OUTPUT)/build-build/.lh_$(E2FSPROGS_NAME)_copied | $(OUTPUT)/build-build/.lh_skarnet_installed
-	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-build/opt/$(E2FSPROGS_NAME)-$(E2FSPROGS_VERSION)/src export CC "$(BUILD_CC)" export LDFLAGS "$(E2FSPROGS_LDFLAGS)" ./configure --prefix=$(OUTPUT)/build-build/opt/$(E2FSPROGS_NAME)-$(E2FSPROGS_VERSION) $(E2FSPROGS_CONFIGURE_OPTIONS)
+	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-build/opt/$(E2FSPROGS_NAME)-$(E2FSPROGS_VERSION)/src export CC "$(BUILD_CC)" export CFLAGS "$(E2FSPROGS_CFLAGS)" export LDFLAGS "$(E2FSPROGS_LDFLAGS)" ./configure --prefix=$(OUTPUT)/build-build/opt/$(E2FSPROGS_NAME)-$(E2FSPROGS_VERSION) $(E2FSPROGS_CONFIGURE_OPTIONS)
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
 $(OUTPUT)/build-build/.lh_$(E2FSPROGS_NAME)_built: $(OUTPUT)/build-build/.lh_$(E2FSPROGS_NAME)_configured | $(OUTPUT)/build-build/.lh_skarnet_installed
