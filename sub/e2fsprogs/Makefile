@@ -1,12 +1,12 @@
 
 E2FSPROGS_NAME := e2fsprogs
-E2FSPROGS_VERSION := 1.47.0
+E2FSPROGS_VERSION := 1.47.1
 E2FSPROGS_URLDIR := https://kernel.org/pub/linux/kernel/people/tytso/e2fsprogs/v$(E2FSPROGS_VERSION)
 E2FSPROGS_TAREXT := tar.xz
 E2FSPROGS_TARLETTER := J
 
 E2FSPROGS_CONFIGURE_OPTIONS := --with-gnu-ld --disable-gtk-doc-html --with-xz --disable-manpages --enable-largefile --with-bashcompletiondir=$(OUTPUT)/build-build/opt/$(E2FSPROGS_NAME)-$(E2FSPROGS_VERSION)/bash-completions
-E2FSPROGS_CFLAGS := -D_LARGEFILE64_SOURCE
+E2FSPROGS_CFLAGS :=
 E2FSPROGS_LDFLAGS := -s -static
 E2FSPROGS_LIBS := -llzma
 
