@@ -1,1 +1,3 @@
 lh-config
+output/
+*.log

@@ -1,5 +1,5 @@
 
-CURL_VERSION ?= 7.87.0
+CURL_VERSION ?= 8.9.1
 CURL_STATIC := $(if $(filter true,$(TARGET_STATIC)),-all-static,)
 
 CURL_CONF_ARGS := \
@@ -59,17 +59,14 @@ CURL_CONF_ARGS := \
     --with-default-ssl-backend=bearssl \
     --without-winssl \
     --without-schannel \
-    --without-darwinssl \
     --without-secure-transport \
     --without-amissl \
-    --without-ssl \
     --without-gnutls \
     --without-mbedtls \
     --without-wolfssl \
     --without-mesalink \
     --with-bearssl=$(OUTPUT)/rootfs/opt/bearssl \
     --without-nss \
-    --without-libmetalink \
     --without-ca-bundle \
     --without-ca-path \
     --without-ca-fallback \

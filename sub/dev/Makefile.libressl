@@ -1,5 +1,5 @@
 
-LIBRESSL_VERSION ?= 3.7.0
+LIBRESSL_VERSION ?= 3.9.2
 LIBRESSL_MAKE_STATIC := $(if $(filter true,$(TARGET_STATIC)),LDFLAGS="-s -all-static",LDFLAGS=-s)
 
 clean-libressl:

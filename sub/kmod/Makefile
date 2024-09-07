@@ -1,6 +1,7 @@
 
 KMOD_NAME := kmod
-KMOD_VERSION := 32
+#KMOD_VERSION := 32
+KMOD_VERSION := 33
 KMOD_URLDIR := https://kernel.org/pub/linux/utils/kernel/$(KMOD_NAME)
 KMOD_TAREXT := tar.xz
 KMOD_TARLETTER := J

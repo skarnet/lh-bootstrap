@@ -6,7 +6,7 @@ E2FSPROGS_TAREXT := tar.xz
 E2FSPROGS_TARLETTER := J
 
 E2FSPROGS_CONFIGURE_OPTIONS := --with-gnu-ld --without-libiconv-prefix --disable-gtk-doc-html --with-xz --disable-manpages --enable-largefile --with-udev-rules-dir=no --with-crond-dir=no --with-systemd-unit-dir=no
-E2FSPROGS_CFLAGS :=
+E2FSPROGS_CFLAGS := -Wno-implicit-function-declaration
 E2FSPROGS_LDFLAGS := -s -static
 E2FSPROGS_LIBS := -llzma
 

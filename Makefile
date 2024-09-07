@@ -69,7 +69,6 @@ $(OUTPUT)/build-build/.lh_done: $(OUTPUT)/build-build/.lh_skarnet_installed $(OU
 # The filesystems
 
 $(OUTPUT)/tmp/.lh_rootfs_installed: $(OUTPUT)/tmp/.lh_layout_installed $(OUTPUT)/build-$(TRIPLE)/.lh_skarnet_installed $(OUTPUT)/build-$(TRIPLE)/.lh_bb_installed $(OUTPUT)/build-$(TRIPLE)/.lh_dropbear_installed $(LH_DEV_TARGETS)
-
 	exec setuidgid $(NORMALUSER) touch $@
 
 $(OUTPUT)/tmp/.lh_rwfs_installed: $(OUTPUT)/tmp/.lh_layout_installed

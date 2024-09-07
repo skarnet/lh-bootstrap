@@ -1,5 +1,5 @@
 
-GIT_VERSION ?= 2.39.1
+GIT_VERSION ?= 2.46.0
 GIT_STATIC := $(if $(filter true,$(TARGET_STATIC)),-static,)
 
 GIT_CONF_ARGS := --enable-pthreads --without-expat --without-iconv --with-shell=/bin/sh --with-perl=/bin/perl --without-python --with-zlib=$(OUTPUT)/rootfs/opt/zlib --without-tcltk --with-openssl=$(OUTPUT)/rootfs/opt/libressl ac_cv_fread_reads_directories=true ac_cv_snprintf_returns_bogus=false

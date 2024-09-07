@@ -1,5 +1,5 @@
 
-MAKE_VERSION ?= 4.4
+MAKE_VERSION ?= 4.4.1
 MAKE_MAKE_STATIC := $(if $(filter true,$(TARGET_STATIC)),LDFLAGS=-static,)
 
 clean-make:
