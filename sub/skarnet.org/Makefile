@@ -87,7 +87,7 @@ TIPIDEE_CATEGORY := web
 SHIBARI_CATEGORY := web
 BCNM_CATEGORY := admin
 DNSFUNNEL_CATEGORY := web
-APASTE_CATEGORY := admin
+APASTE_CATEGORY := web
 
 SKALIBS_TOKEN := libskarnet.a.xyzzy
 NSSS_TOKEN := nsssd-unix
