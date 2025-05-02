@@ -1,7 +1,5 @@
 
 BEARSSL_NAME := bearssl
-# latest version from 2022-06-22
-#BEARSSL_VERSION := 46f7dddce75227f2e40ab94d66ceb9f19ee6b1b0
 # latest version from 2024-06-12
 BEARSSL_VERSION := 3c040368f6791553610e362401db1efff4b4c5b8
 BEARSSL_URLDIR := https://www.bearssl.org/git

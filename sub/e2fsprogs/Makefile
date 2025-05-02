@@ -1,6 +1,6 @@
 
 E2FSPROGS_NAME := e2fsprogs
-E2FSPROGS_VERSION := 1.47.1
+E2FSPROGS_VERSION := 1.47.2
 E2FSPROGS_URLDIR := https://kernel.org/pub/linux/kernel/people/tytso/e2fsprogs/v$(E2FSPROGS_VERSION)
 E2FSPROGS_TAREXT := tar.xz
 E2FSPROGS_TARLETTER := J

@@ -1,7 +1,6 @@
 
-#DROPBEAR_VERSION ?= 2024.84
-DROPBEAR_VERSION ?= 2024.85
-# DROPBEAR_VERSION ?= 2020.81  # previous working version
+DROPBEAR_VERSION ?= 2025.87
+# DROPBEAR_VERSION ?= 2024.85  # previous working version
 DROPBEAR_SITE := https://mirror.dropbear.nl/mirror/releases
 # DROPBEAR_SITE := https://matt.ucc.asn.au/dropbear/releases
 DROPBEAR_CONF_STATIC := $(if $(filter true,$(TARGET_STATIC)),--enable-static,)

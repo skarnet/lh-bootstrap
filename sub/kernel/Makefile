@@ -15,7 +15,7 @@ $(OUTPUT)/build-build/.lh_kernel_unpacked: $(OUTPUT)/sources/linux-$(KERNEL_VERS
 	exec setuidgid $(NORMALUSER) rm -rf $(OUTPUT)/build-build/opt/linux-$(KERNEL_VERSION)/src $(OUTPUT)/build-build/opt/linux-$(KERNEL_VERSION)/linux-$(KERNEL_VERSION)
 	cd $(OUTPUT)/build-build/opt/linux-$(KERNEL_VERSION) && setuidgid $(NORMALUSER) tar Jxpvf $(OUTPUT)/sources/linux-$(KERNEL_VERSION).tar.xz
 	exec setuidgid $(NORMALUSER) mv -f $(OUTPUT)/build-build/opt/linux-$(KERNEL_VERSION)/linux-$(KERNEL_VERSION) $(OUTPUT)/build-build/opt/linux-$(KERNEL_VERSION)/src
-	exec setuidgid $(NORMALUSER) sh -c 'for i in `ls -1 sub/kernel | grep "\.patch$$"` ; do patch -d $(OUTPUT)/build-build/opt/linux-$(KERNEL_VERSION)/src -p1 < sub/kernel/$$i ; done'
+	exec setuidgid $(NORMALUSER) sh -c 'for i in `ls -1 sub/kernel | grep "\.patch$$"` ; do ( cd $(OUTPUT)/build-build/opt/linux-$(KERNEL_VERSION)/src && patch -p1 < $(WD)/sub/kernel/$$i ) ; done'
 	exec setuidgid $(NORMALUSER) touch $@
 
 $(OUTPUT)/build-build/.lh_kernel_headers_installed: $(OUTPUT)/build-build/.lh_kernel_unpacked
@@ -26,7 +26,7 @@ $(OUTPUT)/build-build/.lh_kernel_headers_installed: $(OUTPUT)/build-build/.lh_ke
 $(OUTPUT)/build-$(TRIPLE)/kernel/.lh_unpacked: $(OUTPUT)/sources/linux-$(KERNEL_VERSION).tar.xz | $(OUTPUT)/build-build/.lh_skarnet_installed
 	exec setuidgid $(NORMALUSER) s6-mkdir -p $(OUTPUT)/build-$(TRIPLE)/kernel
 	exec setuidgid $(NORMALUSER) cd $(OUTPUT)/build-$(TRIPLE)/kernel tar Jxpvf $(OUTPUT)/sources/linux-$(KERNEL_VERSION).tar.xz
-	exec setuidgid $(NORMALUSER) sh -c 'for i in `ls -1 sub/kernel | grep "\.patch$$"` ; do patch -d $(OUTPUT)/build-$(TRIPLE)/kernel/linux-$(KERNEL_VERSION) -p1 < sub/kernel/$$i ; done'
+	exec setuidgid $(NORMALUSER) sh -c 'for i in `ls -1 sub/kernel | grep "\.patch$$"` ; do ( cd $(OUTPUT)/build-$(TRIPLE)/kernel/linux-$(KERNEL_VERSION) && patch -p1 < $(WD)/sub/kernel/$$i ) ; done'
 	exec setuidgid $(NORMALUSER) s6-touch $@
 
 $(OUTPUT)/build-$(TRIPLE)/kernel/.lh_configured: $(OUTPUT)/build-$(TRIPLE)/kernel/.lh_unpacked $(KERNEL_CONFIG) | $(OUTPUT)/build-build/.lh_skarnet_installed

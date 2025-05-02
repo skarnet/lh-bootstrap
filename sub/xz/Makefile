@@ -1,6 +1,6 @@
 
 XZ_NAME := xz
-XZ_VERSION := 5.4.1
+XZ_VERSION := 5.8.1
 XZ_URLDIR := https://tukaani.org/$(XZ_NAME)
 XZ_TAREXT := tar.xz
 XZ_TARLETTER := J

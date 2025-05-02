@@ -1,8 +1,8 @@
 
 KMOD_NAME := kmod
-#KMOD_VERSION := 32
+# pin to 33, 34+ needs meson (34 pretends to still support autotools but it's broken)
 KMOD_VERSION := 33
-KMOD_URLDIR := https://kernel.org/pub/linux/utils/kernel/$(KMOD_NAME)
+KMOD_URLDIR := https://mirrors.edge.kernel.org/pub/linux/utils/kernel/$(KMOD_NAME)
 KMOD_TAREXT := tar.xz
 KMOD_TARLETTER := J
 
