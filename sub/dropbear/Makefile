@@ -1,5 +1,5 @@
 
-DROPBEAR_VERSION ?= 2025.87
+DROPBEAR_VERSION ?= 2025.89
 # DROPBEAR_VERSION ?= 2024.85  # previous working version
 DROPBEAR_SITE := https://mirror.dropbear.nl/mirror/releases
 # DROPBEAR_SITE := https://matt.ucc.asn.au/dropbear/releases
